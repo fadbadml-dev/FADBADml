@@ -1,0 +1,10 @@
+fadiff.cmo : \
+    utils.cmo \
+    op.cmo
+fadiff.cmx : \
+    utils.cmx \
+    op.cmx
+op.cmo :
+op.cmx :
+utils.cmo :
+utils.cmx :
