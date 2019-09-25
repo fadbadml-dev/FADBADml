@@ -1,90 +1,163 @@
+(* NAMING CONVENTIONS :
+   - the operators on values of type t have the same name as the normal
+     operators (ie + for add, - for sub, etc...)
+   - the binary operators on values of type t and values of type scalar have
+     an & in their name (ie t + scalar is called +& and scalar + t is called &+)
+   - the operators on values of type scalar have two & in their name
+     (ie scalar - scalar is called &-&)
+   - some terms have the prefix scalar_ : they are functions on scalars
+     (ie scalar_log) or scalar values (scalar_one)
+*)
+
 module type S =
 sig
   type t
-  val myInteger : int -> t
-  val myZero : unit -> t
-  val myOne : unit -> t
-  val myTwo : unit -> t
-  val myPI : unit -> t
-  val myPos : t -> t
-  val myNeg : t -> t
+  type scalar
 
-  val myAdd : t -> t -> t
-  val myCadd : t -> t -> t
-  val mySub : t -> t -> t
-  val myCsub : t -> t -> t
-  val myMul : t -> t -> t
-  val myCmul : t -> t -> t
-  val myDiv : t -> t -> t
-  val myCdiv : t -> t -> t
+  val copy : t -> t
 
-  val myInv : t -> t
-  val mySqr : t -> t
+  val zero : unit -> t
+  val one : unit -> t
+  val two : unit -> t
 
-  type x
-  val myPow : t -> x -> t
-  val mySqrt : t -> t
-  val myLog : t -> t
-  val myExp : t -> t
-  val mySin : t -> t
-  val myCos : t -> t
-  val myTan : t -> t
-  val myAsin : t -> t
-  val myAcos : t -> t
-  val myAtan : t -> t
+  val scalar_one : scalar
 
-  val myEq : t -> t -> bool
-  val myNe : t -> t -> bool
-  val myLt : t -> t -> bool
-  val myLe : t -> t -> bool
-  val myGt : t -> t -> bool
-  val myGe : t -> t -> bool
+  val ( ~+ ) : t -> t
+  val ( ~- ) : t -> t
+
+  val ( + ) : t -> t -> t
+  val ( +& ) : t -> scalar -> t
+  val ( &+ ) : scalar -> t -> t
+  (* val ( &+& ) : scalar -> scalar -> scalar *)
+
+  val ( += ) : t -> t -> t
+  val ( +&= ) : t -> scalar -> t
+
+  val ( - ) : t -> t -> t
+  val ( -& ) : t -> scalar -> t
+  val ( &- ) : scalar -> t -> t
+  val ( &-& ) : scalar -> scalar -> scalar
+
+  val ( -= ) : t -> t -> t
+  val ( -&= ) : t -> scalar -> t
+
+  val ( * ) : t -> t -> t
+  val ( *& ) : t -> scalar -> t
+  val ( &* ) : scalar -> t -> t
+  (* val ( &*& ) : scalar -> scalar -> scalar *)
+
+  val ( *= ) : t -> t -> t
+  val ( *&= ) : t -> scalar -> t
+
+  val ( / ) : t -> t -> t
+  val ( /& ) : t -> scalar -> t
+  val ( &/ ) : scalar -> t -> t
+  (* val ( &/& ) : scalar -> scalar -> scalar *)
+
+  val ( /= ) : t -> t -> t
+  val ( /&= ) : t -> scalar -> t
+
+  val ( ** ) : t -> t -> t
+  val ( **& ) : t -> scalar -> t
+  val ( &** ) : scalar -> t -> t
+  (* val ( &**& ) : scalar -> scalar -> scalar *)
+
+  val inv : t -> t
+  val sqr : t -> t
+
+  val sqrt : t -> t
+  val log : t -> t
+  val scalar_log : scalar -> scalar
+  val exp : t -> t
+  val sin : t -> t
+  val cos : t -> t
+  val tan : t -> t
+  val asin : t -> t
+  val acos : t -> t
+  val atan : t -> t
+
+  val ( = ) : t -> t -> bool
+  val ( <> ) : t -> t -> bool
+  val ( < ) : t -> t -> bool
+  val ( <= ) : t -> t -> bool
+  val ( > ) : t -> t -> bool
+  val ( >= ) : t -> t -> bool
 end
 
 module OpFloat : S =
 struct
   type t = float ref
+  type scalar = float
 
-  let myInteger i = ref (float_of_int i)
+  let copy x = ref !x
 
-  let myZero () = ref 0.
-  let myOne () = ref 1.
-  let myTwo () = ref 2.
-  let myPI () = ref 3.14159265359
-  let myPos x = x
-  let myNeg x = ref (-. !x)
+  let zero () = ref 0.
+  let one () = ref 1.
+  let two () = ref 2.
 
-  let myAdd x y = ref (!x +. !y)
-  let myCadd x y = x := (!x +. !y); x
+  let scalar_one = 1.
 
-  let mySub x y = ref (!x -. !y)
-  let myCsub x y = x := (!x -. !y); x
+  let ( ~+ ) x = copy x
+  let ( ~+& ) x = x
 
-  let myMul x y = ref (!x *. !y)
-  let myCmul x y = x := (!x *. !y); x
+  let ( ~- ) x = Stdlib.(ref (~-. !x))
+  let ( ~-& ) x = Stdlib.(~-. !x)
 
-  let myDiv x y = ref (!x /. !y)
-  let myCdiv x y = x := (!x /. !y); x
+  let ( + ) x y = Stdlib.(ref (!x +. !y))
+  let ( +& ) x y = Stdlib.(ref (!x +. y))
+  let ( &+ ) x y = Stdlib.(ref (x +. !y))
+  let ( &+& ) x y = Stdlib.(x +. y)
 
-  let myInv x = ref (1. /. !x)
-  let mySqr x = ref (!x *. !x)
+  let ( += ) x y = Stdlib.(x := (!x +. !y)); x
+  let ( +&= ) x y = Stdlib.(x := (!x +. y)); x
 
-  type x = float
-  let myPow x y = ref (!x ** y)
-  let mySqrt x = ref (sqrt !x)
-  let myLog x = ref (log !x)
-  let myExp x = ref (exp !x)
-  let mySin x = ref (sin !x)
-  let myCos x = ref (cos !x)
-  let myTan x = ref (tan !x)
-  let myAsin x = ref (asin !x)
-  let myAcos x = ref (acos !x)
-  let myAtan x = ref (atan !x)
+  let ( - ) x y = Stdlib.(ref (!x -. !y))
+  let ( -& ) x y = Stdlib.(ref (!x -. y))
+  let ( &- ) x y = Stdlib.(ref (x -. !y))
+  let ( &-& ) x y = Stdlib.(x -. y)
 
-  let myEq x y = !x = !y
-  let myNe x y = !x <> !y
-  let myLt x y = !x < !y
-  let myLe x y = !x <= !y
-  let myGt x y = !x > !y
-  let myGe x y = !x >= !y
+  let ( -= ) x y = Stdlib.(x := (!x -. !y)); x
+  let ( -&= ) x y = Stdlib.(x := (!x -. y)); x
+
+  let ( * ) x y = Stdlib.(ref (!x *. !y))
+  let ( *& ) x y = Stdlib.(ref (!x *. y))
+  let ( &* ) x y = Stdlib.(ref (x *. !y))
+  let ( &*& ) x y = Stdlib.(x *. y)
+
+  let ( *= ) x y = Stdlib.(x := (!x *. !y)); x
+  let ( *&= ) x y = Stdlib.(x := (!x *. y)); x
+
+  let ( / ) x y = Stdlib.(ref (!x /. !y))
+  let ( /& ) x y = Stdlib.(ref (!x /. y))
+  let ( &/ ) x y = Stdlib.(ref (x /. !y))
+  let ( &/& ) x y = Stdlib.(x /. y)
+
+  let ( /= ) x y = Stdlib.(x := (!x /. !y)); x
+  let ( /&= ) x y = Stdlib.(x := (!x /. y)); x
+
+  let ( ** ) x y = Stdlib.(ref (!x ** !y))
+  let ( **& ) x y = Stdlib.(ref (!x ** y))
+  let ( &** ) x y = Stdlib.(ref (x ** !y))
+  let ( &**& ) x y = Stdlib.(x ** y)
+
+  let inv x = Stdlib.(ref (1. /. !x))
+  let sqr x = Stdlib.(ref (!x *. !x))
+
+  let sqrt x = Stdlib.(ref (sqrt !x))
+  let log x = Stdlib.(ref (log !x))
+  let scalar_log x = Stdlib.(log x)
+  let exp x = Stdlib.(ref (exp !x))
+  let sin x = Stdlib.(ref (sin !x))
+  let cos x = Stdlib.(ref (cos !x))
+  let tan x = Stdlib.(ref (tan !x))
+  let asin x = Stdlib.(ref (asin !x))
+  let acos x = Stdlib.(ref (acos !x))
+  let atan x = Stdlib.(ref (atan !x))
+
+  let ( = ) x y = Stdlib.(!x = !y)
+  let ( <> ) x y = Stdlib.(!x <> !y)
+  let ( < ) x y = Stdlib.(!x < !y)
+  let ( <= ) x y = Stdlib.(!x <= !y)
+  let ( > ) x y = Stdlib.(!x > !y)
+  let ( >= ) x y = Stdlib.(!x >= !y)
 end
