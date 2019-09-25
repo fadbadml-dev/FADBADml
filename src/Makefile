@@ -1,11 +1,14 @@
 CMO = op.cmo utils.cmo fadiff.cmo
+SORTED_CMO = $(shell ocamldep -sort $(CMO:.cmo=.ml))
 
 all: fadbad.cma
 
-fadbad.cma: $(CMO)
-	ocamlc -a -o $@ `ocamldep -sort $(CMO)` $(@:.cma=.ml)
+fadbad.cma: $(CMO) fadbad.cmo
+	ocamlc -a -o $@ $(SORTED_CMO) fadbad.ml
 
-%.cmi %.cmo:%.ml
+%.cmi:%.mli
+	ocamlc $<
+%.cmo:%.ml
 	ocamlc -c $<
 
 clean:

@@ -2,7 +2,7 @@ open Utils
 
 module type S = Op.S
 
-module FTypeName (Op : S) : S =
+module FTypeName (Op : S) =
 struct
 
   type t = {
@@ -55,9 +55,7 @@ struct
       user_assert (v.m_size = n) "derivative vectors not of same size";
 
     Array.fill v.m_diff 0 v.m_size (Op.zero ());
-    v.m_diff.(idx) <- Op.one ();
-
-    v.m_diff.(idx)
+    v.m_diff.(idx) <- Op.one ()
 
   let depend v = v.m_size <> 0
 

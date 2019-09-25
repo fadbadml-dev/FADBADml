@@ -1,1 +1,2 @@
-module F (Op : Op.S) = Fadiff.FTypeName (Op)
+module type S = Op.S
+module F (Op : S) = Fadiff.FTypeName (Op)

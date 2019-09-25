@@ -84,7 +84,7 @@ sig
   val ( >= ) : t -> t -> bool
 end
 
-module OpFloat : S =
+module OpFloat =
 struct
   type t = float ref
   type scalar = float
@@ -96,6 +96,9 @@ struct
   let two () = ref 2.
 
   let scalar_one = 1.
+
+  let make f = ref f
+  let get f = !f
 
   let ( ~+ ) x = copy x
   let ( ~+& ) x = x
