@@ -14,7 +14,7 @@ $(FADBAD):
 	ocamlc $(OCAMLINCLUDE) -c $<
 
 clean:
-	rm -rf *.cmo *.cmi
+	rm -rf *.cmo *.cmi *.byte
 
 -include .depend
 .depend:
