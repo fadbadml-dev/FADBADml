@@ -1,7 +1,7 @@
 include ../config.make
 
 FADBAD = ../src/fadbad.cma
-INCLUDE += -I ../src/ fadbad.cma
+INCLUDES += -I ../src/ fadbad.cma
 
 EXAMPLES = exampleFAD.byte
 
