@@ -12,7 +12,11 @@
 module type S =
 sig
   type t
+  type elt
   type scalar
+
+  val make : elt -> t
+  val get : t -> elt
 
   val copy : t -> t
 
@@ -87,7 +91,11 @@ end
 module OpFloat =
 struct
   type t = float ref
+  type elt = float
   type scalar = float
+
+  let make x = ref x
+  let get f = !f
 
   let copy x = ref !x
 
@@ -97,8 +105,6 @@ struct
 
   let scalar_one = 1.
 
-  let make f = ref f
-  let get f = !f
 
   let ( ~+ ) x = copy x
   let ( ~+& ) x = x

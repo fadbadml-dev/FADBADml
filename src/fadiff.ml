@@ -1,8 +1,8 @@
 open Utils
 
-module type S = Op.S
+module type OpS = Op.S
 
-module FTypeName (Op : S) =
+module FTypeName (Op : OpS) =
 struct
 
   type t = {
@@ -19,11 +19,14 @@ struct
     m_diff = Array.make 0 (Op.zero ());
   }
 
-  let make v = { (create ()) with m_val = v; }
+  let make v = { (create ()) with m_val = Op.make v; }
+  let get v = Op.get v.m_val
 
-  let zero () = make (Op.zero ())
-  let one () = make (Op.one ())
-  let two () = make (Op.two ())
+  let lift v = { (create ()) with m_val = v; }
+
+  let zero () = lift (Op.zero ())
+  let one () = lift (Op.one ())
+  let two () = lift (Op.two ())
 
   let scalar_one = Op.scalar_one
 
@@ -118,33 +121,33 @@ struct
   (* ADD *)
 
   let ( +& ) (v : t) (v' : scalar) : t =
-    let res = make Op.(v.m_val +& v') in
+    let res = lift Op.(v.m_val +& v') in
     if depend v then begin
       setDepend res v;
       Array.blit v.m_diff 0 res.m_diff 0 v.m_size
     end; res
 
   let ( &+ ) v v' =
-    let res = make Op.(v &+ v'.m_val) in
+    let res = lift Op.(v &+ v'.m_val) in
     if depend v' then begin
       setDepend res v';
       Array.blit v'.m_diff 0 res.m_diff 0 v'.m_size
     end; res
 
   let addV (v : t) (v' : Op.t) : t =
-    let res = make Op.(v.m_val + v') in
+    let res = lift Op.(v.m_val + v') in
     setDepend res v;
     Array.blit v.m_diff 0 res.m_diff 0 v.m_size;
     res
 
   let vAdd v v' =
-    let res = make Op.(v + v'.m_val) in
+    let res = lift Op.(v + v'.m_val) in
     setDepend res v';
     Array.blit v'.m_diff 0 res.m_diff 0 v'.m_size;
     res
 
   let add v v' =
-    let res = make Op.(v.m_val + v'.m_val) in
+    let res = lift Op.(v.m_val + v'.m_val) in
     setDepend2 res v v';
     Array.iteri (fun i _ ->
         res.m_diff.(i) <- Op.(v.m_diff.(i) + v'.m_diff.(i)))
@@ -153,7 +156,7 @@ struct
 
   let ( + ) v v' =
     match depend v, depend v' with
-    | false, false -> make Op.(v.m_val + v'.m_val)
+    | false, false -> lift Op.(v.m_val + v'.m_val)
     | true, false -> addV v v'.m_val
     | false, true -> vAdd v.m_val v'
     | true, true -> add v v'
@@ -176,14 +179,14 @@ struct
   (* SUB *)
 
   let ( -& ) v v' =
-    let res = make Op.(v.m_val -& v') in
+    let res = lift Op.(v.m_val -& v') in
     if depend v then begin
       setDepend res v;
       Array.blit v.m_diff 0 res.m_diff 0 v.m_size
     end; res
 
   let ( &- ) v v' =
-    let res = make Op.(v &- v'.m_val) in
+    let res = lift Op.(v &- v'.m_val) in
     if depend v' then begin
       setDepend res v';
       Array.iteri (fun i _ -> res.m_diff.(i) <- Op.( - v'.m_diff.(i) ))
@@ -191,20 +194,20 @@ struct
     end; res
 
   let subV v v' =
-    let res = make Op.(v.m_val - v') in
+    let res = lift Op.(v.m_val - v') in
     setDepend res v;
     Array.blit v.m_diff 0 res.m_diff 0 v.m_size;
     res
 
   let vSub v v' =
-    let res = make Op.(v - v'.m_val) in
+    let res = lift Op.(v - v'.m_val) in
     setDepend res v';
     Array.iteri (fun i _ -> res.m_diff.(i) <- Op.( - v'.m_diff.(i) ))
       res.m_diff;
     res
 
   let sub v v' =
-    let res = make Op.(v.m_val - v'.m_val) in
+    let res = lift Op.(v.m_val - v'.m_val) in
     setDepend2 res v v';
     Array.iteri (fun i _ ->
         res.m_diff.(i) <- Op.( v.m_diff.(i) - v'.m_diff.(i) ))
@@ -213,7 +216,7 @@ struct
 
   let ( - ) v v' =
     match depend v, depend v' with
-    | false, false -> make Op.(v.m_val - v'.m_val)
+    | false, false -> lift Op.(v.m_val - v'.m_val)
     | true, false -> subV v v'.m_val
     | false, true -> vSub v.m_val v'
     | true, true -> sub v v'
@@ -237,7 +240,7 @@ struct
   (* MUL *)
 
   let ( *& ) v v' =
-    let res = make Op.(v.m_val *& v') in
+    let res = lift Op.(v.m_val *& v') in
     if depend v then begin
       setDepend res v;
       Array.iteri (fun i _ -> res.m_diff.(i) <- Op.(v.m_diff.(i) *& v'))
@@ -245,7 +248,7 @@ struct
     end; res
 
   let ( &* ) v v' =
-    let res = make Op.(v &* v'.m_val) in
+    let res = lift Op.(v &* v'.m_val) in
     if depend v' then begin
       setDepend res v';
       Array.iteri (fun i _ -> res.m_diff.(i) <- Op.(v &* v'.m_diff.(i)))
@@ -253,21 +256,21 @@ struct
     end; res
 
   let mulV v v' =
-    let res = make Op.(v.m_val * v') in
+    let res = lift Op.(v.m_val * v') in
     setDepend res v;
     Array.iteri (fun i _ -> res.m_diff.(i) <- Op.(v.m_diff.(i) * v'))
       res.m_diff;
     res
 
   let vMul v v' =
-    let res = make Op.(v * v'.m_val) in
+    let res = lift Op.(v * v'.m_val) in
     setDepend res v';
     Array.iteri (fun i _ -> res.m_diff.(i) <- Op.(v'.m_diff.(i) * v))
       res.m_diff;
     res
 
   let mul v v' =
-    let res = make Op.(v.m_val * v'.m_val) in
+    let res = lift Op.(v.m_val * v'.m_val) in
     setDepend2 res v v';
     Array.iteri (fun i _ ->
         res.m_diff.(i) <-
@@ -278,7 +281,7 @@ struct
 
   let ( * ) v v' =
     match depend v, depend v' with
-    | false, false -> make Op.(v.m_val * v'.m_val)
+    | false, false -> lift Op.(v.m_val * v'.m_val)
     | true, false -> mulV v v'.m_val
     | false, true -> vMul v.m_val v'
     | true, true -> mul v v'
@@ -311,7 +314,7 @@ struct
 
   let ( /& ) v v' =
     let cval = Op.(v.m_val /& v') in
-    let res = make cval in
+    let res = lift cval in
     if depend v then begin
       setDepend res v;
       Array.iteri (fun i _ -> res.m_diff.(i) <- Op.(v.m_diff.(i) /& v'))
@@ -321,7 +324,7 @@ struct
 
   let ( &/ ) v v' =
     let cval = Op.(v &/ v'.m_val) in
-    let res = make cval in
+    let res = lift cval in
     if depend v' then begin
       let tmp = Op.(- res.m_val / v'.m_val) in
       setDepend res v';
@@ -332,7 +335,7 @@ struct
 
   let divV v v' =
     let cval = Op.(v.m_val / v') in
-    let res = make cval in
+    let res = lift cval in
     if depend v then begin
       setDepend res v;
       Array.iteri (fun i _ -> res.m_diff.(i) <- Op.(v.m_diff.(i) / v'))
@@ -342,7 +345,7 @@ struct
 
   let vDiv v v' =
     let cval = Op.(v / v'.m_val) in
-    let res = make cval in
+    let res = lift cval in
     if depend v' then begin
       let tmp = Op.(- res.m_val / v'.m_val) in
       setDepend res v';
@@ -353,7 +356,7 @@ struct
 
   let div v v' =
     let cval = Op.(v.m_val / v'.m_val) in
-    let res = make cval in
+    let res = lift cval in
     setDepend2 res v v';
     Array.iteri (fun i _ ->
         res.m_diff.(i) <-
@@ -363,7 +366,7 @@ struct
 
   let ( / ) v v' =
     match depend v, depend v' with
-    | false, false -> make Op.(v.m_val / v'.m_val)
+    | false, false -> lift Op.(v.m_val / v'.m_val)
     | true, false -> divV v v'.m_val
     | false, true -> vDiv v.m_val v'
     | true, true -> div v v'
@@ -397,7 +400,7 @@ struct
   (* POW *)
 
   let ( **& ) v v' =
-    let res = make Op.(v.m_val **& v') in
+    let res = lift Op.(v.m_val **& v') in
     if depend v then begin
       let tmp = Op.(v' &* (v.m_val **& (v' &-& scalar_one))) in
       setDepend res v;
@@ -407,7 +410,7 @@ struct
     end; res
 
   let ( &** ) v v' =
-    let res = make Op.(v &** v'.m_val) in
+    let res = lift Op.(v &** v'.m_val) in
     if depend v' then begin
       let tmp = Op.(res.m_val *& (scalar_log v)) in
       setDepend res v';
@@ -417,7 +420,7 @@ struct
     end; res
 
   let powV v v' =
-    let res = make Op.(v.m_val ** v') in
+    let res = lift Op.(v.m_val ** v') in
     let tmp = Op.(v' * (v.m_val ** (v' - (one ())))) in
     setDepend res v;
     Array.iteri (fun i _ ->
@@ -426,7 +429,7 @@ struct
     res
 
   let vPow v v' =
-    let res = make Op.(v ** v'.m_val) in
+    let res = lift Op.(v ** v'.m_val) in
     let tmp = Op.(res.m_val * (log v)) in
     setDepend res v';
     Array.iteri (fun i _ ->
@@ -435,7 +438,7 @@ struct
     res
 
   let pow v v' =
-    let res = make Op.(v.m_val ** v'.m_val) in
+    let res = lift Op.(v.m_val ** v'.m_val) in
     let tmp1 = Op.(v'.m_val * (v.m_val ** (v'.m_val - (one ())))) in
     let tmp2 = Op.(res.m_val * (log v.m_val)) in
     setDepend2 res v v';
@@ -446,7 +449,7 @@ struct
 
   let ( ** ) v v' =
     match depend v, depend v' with
-    | false, false -> make Op.(v.m_val ** v'.m_val)
+    | false, false -> lift Op.(v.m_val ** v'.m_val)
     | true, false -> powV v v'.m_val
     | false, true -> vPow v.m_val v'
     | true, true -> pow v v'
@@ -456,7 +459,7 @@ struct
   (* ------------------------------ *)
 
   let ( ~+ ) v =
-    let res = make Op.(+v.m_val) in
+    let res = lift Op.(+v.m_val) in
     if depend v then begin
       setDepend res v;
       Array.iteri (fun i _ -> res.m_diff.(i) <- Op.(+v.m_diff.(i)))
@@ -465,7 +468,7 @@ struct
     res
 
   let ( ~- ) v =
-    let res = make Op.(- v.m_val) in
+    let res = lift Op.(- v.m_val) in
     if depend v then begin
       setDepend res v;
       Array.iteri (fun i _ -> res.m_diff.(i) <- Op.(-v.m_diff.(i)))
@@ -474,7 +477,7 @@ struct
     res
 
   let sqr v =
-    let res = make (Op.sqr v.m_val) in
+    let res = lift (Op.sqr v.m_val) in
     if depend v then begin
       let tmp = Op.((two ()) * v.m_val) in
       setDepend res v;
@@ -484,7 +487,7 @@ struct
     res
 
   let inv v =
-    let res = make Op.(inv v.m_val) in
+    let res = lift Op.(inv v.m_val) in
     if depend v then begin
       let tmp = Op.(- inv (sqr v.m_val)) in
       setDepend res v;
@@ -494,7 +497,7 @@ struct
     res
 
   let exp v =
-    let res = make Op.(exp v.m_val) in
+    let res = lift Op.(exp v.m_val) in
     if depend v then begin
       setDepend res v;
       Array.iteri (fun i _ -> res.m_diff.(i) <- Op.(v.m_diff.(i) * res.m_val))
@@ -503,7 +506,7 @@ struct
     res
 
   let log v =
-    let res = make Op.(log v.m_val) in
+    let res = lift Op.(log v.m_val) in
     if depend v then begin
       setDepend res v;
       Array.iteri (fun i _ -> res.m_diff.(i) <- Op.(v.m_diff.(i) / v.m_val))
@@ -514,7 +517,7 @@ struct
   let scalar_log = Op.scalar_log
 
   let sqrt v =
-    let res = make Op.(sqrt v.m_val) in
+    let res = lift Op.(sqrt v.m_val) in
     if depend v then begin
       let tmp = Op.((two ()) * res.m_val) in
       setDepend res v;
@@ -524,7 +527,7 @@ struct
     res
 
   let sin v =
-    let res = make Op.(sin v.m_val) in
+    let res = lift Op.(sin v.m_val) in
     if depend v then begin
       let tmp = Op.cos v.m_val in
       setDepend res v;
@@ -534,7 +537,7 @@ struct
     res
 
   let cos v =
-    let res = make Op.(cos v.m_val) in
+    let res = lift Op.(cos v.m_val) in
     if depend v then begin
       let tmp = Op.(- sin v.m_val) in
       setDepend res v;
@@ -544,7 +547,7 @@ struct
     res
 
   let tan v =
-    let res = make Op.(tan v.m_val) in
+    let res = lift Op.(tan v.m_val) in
     if depend v then begin
       let tmp = Op.((one ()) + (sqr res.m_val)) in
       setDepend res v;
@@ -554,7 +557,7 @@ struct
     res
 
   let asin v =
-    let res = make Op.(asin v.m_val) in
+    let res = lift Op.(asin v.m_val) in
     if depend v then begin
       let tmp = Op.(inv (sqrt ((one ()) - (sqr v.m_val)))) in
       setDepend res v;
@@ -564,7 +567,7 @@ struct
     res
 
   let acos v =
-    let res = make Op.(acos v.m_val) in
+    let res = lift Op.(acos v.m_val) in
     if depend v then begin
       let tmp = Op.(- inv (sqrt ((one ()) - (sqr v.m_val)))) in
       setDepend res v;
@@ -574,7 +577,7 @@ struct
     res
 
   let atan v =
-    let res = make Op.(atan v.m_val) in
+    let res = lift Op.(atan v.m_val) in
     if depend v then begin
       let tmp = Op.(inv ((one ()) + (sqr v.m_val))) in
       setDepend res v;
