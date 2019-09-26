@@ -16,4 +16,4 @@ clean:
 
 -include .depend
 .depend:
-	ocamldep $(CMO:.cmo=.ml) > .depend
+	ocamldep *.ml *.mli > .depend
