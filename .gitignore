@@ -20,6 +20,6 @@ setup.data
 setup.log
 
 # Merlin configuring file for Vim and Emacs
-.merlin
+#.merlin
 
 *.depend

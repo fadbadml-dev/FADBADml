@@ -29,17 +29,17 @@ let compare
     (v : float)
   =
 
-  let x = F.make (Op.make v) in
+  let x = F.make v in
   F.diff x 0 1;
 
   let f = fun_fad x in
 
   (* value of f *)
-  let vf = Op.get (F.value f) in
+  let vf = F.get f in
   let vfx = fun_x v in
 
   (* derivative of f *)
-  let df = Op.get (F.d f 0) in
+  let df = F.d f 0 in
   let dfx = fun_xp v in
 
   (eq_float vf vfx 1e-10) && (eq_float df dfx 1e-10)
