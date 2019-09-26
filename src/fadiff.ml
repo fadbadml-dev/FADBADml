@@ -7,7 +7,7 @@ struct
 
   type t = {
     m_val : Op.t;
-    mutable m_size : int;
+    mutable m_length : int;
     mutable m_diff : Op.t array;
   }
 
@@ -15,7 +15,7 @@ struct
 
   let create () = {
     m_val = Op.zero ();
-    m_size = 0;
+    m_length = 0;
     m_diff = Array.make 0 (Op.zero ());
   }
 
@@ -32,15 +32,15 @@ struct
 
   let copy v = {
     m_val = Op.copy v.m_val;
-    m_size = v.m_size;
+    m_length = v.m_length;
     m_diff = Array.map Op.copy v.m_diff;
   }
 
-  let size v = v.m_size
+  let length v = v.m_length
   let value v = v.m_val
 
   let deriv v i =
-    if i < v.m_size then v.m_diff.(i)
+    if i < v.m_length then v.m_diff.(i)
     else Op.zero ()
 
   let d v i = Op.get (deriv v i)
@@ -50,40 +50,40 @@ struct
       ("Index " ^ (string_of_int idx) ^
        " out of bounds [0," ^ (string_of_int n) ^ "]");
 
-    if v.m_size = 0 then begin
-      v.m_size <- n;
+    if v.m_length = 0 then begin
+      v.m_length <- n;
       v.m_diff <- Array.make n (Op.zero ());
     end else
-      user_assert (v.m_size = n) "derivative vectors not of same size";
+      user_assert (v.m_length = n) "derivative vectors not of same length";
 
-    Array.fill v.m_diff 0 v.m_size (Op.zero ());
+    Array.fill v.m_diff 0 v.m_length (Op.zero ());
     v.m_diff.(idx) <- Op.one ()
 
-  let depend v = v.m_size <> 0
+  let depend v = v.m_length <> 0
 
   let setDepend v v' =
-    internal_assert (v'.m_size > 0) "input is not a dependent variable";
-    if (v.m_size = 0) then begin
-      v.m_size <- v'.m_size;
-      v.m_diff <- Array.make v.m_size (Op.zero ());
+    internal_assert (v'.m_length > 0) "input is not a dependent variable";
+    if (v.m_length = 0) then begin
+      v.m_length <- v'.m_length;
+      v.m_diff <- Array.make v.m_length (Op.zero ());
     end else
-      user_assert (v.m_size = v'.m_size)
-        ("derivative vectors not of the same size "
-         ^ (string_of_int v.m_size) ^ "," ^ (string_of_int v'.m_size))
+      user_assert (v.m_length = v'.m_length)
+        ("derivative vectors not of the same length "
+         ^ (string_of_int v.m_length) ^ "," ^ (string_of_int v'.m_length))
 
   let setDepend2 v v1 v2 =
-    internal_assert (v1.m_size = v2.m_size)
-      ("derivative vectors not of same size "
-       ^ (string_of_int v1.m_size) ^ "," ^ (string_of_int v2.m_size));
-    internal_assert (v1.m_size > 0) "lhs-input is not a dependent variable";
-    internal_assert (v2.m_size > 0) "rhs-input is not a dependent variable";
-    if (v.m_size = 0) then begin
-      v.m_size <- v1.m_size;
-      v.m_diff <- Array.make v.m_size (Op.zero ());
+    internal_assert (v1.m_length = v2.m_length)
+      ("derivative vectors not of same length "
+       ^ (string_of_int v1.m_length) ^ "," ^ (string_of_int v2.m_length));
+    internal_assert (v1.m_length > 0) "lhs-input is not a dependent variable";
+    internal_assert (v2.m_length > 0) "rhs-input is not a dependent variable";
+    if (v.m_length = 0) then begin
+      v.m_length <- v1.m_length;
+      v.m_diff <- Array.make v.m_length (Op.zero ());
     end else
-      user_assert (v.m_size = v1.m_size)
-        ("derivative vectors not of the same size "
-         ^ (string_of_int v.m_size) ^ "," ^ (string_of_int v1.m_size))
+      user_assert (v.m_length = v1.m_length)
+        ("derivative vectors not of the same length "
+         ^ (string_of_int v.m_length) ^ "," ^ (string_of_int v1.m_length))
 
   (* ------------------------------ *)
   (* COMPARISON OPERATORS *)
@@ -123,26 +123,26 @@ struct
     let res = lift Op.(v.m_val +& v') in
     if depend v then begin
       setDepend res v;
-      Array.blit v.m_diff 0 res.m_diff 0 v.m_size
+      Array.blit v.m_diff 0 res.m_diff 0 v.m_length
     end; res
 
   let ( &+ ) v v' =
     let res = lift Op.(v &+ v'.m_val) in
     if depend v' then begin
       setDepend res v';
-      Array.blit v'.m_diff 0 res.m_diff 0 v'.m_size
+      Array.blit v'.m_diff 0 res.m_diff 0 v'.m_length
     end; res
 
   let addV (v : t) (v' : Op.t) : t =
     let res = lift Op.(v.m_val + v') in
     setDepend res v;
-    Array.blit v.m_diff 0 res.m_diff 0 v.m_size;
+    Array.blit v.m_diff 0 res.m_diff 0 v.m_length;
     res
 
   let vAdd v v' =
     let res = lift Op.(v + v'.m_val) in
     setDepend res v';
-    Array.blit v'.m_diff 0 res.m_diff 0 v'.m_size;
+    Array.blit v'.m_diff 0 res.m_diff 0 v'.m_length;
     res
 
   let add v v' =
@@ -168,7 +168,7 @@ struct
         Array.iteri (fun i vi -> ignore Op.(vi += v'.m_diff.(i))) v.m_diff
       else begin
         setDepend v v';
-        Array.blit v'.m_diff 0 v.m_diff 0 v.m_size
+        Array.blit v'.m_diff 0 v.m_diff 0 v.m_length
       end;
       v
     end
@@ -181,7 +181,7 @@ struct
     let res = lift Op.(v.m_val -& v') in
     if depend v then begin
       setDepend res v;
-      Array.blit v.m_diff 0 res.m_diff 0 v.m_size
+      Array.blit v.m_diff 0 res.m_diff 0 v.m_length
     end; res
 
   let ( &- ) v v' =
@@ -195,7 +195,7 @@ struct
   let subV v v' =
     let res = lift Op.(v.m_val - v') in
     setDepend res v;
-    Array.blit v.m_diff 0 res.m_diff 0 v.m_size;
+    Array.blit v.m_diff 0 res.m_diff 0 v.m_length;
     res
 
   let vSub v v' =
