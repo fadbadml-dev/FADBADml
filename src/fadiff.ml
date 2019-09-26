@@ -38,13 +38,12 @@ struct
 
   let size v = v.m_size
   let value v = v.m_val
-  let get v i = v.m_diff.(i)
 
   let deriv v i =
-    if i < v.m_size then get v i
+    if i < v.m_size then v.m_diff.(i)
     else Op.zero ()
 
-  let d v i = deriv v i
+  let d v i = Op.get (deriv v i)
 
   let diff v idx n =
     user_assert (idx < n)
