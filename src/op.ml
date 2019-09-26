@@ -106,7 +106,7 @@ struct
   let scalar_one = 1.
 
 
-  let ( ~+ ) x = copy x
+  let ( ~+ ) = copy
   let ( ~+& ) x = x
 
   let ( ~- ) x = Stdlib.(ref (~-. !x))
@@ -115,7 +115,7 @@ struct
   let ( + ) x y = Stdlib.(ref (!x +. !y))
   let ( +& ) x y = Stdlib.(ref (!x +. y))
   let ( &+ ) x y = Stdlib.(ref (x +. !y))
-  let ( &+& ) x y = Stdlib.(x +. y)
+  let ( &+& ) = Stdlib.( +. )
 
   let ( += ) x y = Stdlib.(x := (!x +. !y)); x
   let ( +&= ) x y = Stdlib.(x := (!x +. y)); x
@@ -123,7 +123,7 @@ struct
   let ( - ) x y = Stdlib.(ref (!x -. !y))
   let ( -& ) x y = Stdlib.(ref (!x -. y))
   let ( &- ) x y = Stdlib.(ref (x -. !y))
-  let ( &-& ) x y = Stdlib.(x -. y)
+  let ( &-& ) = Stdlib.( -. )
 
   let ( -= ) x y = Stdlib.(x := (!x -. !y)); x
   let ( -&= ) x y = Stdlib.(x := (!x -. y)); x
@@ -131,7 +131,7 @@ struct
   let ( * ) x y = Stdlib.(ref (!x *. !y))
   let ( *& ) x y = Stdlib.(ref (!x *. y))
   let ( &* ) x y = Stdlib.(ref (x *. !y))
-  let ( &*& ) x y = Stdlib.(x *. y)
+  let ( &*& ) = Stdlib.( *. )
 
   let ( *= ) x y = Stdlib.(x := (!x *. !y)); x
   let ( *&= ) x y = Stdlib.(x := (!x *. y)); x
@@ -139,7 +139,7 @@ struct
   let ( / ) x y = Stdlib.(ref (!x /. !y))
   let ( /& ) x y = Stdlib.(ref (!x /. y))
   let ( &/ ) x y = Stdlib.(ref (x /. !y))
-  let ( &/& ) x y = Stdlib.(x /. y)
+  let ( &/& ) = Stdlib.( /. )
 
   let ( /= ) x y = Stdlib.(x := (!x /. !y)); x
   let ( /&= ) x y = Stdlib.(x := (!x /. y)); x
@@ -147,7 +147,7 @@ struct
   let ( ** ) x y = Stdlib.(ref (!x ** !y))
   let ( **& ) x y = Stdlib.(ref (!x ** y))
   let ( &** ) x y = Stdlib.(ref (x ** !y))
-  let ( &**& ) x y = Stdlib.(x ** y)
+  let ( &**& ) = Stdlib.( ** )
 
   let inv x = Stdlib.(ref (1. /. !x))
   let sqr x = Stdlib.(ref (!x *. !x))
