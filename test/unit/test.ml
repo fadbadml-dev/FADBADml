@@ -44,22 +44,44 @@ let compare
 
   (eq_float vf vfx 1e-10) && (eq_float df dfx 1e-10)
 
-let test ?count:(count=100) f =
+let test_unary ?count:(count=100) f =
   let (name, arbitrary, f) = f in
   let cell = QCheck.(Test.make_cell ~name:name ~count:count arbitrary f) in
-  QCheck.Test.check_cell cell
+  cell, QCheck.Test.check_cell cell
 
-let test_all ?count:(count=100) tests =
+let test_unary_arr ?count:(count=100) tests =
   let results =
-    Array.map (fun ((name, _, _) as t) -> name, test ~count:count t)
+    Array.map (fun t -> test_unary ~count:count t)
       tests in
 
-  Array.iter (fun (name, res) ->
-      let str_res =
-        if QCheck.TestResult.is_success res then "OK" else "NOT OK"
-      in
-      Printf.printf "%s: %s\n" name str_res
-    ) results
+  let ok = ref true in
+
+  Array.iter (fun (cell, res) ->
+    match res.QCheck.TestResult.state with
+    | Success ->
+      Printf.printf "%s\t:\tOK\n" (QCheck.Test.get_name cell)
+    | Error { instance } ->
+      ok := false;
+      Printf.printf "%s\t:\tNOT OK\n" (QCheck.Test.get_name cell);
+      Printf.printf "\tCounter-example: %s\n"
+        (QCheck.Test.print_c_ex (QCheck.Test.get_arbitrary cell) instance)
+    | Failed { instances } ->
+      ok := false;
+      Printf.printf "%s\t:\tNOT OK\n" (QCheck.Test.get_name cell);
+      Printf.printf "\tCounter-example: %s (1 of %d)\n"
+        (QCheck.Test.print_c_ex (QCheck.Test.get_arbitrary cell)
+           (List.hd instances))
+        (List.length instances)
+    | Failed_other { msg } ->
+      ok := false;
+      Printf.printf "%s\t:\tNOT OK\n" (QCheck.Test.get_name cell);
+      Printf.printf "\tMessage: %s\n" msg
+    ) results;
+
+  print_endline (if !ok then "OK" else "NOT OK");
+  !ok
+
+
 
 (* preset arbitraries *)
 
