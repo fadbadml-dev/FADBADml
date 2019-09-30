@@ -3,160 +3,238 @@ open Test
 let pi = 3.14159265359
 
 let test_pos =
-  "pos",
-  QCheck.float,
-  compare (fun x -> F.(+x))
-    (fun x -> x) (fun _ -> 1.)
+  {
+    uname="pos";
+    uarbitrary=QCheck.float;
+    ufad = (fun x -> F.(+x));
+    uf = (fun x -> x);
+    udfdx = (fun _ -> 1.);
+  }
 
 let test_neg =
-  "neg",
-  QCheck.float,
-  compare (fun x -> F.(-x))
-    (fun x -> -.x) (fun _ -> -1.)
+  {
+    uname="neg";
+    uarbitrary=QCheck.float;
+    ufad = (fun x -> F.(-x));
+    uf = (fun x -> -.x);
+    udfdx = (fun _ -> -1.);
+  }
 
 let test_inv =
-  "inv",
-  non_zero_float,
-  compare (fun x -> F.inv x)
-    (fun x -> 1. /. x) (fun x -> -1. /. (x *. x))
+  {
+    uname="inv";
+    uarbitrary=non_zero_float;
+    ufad=(fun x -> F.inv x);
+    uf=(fun x -> 1. /. x);
+    udfdx=(fun x -> -1. /. (x *. x));
+  }
 
 let test_sqr =
-  "sqr",
-  QCheck.float,
-  compare (fun x -> F.sqr x)
-    (fun x -> x *. x) (fun x -> 2. *. x)
+  {
+    uname="sqr";
+    uarbitrary=QCheck.float;
+    ufad=(fun x -> F.sqr x);
+    uf=(fun x -> x *. x);
+    udfdx=(fun x -> 2. *. x);
+  }
 
 let test_sqrt =
-  "sqrt",
-  QCheck.pos_float,
-  compare (fun x -> F.sqrt x)
-    sqrt (fun x -> 1. /. (2. *. sqrt x))
+  {
+    uname="sqrt";
+    uarbitrary=QCheck.pos_float;
+    ufad=(fun x -> F.sqrt x);
+    uf=sqrt;
+    udfdx=(fun x -> 1. /. (2. *. sqrt x));
+  }
 
 let test_log =
-  "log",
-  non_zero_pfloat,
-  compare (fun x -> F.log x)
-    log (fun x -> 1. /. x)
+  {
+    uname="log";
+    uarbitrary=non_zero_pfloat;
+    ufad=(fun x -> F.log x);
+    uf=log;
+    udfdx=(fun x -> 1. /. x);
+  }
 
 let test_sin =
-  "sin",
-  QCheck.float,
-  compare (fun x -> F.sin x)
-    sin cos
+  {
+    uname="sin";
+    uarbitrary=QCheck.float;
+    ufad=(fun x -> F.sin x);
+    uf=sin;
+    udfdx=cos;
+  }
 
 let test_cos =
-  "cos",
-  QCheck.float,
-  compare (fun x -> F.cos x)
-    cos (fun x -> -. sin x)
+  {
+    uname="cos";
+    uarbitrary=QCheck.float;
+    ufad=(fun x -> F.cos x);
+    uf=cos;
+    udfdx=(fun x -> -. sin x);
+  }
 
 let test_tan =
-  "tan",
-  QCheck.float,
-  compare (fun x -> F.tan x)
-    tan (fun x -> 1. +. (tan x) *. (tan x))
+  {
+    uname="tan";
+    uarbitrary=QCheck.float;
+    ufad=(fun x -> F.tan x);
+    uf=tan;
+    udfdx=(fun x -> 1. +. (tan x) *. (tan x));
+  }
 
 let test_asin =
-  "asin",
-  QCheck.float_range (-1.) 1.,
-  compare (fun x -> F.asin x)
-    asin (fun x -> 1. /. (sqrt (1. -. x *. x)))
+  {
+    uname="asin";
+    uarbitrary=QCheck.float_range (-1.) 1.;
+    ufad=(fun x -> F.asin x);
+    uf=asin;
+    udfdx=(fun x -> 1. /. (sqrt (1. -. x *. x)));
+  }
 
 let test_acos =
-  "cos",
-  QCheck.float_range (-1.) 1.,
-  compare (fun x -> F.acos x)
-    acos (fun x -> -1. /. (sqrt (1. -. x *. x)))
+  {
+    uname="cos";
+    uarbitrary=QCheck.float_range (-1.) 1.;
+    ufad=(fun x -> F.acos x);
+    uf=acos;
+    udfdx=(fun x -> -1. /. (sqrt (1. -. x *. x)));
+  }
 
 let test_atan =
-  "atan",
-  QCheck.float_range (-.pi /. 2.) (pi /. 2.),
-  compare (fun x -> F.atan x)
-    atan (fun x -> 1. /. (1. +. x *. x))
+  {
+    uname="atan";
+    uarbitrary=QCheck.float_range (-.pi /. 2.) (pi /. 2.);
+    ufad=(fun x -> F.atan x);
+    uf=atan;
+    udfdx=(fun x -> 1. /. (1. +. x *. x));
+  }
 
 let test_addV =
-  "addV",
-  QCheck.float,
-  compare (fun x -> F.(x +& 5.))
-    (fun x -> x +. 5.) (fun _ -> 1.)
+  {
+    uname="addV";
+    uarbitrary=QCheck.float;
+    ufad=(fun x -> F.(x +& 5.));
+    uf=(fun x -> x +. 5.);
+    udfdx=(fun _ -> 1.);
+  }
 
 let test_vAdd =
-  "vAdd",
-  QCheck.float,
-  compare (fun x -> F.(5. &+ x))
-    (fun x -> 5. +. x) (fun _ -> 1.)
+  {
+    uname="vAdd";
+    uarbitrary=QCheck.float;
+    ufad=(fun x -> F.(5. &+ x));
+    uf=(fun x -> 5. +. x);
+    udfdx=(fun _ -> 1.);
+  }
 
 let test_cAddV =
-  "cAddV",
-  QCheck.float,
-  compare (fun x -> F.(x +&= 5.))
-    (fun x -> x +. 5.) (fun _ -> 1.)
+  {
+    uname="cAddV";
+    uarbitrary=QCheck.float;
+    ufad=(fun x -> F.(x +&= 5.));
+    uf=(fun x -> x +. 5.);
+    udfdx=(fun _ -> 1.);
+  }
 
 let test_subV =
-  "subV",
-  QCheck.float,
-  compare (fun x -> F.(x -& 5.))
-    (fun x -> x -. 5.) (fun _ -> 1.)
+  {
+    uname="subV";
+    uarbitrary=QCheck.float;
+    ufad=(fun x -> F.(x -& 5.));
+    uf=(fun x -> x -. 5.);
+    udfdx=(fun _ -> 1.);
+  }
 
 let test_vSub =
-  "vSub",
-  QCheck.float,
-  compare (fun x -> F.(5. &- x))
-    (fun x -> 5. -. x) (fun _ -> -1.)
+  {
+    uname="vSub";
+    uarbitrary=QCheck.float;
+    ufad=(fun x -> F.(5. &- x));
+    uf=(fun x -> 5. -. x);
+    udfdx=(fun _ -> -1.);
+  }
 
 let test_cSubV =
-  "cSubV",
-  QCheck.float,
-  compare (fun x -> F.(x -&= 5.))
-    (fun x -> x -. 5.) (fun _ -> 1.)
+  {
+    uname="cSubV";
+    uarbitrary=QCheck.float;
+    ufad=(fun x -> F.(x -&= 5.));
+    uf=(fun x -> x -. 5.);
+    udfdx=(fun _ -> 1.);
+  }
 
 let test_mulV =
-  "mulV",
-  QCheck.float,
-  compare (fun x -> F.(x *& 5.))
-    (fun x -> x *. 5.) (fun _ -> 5.)
+  {
+    uname="mulV";
+    uarbitrary=QCheck.float;
+    ufad=(fun x -> F.(x *& 5.));
+    uf=(fun x -> x *. 5.);
+    udfdx=(fun _ -> 5.);
+  }
 
 let test_vMul =
-  "vMul",
-  QCheck.float,
-  compare (fun x -> F.(5. &* x))
-    (fun x -> 5. *. x) (fun _ -> 5.)
+  {
+    uname="vMul";
+    uarbitrary=QCheck.float;
+    ufad=(fun x -> F.(5. &* x));
+    uf=(fun x -> 5. *. x);
+    udfdx=(fun _ -> 5.);
+  }
 
 let test_cMulV =
-  "cMulV",
-  QCheck.float,
-  compare (fun x -> F.(x *&= 5.))
-    (fun x -> x *. 5.) (fun _ -> 5.)
+  {
+    uname="cMulV";
+    uarbitrary=QCheck.float;
+    ufad=(fun x -> F.(x *&= 5.));
+    uf=(fun x -> x *. 5.);
+    udfdx=(fun _ -> 5.);
+  }
 
 let test_divV =
-  "divV",
-  QCheck.float,
-  compare (fun x -> F.(x /& 5.))
-    (fun x -> x /. 5.) (fun _ -> 1. /. 5.)
+  {
+    uname="divV";
+    uarbitrary=QCheck.float;
+    ufad=(fun x -> F.(x /& 5.));
+    uf=(fun x -> x /. 5.);
+    udfdx=(fun _ -> 1. /. 5.);
+  }
 
 let test_vDiv =
-  "vDiv",
-  QCheck.float,
-  compare (fun x -> F.(5. &/ x))
-    (fun x -> 5. /. x) (fun x -> -5. /. (x *. x))
+  {
+    uname="vDiv";
+    uarbitrary=QCheck.float;
+    ufad=(fun x -> F.(5. &/ x));
+    uf=(fun x -> 5. /. x);
+    udfdx=(fun x -> -5. /. (x *. x));
+  }
 
 let test_cDivV =
-  "cDivV",
-  QCheck.float,
-  compare (fun x -> F.(x /&= 5.))
-    (fun x -> x /. 5.) (fun _ -> 1. /. 5.)
+  {
+    uname="cDivV";
+    uarbitrary=QCheck.float;
+    ufad=(fun x -> F.(x /&= 5.));
+    uf=(fun x -> x /. 5.);
+    udfdx=(fun _ -> 1. /. 5.);
+  }
 
 let test_powV =
-  "powV",
-  QCheck.float,
-  compare (fun x -> F.(x **& 5.))
-    (fun x -> x ** 5.) (fun x -> 5. *. x ** 4.)
+  {
+    uname="powV";
+    uarbitrary=QCheck.float;
+    ufad=(fun x -> F.(x **& 5.));
+    uf=(fun x -> x ** 5.);
+    udfdx=(fun x -> 5. *. x ** 4.);
+  }
 
 let test_vPow =
-  "vPow",
-  QCheck.float,
-  compare (fun x -> F.(5. &** x))
-    (fun x -> 5. ** x) (fun x -> (log 5.) *. 5. ** x)
+  {
+    uname="vPow";
+    uarbitrary=QCheck.float;
+    ufad=(fun x -> F.(5. &** x));
+    uf=(fun x -> 5. ** x);
+    udfdx=(fun x -> (log 5.) *. 5. ** x);
+  }
 
 let unary = [|
   test_pos; test_neg;
@@ -171,22 +249,66 @@ let unary = [|
 |]
 
 let test_add =
-  "add",
-  QCheck.pair QCheck.float QCheck.float,
-  compare2 (fun x y -> F.(x + y))
-    ( +. ) (fun _ _ -> 1.) (fun _ _ -> 1.)
+  {
+    bname="add";
+    barbitrary=QCheck.pair QCheck.float QCheck.float;
+    bfad=(fun x y -> F.(x + y));
+    bf=( +. );
+    bdfdx=(fun _ _ -> 1.);
+    bdfdy=(fun _ _ -> 1.);
+  }
 
-let binary = [|
-  test_add
-|]
+let test_sub =
+  {
+    bname="sub";
+    barbitrary=QCheck.pair QCheck.float QCheck.float;
+    bfad=(fun x y -> F.(x - y));
+    bf=( -. );
+    bdfdx=(fun _ _ -> 1.);
+    bdfdy=(fun _ _ -> -1.);
+  }
 
-let _ =
+let test_mul =
+  {
+    bname="mul";
+    barbitrary=QCheck.pair QCheck.float QCheck.float;
+    bfad=(fun x y -> F.(x * y));
+    bf=( *. );
+    bdfdx=(fun _ y -> y);
+    bdfdy=(fun x _ -> x);
+  }
+
+let test_div =
+  {
+    bname="div";
+    barbitrary=QCheck.pair QCheck.float QCheck.float;
+    bfad=(fun x y -> F.(x / y));
+    bf=( /. );
+    bdfdx=(fun _ y -> 1. /. y);
+    bdfdy=(fun x y -> -. x /. (y *. y));
+  }
+
+let test_pow =
+  {
+    bname="pow";
+    barbitrary=QCheck.pair (QCheck.float_range 0. 100.) (int_float_range 1 10);
+    bfad=(fun x y -> F.(x ** y));
+    bf=( ** );
+    bdfdx=(fun x y -> y *. x ** (y -. 1.));
+    bdfdy=(fun x y -> (log x) *. x ** y);
+  }
+
+let binary = [| test_add; test_sub; test_mul; test_div; test_pow |]
+
+let test_all () =
   Random.self_init ();
 
   print_endline "---- UNARY FUNCTIONS";
-  ignore (test_unary_arr ~count:1000 unary);
+  ignore (test_arr ~count:1000 unary);
 
   print_endline "\n---- BINARY FUNCTIONS";
-  ignore (test_binary_arr ~count:1000 binary);
+  ignore (test2_arr ~count:1000 binary);
 
   ()
+
+let _ = test_all ()
