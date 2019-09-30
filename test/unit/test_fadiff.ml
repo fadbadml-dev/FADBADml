@@ -170,18 +170,23 @@ let unary = [|
   test_powV; test_vPow;
 |]
 
-(* let test_add =
+let test_add =
   "add",
-  (QCheck.float, QCheck.float),
+  QCheck.pair QCheck.float QCheck.float,
   compare2 (fun x y -> F.(x + y))
-    ( + ) (fun _ _ -> 1) (fun _ _ -> 1)
+    ( +. ) (fun _ _ -> 1.) (fun _ _ -> 1.)
 
 let binary = [|
   test_add
-|] *)
+|]
 
 let _ =
   Random.self_init ();
 
   print_endline "---- UNARY FUNCTIONS";
-  test_unary_arr ~count:1000 unary
+  ignore (test_unary_arr ~count:1000 unary);
+
+  print_endline "\n---- BINARY FUNCTIONS";
+  ignore (test_binary_arr ~count:1000 binary);
+
+  ()
