@@ -30,12 +30,16 @@ let eq_float a b epsilon =
   if a = b then
     (* shortcut, handles infinities *)
     true
+  else if Float.is_nan a then Float.is_nan b
+  else if Float.is_nan b then Float.is_nan a
   else if a = 0. || b = 0. || (absA +. absB < epsilon_float) then
     (* a or b is zero or both are extremely close to it
        relative error is less meaningful here *)
     diff < (epsilon *. epsilon_float)
   else
     diff /. (min (absA +. absB) max_float) < epsilon
+
+let eq_float a b = eq_float a b 1e-10
 
 let show_test t v =
   let x = F.make v in
@@ -75,11 +79,11 @@ let show_test2 t (v1, v2) =
 
   Printf.printf "\tv = %e, %e\n" v1 v2;
   Printf.printf "\tf    : expected %e, got %e ... %s\n" vf actual_vf
-    (string_of_bool (vf=actual_vf));
+    (string_of_bool (eq_float vf actual_vf));
   Printf.printf "\tdfdx : expected %e, got %e ... %s\n" dfdx_fad actual_dfdx
-    (string_of_bool (dfdx_fad=actual_dfdx));
+    (string_of_bool (eq_float dfdx_fad actual_dfdx));
   Printf.printf "\tdfdy : expected %e, got %e ... %s\n" dfdy_fad actual_dfdy
-    (string_of_bool (dfdy_fad=actual_dfdy));
+    (string_of_bool (eq_float dfdy_fad actual_dfdy));
   ()
 
 let show_result test (cell, res) =
@@ -145,8 +149,8 @@ let compare t v =
   let dfdx_fad = F.d v_fad 0 in
   let actual_dfdx = t.udfdx v in
 
-  (eq_float vf actual_vf 1e-10) &&
-  (eq_float dfdx_fad actual_dfdx 1e-10)
+  (eq_float vf actual_vf) &&
+  (eq_float dfdx_fad actual_dfdx)
 
 let test ?count:(count=100) f =
   let cell = QCheck.(Test.make_cell ~name:f.uname ~count:count f.uarbitrary
@@ -180,9 +184,9 @@ let compare2 t (v1, v2) =
   let dfdy_fad = F.d v_fad 1 in
   let actual_dfdy = t.bdfdy v1 v2 in
 
-  (eq_float vf actual_vf 1e-10) &&
-  (eq_float dfdx_fad actual_dfdx 1e-10) &&
-  (eq_float dfdy_fad actual_dfdy 1e-10)
+  (eq_float vf actual_vf) &&
+  (eq_float dfdx_fad actual_dfdx) &&
+  (eq_float dfdy_fad actual_dfdy)
 
 let test2 ?count:(count=100) f =
   let cell = QCheck.(Test.make_cell ~name:f.bname ~count:count f.barbitrary
