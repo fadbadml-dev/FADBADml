@@ -11,6 +11,7 @@ struct
     mutable m_diff : Op.t array;
   }
 
+  type elt = Op.elt
   type scalar = Op.scalar
 
   let create () = {
