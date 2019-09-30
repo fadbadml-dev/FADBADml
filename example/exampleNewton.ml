@@ -6,9 +6,9 @@ module FF = Fadbad.F(F)
 let f_heat1D x =
   let alpha = 1. in
   let dfdx = FF.deriv x 0 in
-  let dfdxx = F.deriv dfdx 0 in
+  let dfdxx = F.d dfdx 0 in
   (*let () = print_endline ("DEBUG: " ^ (string_of_float (Op.get dfdxx))) in*)
-  FF.(alpha &* (FF.lift (F.lift dfdxx)))
+  FF.(alpha &* (FF.make dfdxx))
 
 let newton_step f x0 dt =
   let open FF in
@@ -26,11 +26,11 @@ let newton_integration f x0 dt tEnd =
 
 let () =
   let tEnd = 100. in
-  let dt = 0.1 in
+  let dt = 0.001 in
   let temperature x =
     let open FF in
     (* 1 / (1 + (x-2)^2)  +  1 / (1 + (x+2)^2) *)
-    (1. &/ (1. &+ (sqr (x -& 2.)))) + (1. &/ (1. &+ (sqr (x +& 2.))))
+    (inv (1. &+ (sqr (x -& 2.)))) + (inv (1. &+ (sqr (x +& 2.))))
   in
   let x = F.make 0. in
   let () = F.diff x 0 1 in

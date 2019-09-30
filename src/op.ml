@@ -26,6 +26,9 @@ sig
 
   val scalar_one : scalar
 
+  val diff_n : t -> int -> int -> int -> unit
+  val d_n : t -> int list -> elt
+
   val ( ~+ ) : t -> t
   val ( ~- ) : t -> t
 
@@ -105,6 +108,11 @@ struct
 
   let scalar_one = 1.
 
+  let diff_n _ _ _ d =
+    Utils.user_assert (d = 0) "diff_n : cannot differentiate a float"
+  let d_n v i_l =
+    Utils.user_assert (i_l = []) "d_n : cannot get derivative of a float";
+    get v
 
   let ( ~+ ) = copy
   let ( ~+& ) x = x

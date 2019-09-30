@@ -11,8 +11,8 @@ fadbad.cma: $(CMO) fadbad.cmo
 %.cmo:%.ml
 	ocamlc -c $<
 
-clean:
-	rm -rf *.cmo *.cmi
+clean cleanall:
+	rm -rf *.cmo *.cmi .depend
 
 -include .depend
 .depend:

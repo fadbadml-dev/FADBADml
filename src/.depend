@@ -1,10 +1,26 @@
+badiff.cmo : \
+    utils.cmo \
+    op.cmo
+badiff.cmx : \
+    utils.cmx \
+    op.cmx
+diff.cmi : \
+    op.cmo
+fadbad.cmo : \
+    op.cmo \
+    fadiff.cmo
+fadbad.cmx : \
+    op.cmx \
+    fadiff.cmx
 fadiff.cmo : \
     utils.cmo \
     op.cmo
 fadiff.cmx : \
     utils.cmx \
     op.cmx
-op.cmo :
-op.cmx :
+op.cmo : \
+    utils.cmo
+op.cmx : \
+    utils.cmx
 utils.cmo :
 utils.cmx :

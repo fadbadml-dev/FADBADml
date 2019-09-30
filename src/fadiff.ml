@@ -44,6 +44,10 @@ struct
     if i < v.m_length then v.m_diff.(i)
     else Op.zero ()
 
+  let d_n v i_l =
+    user_assert (i_l <> []) "d_n : got empty list";
+    Op.d_n (v.m_diff.(List.hd i_l)) (List.tl i_l)
+
   let d v i = Op.get (deriv v i)
 
   let diff v idx n =
@@ -59,6 +63,12 @@ struct
 
     Array.fill v.m_diff 0 v.m_length (Op.zero ());
     v.m_diff.(idx) <- Op.one ()
+
+  let diff_n v idx n d =
+    if d > 0 then begin
+      diff v idx n;
+      Op.diff_n (value v) idx n (d-1)
+    end
 
   let depend v = v.m_length <> 0
 
