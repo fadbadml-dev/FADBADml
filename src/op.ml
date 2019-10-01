@@ -1,41 +1,57 @@
-(* NAMING CONVENTIONS :
-   - the operators on values of type t have the same name as the normal
-     operators (ie + for add, - for sub, etc...)
-   - the binary operators on values of type t and values of type scalar have
-     an & in their name (ie t + scalar is called +& and scalar + t is called &+)
-   - the operators on values of type scalar have two & in their name
-     (ie scalar - scalar is called &-&)
-   - some terms have the prefix scalar_ : they are functions on scalars
-     (ie scalar_log) or scalar values (scalar_one)
-*)
-
 module type S =
 sig
+(** NAMING CONVENTIONS :
+    - the operators on values of type t have the same name as the normal
+      operators (ie + for add, - for sub, etc...)
+    - the binary operators on values of type t and values of type scalar have
+      an & in their name (ie t + scalar is called +& and scalar + t is called &+)
+    - the operators on values of type scalar have two & in their name
+      (ie scalar - scalar is called &-&)
+    - some terms have the prefix scalar_ : they are functions on scalars
+      (ie scalar_log) or scalar values (scalar_one)
+*)
+
   type t
   type elt
+  (** Type of values *)
+
   type scalar
+  (** Type of scalars *)
 
   val make : elt -> t
+  (** Wrap a value *)
+
   val get : t -> elt
+  (** Unwrap a value *)
 
   val copy : t -> t
 
   val zero : unit -> t
+  (** Construct a fresh value corresponding to 0 *)
   val one : unit -> t
+  (** Construct a fresh value corresponding to 1 *)
   val two : unit -> t
+  (** Construct a fresh value corresponding to 2 *)
 
   val scalar_one : scalar
+  (** Value one of type scalar *)
+  (* this value is used in the derivative of powV *)
 
   val diff_n : t -> int -> int -> int -> unit
+  (** [diff_n x i dim n] assigns [i] as index of variable [x] out of [dim]
+      up to depth [n] *)
+
   val d_n : t -> int list -> elt
+  (** [d_n f \[i1;...;in\]] returns the value of df/dx1...dxn *)
 
   val ( ~+ ) : t -> t
+  (** unary plus *)
   val ( ~- ) : t -> t
+  (** unary minus *)
 
   val ( + ) : t -> t -> t
   val ( +& ) : t -> scalar -> t
   val ( &+ ) : scalar -> t -> t
-  (* val ( &+& ) : scalar -> scalar -> scalar *)
 
   val ( += ) : t -> t -> t
   val ( +&= ) : t -> scalar -> t
@@ -51,7 +67,6 @@ sig
   val ( * ) : t -> t -> t
   val ( *& ) : t -> scalar -> t
   val ( &* ) : scalar -> t -> t
-  (* val ( &*& ) : scalar -> scalar -> scalar *)
 
   val ( *= ) : t -> t -> t
   val ( *&= ) : t -> scalar -> t
@@ -59,7 +74,6 @@ sig
   val ( / ) : t -> t -> t
   val ( /& ) : t -> scalar -> t
   val ( &/ ) : scalar -> t -> t
-  (* val ( &/& ) : scalar -> scalar -> scalar *)
 
   val ( /= ) : t -> t -> t
   val ( /&= ) : t -> scalar -> t
@@ -67,7 +81,6 @@ sig
   val ( ** ) : t -> t -> t
   val ( **& ) : t -> scalar -> t
   val ( &** ) : scalar -> t -> t
-  (* val ( &**& ) : scalar -> scalar -> scalar *)
 
   val inv : t -> t
   val sqr : t -> t
@@ -115,10 +128,7 @@ struct
     get v
 
   let ( ~+ ) = copy
-  let ( ~+& ) x = x
-
   let ( ~- ) x = Stdlib.(ref (~-. !x))
-  let ( ~-& ) x = Stdlib.(~-. !x)
 
   let ( + ) x y = Stdlib.(ref (!x +. !y))
   let ( +& ) x y = Stdlib.(ref (!x +. y))
