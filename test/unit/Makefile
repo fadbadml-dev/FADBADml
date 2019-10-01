@@ -6,7 +6,10 @@ TESTS = test_fadiff.byte
 
 all: $(TESTS)
 
-clean:
+run: $(TESTS)
+	for test in $(TESTS) ; do ./$$test ; done
+
+clean cleanall:
 	rm -rf *.cm[ixo] *.byte .depend
 
 -include .depend

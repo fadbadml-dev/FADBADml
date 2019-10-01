@@ -12,7 +12,7 @@ $(EXAMPLES): $(FADBAD)
 $(FADBAD):
 	$(MAKE) -C ../src/
 
-clean:
+clean cleanall:
 	rm -rf *.cm[ixo] *.byte .depend
 
 -include .depend
