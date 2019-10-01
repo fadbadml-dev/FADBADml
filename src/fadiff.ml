@@ -7,7 +7,6 @@ struct
 
   type t = {
     m_val : Op.t;
-    mutable m_length : int;
     mutable m_diff : Op.t array;
   }
 
@@ -16,7 +15,6 @@ struct
 
   let create () = {
     m_val = Op.zero ();
-    m_length = 0;
     m_diff = Array.make 0 (Op.zero ());
   }
 
@@ -33,68 +31,74 @@ struct
 
   let copy v = {
     m_val = Op.copy v.m_val;
-    m_length = v.m_length;
     m_diff = Array.map Op.copy v.m_diff;
   }
 
-  let length v = v.m_length
+  let length v = Array.length v.m_diff
   let value v = v.m_val
 
+  (** [deriv f i] retrieves the derivative of variable of index [i] in
+      computation [f] *)
   let deriv v i =
-    if i < v.m_length then v.m_diff.(i)
+    if i < (length v) then v.m_diff.(i)
     else Op.zero ()
 
+  (** [d_n f \[i1;...;in\]] returns the value of df/dx{_i1}...dx{_in} *)
   let d_n v i_l =
     user_assert (i_l <> []) "d_n : got empty list";
     Op.d_n (v.m_diff.(List.hd i_l)) (List.tl i_l)
 
+  (** [d f i] retrieves the derivative of variable of index [i] in
+      computation [f] as an [elt] *)
   let d v i = Op.get (deriv v i)
 
+  (** [diff x i n] assigns [i] as index of variable [x] out of [n] *)
   let diff v idx n =
     user_assert (idx < n)
       ("Index " ^ (string_of_int idx) ^
        " out of bounds [0," ^ (string_of_int n) ^ "]");
 
-    if v.m_length = 0 then begin
-      v.m_length <- n;
+    if (length v) = 0 then begin
       v.m_diff <- Array.make n (Op.zero ());
     end else
-      user_assert (v.m_length = n) "derivative vectors not of same length";
+      user_assert ((length v) = n) "derivative vectors not of same length";
 
-    Array.fill v.m_diff 0 v.m_length (Op.zero ());
+    Array.fill v.m_diff 0 (length v) (Op.zero ());
     v.m_diff.(idx) <- Op.one ()
 
+  (** [diff_n x i dim n] assigns [i] as index of variable [x] out of [dim]
+      up to depth [n] *)
   let diff_n v idx n d =
     if d > 0 then begin
       diff v idx n;
       Op.diff_n (value v) idx n (d-1)
     end
 
-  let depend v = v.m_length <> 0
+  (**/**)
+  let depend v = (length v) <> 0
 
   let setDepend v v' =
-    internal_assert (v'.m_length > 0) "input is not a dependent variable";
-    if (v.m_length = 0) then begin
-      v.m_length <- v'.m_length;
-      v.m_diff <- Array.make v.m_length (Op.zero ());
+    internal_assert ((length v') > 0) "input is not a dependent variable";
+    if ((length v) = 0) then begin
+      v.m_diff <- Array.make (length v') (Op.zero ());
     end else
-      user_assert (v.m_length = v'.m_length)
+      user_assert ((length v) = (length v'))
         ("derivative vectors not of the same length "
-         ^ (string_of_int v.m_length) ^ "," ^ (string_of_int v'.m_length))
+         ^ (string_of_int (length v)) ^ "," ^ (string_of_int (length v')))
 
   let setDepend2 v v1 v2 =
-    internal_assert (v1.m_length = v2.m_length)
+    internal_assert ((length v1) = (length v2))
       ("derivative vectors not of same length "
-       ^ (string_of_int v1.m_length) ^ "," ^ (string_of_int v2.m_length));
-    internal_assert (v1.m_length > 0) "lhs-input is not a dependent variable";
-    internal_assert (v2.m_length > 0) "rhs-input is not a dependent variable";
-    if (v.m_length = 0) then begin
-      v.m_length <- v1.m_length;
-      v.m_diff <- Array.make v.m_length (Op.zero ());
+       ^ (string_of_int (length v1)) ^ "," ^ (string_of_int (length v2)));
+    internal_assert ((length v1) > 0) "lhs-input is not a dependent variable";
+    internal_assert ((length v2) > 0) "rhs-input is not a dependent variable";
+    if ((length v) = 0) then begin
+      v.m_diff <- Array.make (length v1) (Op.zero ());
     end else
-      user_assert (v.m_length = v1.m_length)
+      user_assert ((length v) = (length v1))
         ("derivative vectors not of the same length "
-         ^ (string_of_int v.m_length) ^ "," ^ (string_of_int v1.m_length))
+         ^ (string_of_int (length v)) ^ "," ^ (string_of_int (length v1)))
+  (**/**)
 
   (* ------------------------------ *)
   (* COMPARISON OPERATORS *)
@@ -134,26 +138,27 @@ struct
     let res = lift Op.(v.m_val +& v') in
     if depend v then begin
       setDepend res v;
-      Array.blit v.m_diff 0 res.m_diff 0 v.m_length
+      Array.blit v.m_diff 0 res.m_diff 0 (length v)
     end; res
 
   let ( &+ ) v v' =
     let res = lift Op.(v &+ v'.m_val) in
     if depend v' then begin
       setDepend res v';
-      Array.blit v'.m_diff 0 res.m_diff 0 v'.m_length
+      Array.blit v'.m_diff 0 res.m_diff 0 (length v')
     end; res
 
+  (**/**)
   let addV (v : t) (v' : Op.t) : t =
     let res = lift Op.(v.m_val + v') in
     setDepend res v;
-    Array.blit v.m_diff 0 res.m_diff 0 v.m_length;
+    Array.blit v.m_diff 0 res.m_diff 0 (length v);
     res
 
   let vAdd v v' =
     let res = lift Op.(v + v'.m_val) in
     setDepend res v';
-    Array.blit v'.m_diff 0 res.m_diff 0 v'.m_length;
+    Array.blit v'.m_diff 0 res.m_diff 0 (length v');
     res
 
   let add v v' =
@@ -163,6 +168,7 @@ struct
         res.m_diff.(i) <- Op.(v.m_diff.(i) + v'.m_diff.(i)))
       res.m_diff;
     res
+  (**/**)
 
   let ( + ) v v' =
     match depend v, depend v' with
@@ -179,7 +185,7 @@ struct
         Array.iteri (fun i vi -> ignore Op.(vi += v'.m_diff.(i))) v.m_diff
       else begin
         setDepend v v';
-        Array.blit v'.m_diff 0 v.m_diff 0 v.m_length
+        Array.blit v'.m_diff 0 v.m_diff 0 (length v)
       end;
       v
     end
@@ -192,7 +198,7 @@ struct
     let res = lift Op.(v.m_val -& v') in
     if depend v then begin
       setDepend res v;
-      Array.blit v.m_diff 0 res.m_diff 0 v.m_length
+      Array.blit v.m_diff 0 res.m_diff 0 (length v)
     end; res
 
   let ( &- ) v v' =
@@ -203,10 +209,11 @@ struct
         res.m_diff
     end; res
 
+  (**/**)
   let subV v v' =
     let res = lift Op.(v.m_val - v') in
     setDepend res v;
-    Array.blit v.m_diff 0 res.m_diff 0 v.m_length;
+    Array.blit v.m_diff 0 res.m_diff 0 (length v);
     res
 
   let vSub v v' =
@@ -223,6 +230,7 @@ struct
         res.m_diff.(i) <- Op.( v.m_diff.(i) - v'.m_diff.(i) ))
       res.m_diff;
     res
+  (**/**)
 
   let ( - ) v v' =
     match depend v, depend v' with
@@ -265,6 +273,7 @@ struct
         res.m_diff
     end; res
 
+  (**/**)
   let mulV v v' =
     let res = lift Op.(v.m_val * v') in
     setDepend res v;
@@ -288,6 +297,7 @@ struct
       )
       res.m_diff;
     res
+  (**/**)
 
   let ( * ) v v' =
     match depend v, depend v' with
@@ -343,6 +353,7 @@ struct
     end;
     res
 
+  (**/**)
   let divV v v' =
     let cval = Op.(v.m_val / v') in
     let res = lift cval in
@@ -373,6 +384,7 @@ struct
           Op.((v.m_diff.(i) - (cval * v'.m_diff.(i))) / v'.m_val)
       ) res.m_diff;
     res
+  (**/**)
 
   let ( / ) v v' =
     match depend v, depend v' with
@@ -429,6 +441,7 @@ struct
         ) v'.m_diff
     end; res
 
+  (**/**)
   let powV v v' =
     let res = lift Op.(v.m_val ** v') in
     let tmp = Op.(v' * (v.m_val ** (v' - (one ())))) in
@@ -456,6 +469,7 @@ struct
         res.m_diff.(i) <- Op.((tmp1 * v.m_diff.(i)) + (tmp2 * v'.m_diff.(i)))
       ) v.m_diff;
     res
+  (**/**)
 
   let ( ** ) v v' =
     match depend v, depend v' with
