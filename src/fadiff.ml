@@ -11,6 +11,7 @@ struct
   }
 
   type elt = Op.elt
+
   type scalar = Op.scalar
 
   let create () = {
@@ -27,7 +28,15 @@ struct
   let one () = lift (Op.one ())
   let two () = lift (Op.two ())
 
-  let scalar_one = Op.scalar_one
+  let scale x a = {
+    m_val = Op.scale x.m_val a;
+    m_diff = Array.map (fun x -> Op.scale x a) x.m_diff;
+  }
+
+  let translate x a = {
+    m_val = Op.translate x.m_val a;
+    m_diff = Array.map Op.copy x.m_diff;
+  }
 
   let copy v = {
     m_val = Op.copy v.m_val;
@@ -54,7 +63,7 @@ struct
 
   (** [diff x i n] assigns [i] as index of variable [x] out of [n] *)
   let diff v idx n =
-    user_assert (idx < n)
+    user_assert (idx < n && idx >= 0)
       ("Index " ^ (string_of_int idx) ^
        " out of bounds [0," ^ (string_of_int n) ^ "]");
 
@@ -104,28 +113,11 @@ struct
   (* COMPARISON OPERATORS *)
   (* ------------------------------ *)
 
-  let ( =& ) v v' = Op.( v.m_val = v' )
-  let ( &= ) v v' = Op.( v = v'.m_val )
   let ( = ) v v' = Op.( v.m_val = v'.m_val )
-
-  let ( <>& ) v v' = Op.( v.m_val <> v' )
-  let ( &<> ) v v' = Op.( v <> v'.m_val )
   let ( <> ) v v' = Op.( v.m_val <> v'.m_val )
-
-  let ( <=& ) v v' = Op.( v.m_val <= v' )
-  let ( &<= ) v v' = Op.( v <= v'.m_val )
   let ( <= ) v v' = Op.( v.m_val <= v'.m_val )
-
-  let ( <& ) v v' = Op.( v.m_val < v' )
-  let ( &< ) v v' = Op.( v < v'.m_val )
   let ( < ) v v' = Op.( v.m_val < v'.m_val )
-
-  let ( >=& ) v v' = Op.( v.m_val >= v' )
-  let ( &>= ) v v' = Op.( v >= v'.m_val )
   let ( >= ) v v' = Op.( v.m_val >= v'.m_val )
-
-  let ( >& ) v v' = Op.( v.m_val > v' )
-  let ( &> ) v v' = Op.( v > v'.m_val )
   let ( > ) v v' = Op.( v.m_val > v'.m_val )
 
   (* ------------------------------ *)
@@ -133,20 +125,6 @@ struct
   (* ------------------------------ *)
 
   (* ADD *)
-
-  let ( +& ) (v : t) (v' : scalar) : t =
-    let res = lift Op.(v.m_val +& v') in
-    if depend v then begin
-      setDepend res v;
-      Array.blit v.m_diff 0 res.m_diff 0 (length v)
-    end; res
-
-  let ( &+ ) v v' =
-    let res = lift Op.(v &+ v'.m_val) in
-    if depend v' then begin
-      setDepend res v';
-      Array.blit v'.m_diff 0 res.m_diff 0 (length v')
-    end; res
 
   (**/**)
   let addV (v : t) (v' : Op.t) : t =
@@ -190,24 +168,7 @@ struct
       v
     end
 
-  let ( +&= ) v v' = ignore Op.(v.m_val +&= v'); v
-
   (* SUB *)
-
-  let ( -& ) v v' =
-    let res = lift Op.(v.m_val -& v') in
-    if depend v then begin
-      setDepend res v;
-      Array.blit v.m_diff 0 res.m_diff 0 (length v)
-    end; res
-
-  let ( &- ) v v' =
-    let res = lift Op.(v &- v'.m_val) in
-    if depend v' then begin
-      setDepend res v';
-      Array.iteri (fun i _ -> res.m_diff.(i) <- Op.( - v'.m_diff.(i) ))
-        res.m_diff
-    end; res
 
   (**/**)
   let subV v v' =
@@ -239,8 +200,6 @@ struct
     | false, true -> vSub v.m_val v'
     | true, true -> sub v v'
 
-  let ( &-& ) = Op.( &-& )
-
   let ( -= ) v v' =
     ignore Op.(v.m_val -= v'.m_val);
     if depend v' then begin
@@ -253,25 +212,7 @@ struct
     end;
     v
 
-  let ( -&= ) v v' = ignore Op.(v.m_val -&= v'); v
-
   (* MUL *)
-
-  let ( *& ) v v' =
-    let res = lift Op.(v.m_val *& v') in
-    if depend v then begin
-      setDepend res v;
-      Array.iteri (fun i _ -> res.m_diff.(i) <- Op.(v.m_diff.(i) *& v'))
-        res.m_diff
-    end; res
-
-  let ( &* ) v v' =
-    let res = lift Op.(v &* v'.m_val) in
-    if depend v' then begin
-      setDepend res v';
-      Array.iteri (fun i _ -> res.m_diff.(i) <- Op.(v &* v'.m_diff.(i)))
-        res.m_diff
-    end; res
 
   (**/**)
   let mulV v v' =
@@ -323,35 +264,7 @@ struct
     ignore Op.( v.m_val *= v'.m_val);
     v
 
-  let ( *&= ) v v' =
-    ignore Op.( v.m_val *&= v');
-    if depend v then begin
-      Array.iteri (fun i vi -> ignore Op.( vi *&= v')) v.m_diff
-    end;
-    v
-
   (* DIV *)
-
-  let ( /& ) v v' =
-    let cval = Op.(v.m_val /& v') in
-    let res = lift cval in
-    if depend v then begin
-      setDepend res v;
-      Array.iteri (fun i _ -> res.m_diff.(i) <- Op.(v.m_diff.(i) /& v'))
-        res.m_diff
-    end;
-    res
-
-  let ( &/ ) v v' =
-    let cval = Op.(v &/ v'.m_val) in
-    let res = lift cval in
-    if depend v' then begin
-      let tmp = Op.(- res.m_val / v'.m_val) in
-      setDepend res v';
-      Array.iteri (fun i _ -> res.m_diff.(i) <- Op.(tmp * v'.m_diff.(i)))
-        res.m_diff
-    end;
-    res
 
   (**/**)
   let divV v v' =
@@ -412,34 +325,7 @@ struct
     end;
     v
 
-  let ( /&= ) v v' =
-    ignore Op.(v.m_val /&= v');
-    if depend v then begin
-      Array.iteri (fun i vi -> ignore Op.(vi /&= v')) v.m_diff
-    end;
-    v
-
   (* POW *)
-
-  let ( **& ) v v' =
-    let res = lift Op.(v.m_val **& v') in
-    if depend v then begin
-      let tmp = Op.(v' &* (v.m_val **& (v' &-& scalar_one))) in
-      setDepend res v;
-      Array.iteri (fun i _ ->
-          res.m_diff.(i) <- Op.(tmp * v.m_diff.(i))
-        ) v.m_diff
-    end; res
-
-  let ( &** ) v v' =
-    let res = lift Op.(v &** v'.m_val) in
-    if depend v' then begin
-      let tmp = Op.(res.m_val *& (scalar_log v)) in
-      setDepend res v';
-      Array.iteri (fun i _ ->
-          res.m_diff.(i) <- Op.(tmp * v'.m_diff.(i))
-        ) v'.m_diff
-    end; res
 
   (**/**)
   let powV v v' =
@@ -537,8 +423,6 @@ struct
         res.m_diff;
     end;
     res
-
-  let scalar_log = Op.scalar_log
 
   let sqrt v =
     let res = lift Op.(sqrt v.m_val) in

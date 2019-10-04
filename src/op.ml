@@ -17,6 +17,7 @@ sig
 
   type scalar
   (** Type of scalars *)
+  (* (t, +, .) should be a commutative S-module where S is the set of scalars *)
 
   val make : elt -> t
   (** Wrap a value *)
@@ -33,9 +34,8 @@ sig
   val two : unit -> t
   (** Construct a fresh value corresponding to 2 *)
 
-  val scalar_one : scalar
-  (** Value one of type scalar *)
-  (* this value is used in the derivative of powV *)
+  val scale : t -> scalar -> t
+  val translate : t -> scalar -> t
 
   val diff_n : t -> int -> int -> int -> unit
   (** [diff_n x i dim n] assigns [i] as index of variable [x] out of [dim]
@@ -45,49 +45,29 @@ sig
   (** [d_n f \[i1;...;in\]] returns the value of df/dx1...dxn *)
 
   val ( ~+ ) : t -> t
-  (** unary plus *)
+  (** unary plus (with copy) *)
   val ( ~- ) : t -> t
-  (** unary minus *)
+  (** unary minus (with copy) *)
 
   val ( + ) : t -> t -> t
-  val ( +& ) : t -> scalar -> t
-  val ( &+ ) : scalar -> t -> t
-
   val ( += ) : t -> t -> t
-  val ( +&= ) : t -> scalar -> t
 
   val ( - ) : t -> t -> t
-  val ( -& ) : t -> scalar -> t
-  val ( &- ) : scalar -> t -> t
-  val ( &-& ) : scalar -> scalar -> scalar
-
   val ( -= ) : t -> t -> t
-  val ( -&= ) : t -> scalar -> t
 
   val ( * ) : t -> t -> t
-  val ( *& ) : t -> scalar -> t
-  val ( &* ) : scalar -> t -> t
-
   val ( *= ) : t -> t -> t
-  val ( *&= ) : t -> scalar -> t
 
   val ( / ) : t -> t -> t
-  val ( /& ) : t -> scalar -> t
-  val ( &/ ) : scalar -> t -> t
-
   val ( /= ) : t -> t -> t
-  val ( /&= ) : t -> scalar -> t
 
   val ( ** ) : t -> t -> t
-  val ( **& ) : t -> scalar -> t
-  val ( &** ) : scalar -> t -> t
 
   val inv : t -> t
   val sqr : t -> t
 
   val sqrt : t -> t
   val log : t -> t
-  val scalar_log : scalar -> scalar
   val exp : t -> t
   val sin : t -> t
   val cos : t -> t
@@ -119,7 +99,8 @@ struct
   let one () = ref 1.
   let two () = ref 2.
 
-  let scalar_one = 1.
+  let scale x a = ref (a *. !x)
+  let translate x a = ref (!x +. a)
 
   let diff_n _ _ _ d =
     Utils.user_assert (d = 0) "diff_n : cannot differentiate a float"
@@ -131,48 +112,24 @@ struct
   let ( ~- ) x = Stdlib.(ref (~-. !x))
 
   let ( + ) x y = Stdlib.(ref (!x +. !y))
-  let ( +& ) x y = Stdlib.(ref (!x +. y))
-  let ( &+ ) x y = Stdlib.(ref (x +. !y))
-  let ( &+& ) = Stdlib.( +. )
-
   let ( += ) x y = Stdlib.(x := (!x +. !y)); x
-  let ( +&= ) x y = Stdlib.(x := (!x +. y)); x
 
   let ( - ) x y = Stdlib.(ref (!x -. !y))
-  let ( -& ) x y = Stdlib.(ref (!x -. y))
-  let ( &- ) x y = Stdlib.(ref (x -. !y))
-  let ( &-& ) = Stdlib.( -. )
-
   let ( -= ) x y = Stdlib.(x := (!x -. !y)); x
-  let ( -&= ) x y = Stdlib.(x := (!x -. y)); x
 
   let ( * ) x y = Stdlib.(ref (!x *. !y))
-  let ( *& ) x y = Stdlib.(ref (!x *. y))
-  let ( &* ) x y = Stdlib.(ref (x *. !y))
-  let ( &*& ) = Stdlib.( *. )
-
   let ( *= ) x y = Stdlib.(x := (!x *. !y)); x
-  let ( *&= ) x y = Stdlib.(x := (!x *. y)); x
 
   let ( / ) x y = Stdlib.(ref (!x /. !y))
-  let ( /& ) x y = Stdlib.(ref (!x /. y))
-  let ( &/ ) x y = Stdlib.(ref (x /. !y))
-  let ( &/& ) = Stdlib.( /. )
-
   let ( /= ) x y = Stdlib.(x := (!x /. !y)); x
-  let ( /&= ) x y = Stdlib.(x := (!x /. y)); x
 
   let ( ** ) x y = Stdlib.(ref (!x ** !y))
-  let ( **& ) x y = Stdlib.(ref (!x ** y))
-  let ( &** ) x y = Stdlib.(ref (x ** !y))
-  let ( &**& ) = Stdlib.( ** )
 
   let inv x = Stdlib.(ref (1. /. !x))
   let sqr x = Stdlib.(ref (!x *. !x))
 
   let sqrt x = Stdlib.(ref (sqrt !x))
   let log x = Stdlib.(ref (log !x))
-  let scalar_log x = Stdlib.(log x)
   let exp x = Stdlib.(ref (exp !x))
   let sin x = Stdlib.(ref (sin !x))
   let cos x = Stdlib.(ref (cos !x))
