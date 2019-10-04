@@ -25,6 +25,8 @@ sig
   val get : t -> elt
   (** Unwrap a value *)
 
+  val to_string : t -> string
+
   val copy : t -> t
 
   val zero : unit -> t
@@ -92,6 +94,8 @@ struct
 
   let make x = ref x
   let get f = !f
+
+  let to_string x = string_of_float !x
 
   let copy x = ref !x
 

@@ -1,16 +1,21 @@
 include ../../config.make
 
-INCLUDES += -I `ocamlfind -query qcheck-core` qcheck_core.cma \
- 			-I ../../src fadbad.cma test.cmo
-TESTS = test_fadiff.byte
+INCLUDES += -I ../../src fadbad.cma
+
+TESTS = test_fadiff.byte test_badiff.byte
 
 all: $(TESTS)
+
+test_fadiff.byte: INCLUDES += -I `ocamlfind -query qcheck-core` qcheck_core.cma \
+ 			test.cmo
 
 run: $(TESTS)
 	for test in $(TESTS) ; do ./$$test ; done
 
-clean cleanall:
+clean:
 	rm -rf *.cm[ixo] *.byte .depend
+
+cleanall: clean
 
 -include .depend
 .depend:

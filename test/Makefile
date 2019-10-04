@@ -4,5 +4,5 @@ run:
 	$(MAKE) -C unit run
 clean:
 	$(MAKE) -C unit clean
-cleanall: clean
+cleanall:
 	$(MAKE) -C unit cleanall

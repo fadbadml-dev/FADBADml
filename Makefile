@@ -23,7 +23,7 @@ clean:
 	$(MAKE) -C example clean
 	$(MAKE) -C test clean
 
-cleanall: clean
+cleanall:
 	$(MAKE) -C src cleanall
 	$(MAKE) -C example cleanall
 	$(MAKE) -C test cleanall
