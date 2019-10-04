@@ -14,8 +14,8 @@ OCAMLOP = ocamlopt
 %.cmx %.cmi: %.ml
 	$(OCAMLOPT) $(OCAMLOPTFLAGS) -c $(INCLUDES:.cma=.cmxa) $<
 
-%.byte: %.cmo
+%.byte: %.ml
 	$(OCAMLC) $(OCAMLFLAGS) -o $@ $(INCLUDES) $<
 
-%.opt: %.cmx
+%.opt: %.ml
 	$(OCAMLOPT) $(OCAMLOPTFLAGS) -o $@ $(INCLUDES:.cma=.cmxa) $<
