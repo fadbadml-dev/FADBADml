@@ -180,7 +180,66 @@ struct
       let t1 = get_operands this 0 in
       let t2 = get_operands this 1 in
       mac_der t1 (value t2) this; mac_der t2 (value t1) this
-    | _ -> assert false
+    | DIV ->
+      let t1 = get_operands this 0 in
+      let t2 = get_operands this 1 in
+      let inv_t2 = Op.inv (value t2) in
+      mac_der t1 inv_t2 this; smac_der t2 Op.(inv_t2 * (value this)) this
+    | POW ->
+      let t1 = get_operands this 0 in
+      let t2 = get_operands this 1 in
+      let t1_val = value t1 in
+      let t2_val = value t2 in
+      let tmp1 = Op.(t2_val * (t1_val ** (t2_val - (one ())))) in
+      let tmp2 = Op.((value this) * (log t1_val)) in
+      mac_der t1 tmp1 this; mac_der t2 tmp2 this
+    | POS ->
+       let t = get_operands this 0 in
+       add_der t this
+    | NEG ->
+       let t = get_operands this 0 in
+       sub_der t this
+    | INV ->
+       let t = get_operands this 0 in
+       smac_der t Op.((inv (value t)) * (value this)) this
+    | SQR ->
+       let t = get_operands this 0 in
+       let tmp = Op.((two ()) * (value t)) in
+       mac_der t tmp this
+    | SQRT ->
+       let t = get_operands this 0 in
+       let tmp = Op.(inv ((value this) * (two ()))) in
+       mac_der t tmp this
+    | EXP ->
+       let t = get_operands this 0 in
+       mac_der t (value this) this
+    | LOG ->
+       let t = get_operands this 0 in
+       mac_der t Op.(inv (value t)) this
+    | SIN ->
+       let t = get_operands this 0 in
+       let tmp = Op.cos (value t) in
+       mac_der t tmp this
+    | COS ->
+       let t = get_operands this 0 in
+       let tmp = Op.sin (value t) in
+       smac_der t tmp this
+    | TAN ->
+       let t = get_operands this 0 in
+       let tmp = Op.((sqr (value this)) + (one ())) in
+       mac_der t tmp this
+    | ASIN ->
+       let t = get_operands this 0 in
+       let tmp = Op.(inv (sqrt ((one ()) - (sqr (value t))))) in
+       mac_der t tmp this
+    | ACOS ->
+       let t = get_operands this 0 in
+       let tmp = Op.(inv (sqrt ((one ()) - (sqr (value t))))) in
+       smac_der t tmp this
+    | ATAN ->
+       let t = get_operands this 0 in
+       let tmp = Op.(inv (sqr ((value t) + (one ())))) in
+       mac_der t tmp this
 
   let rec propagateChildren this =
     Array.iter decRef this.operands
