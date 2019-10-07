@@ -265,7 +265,7 @@ struct
       Array.iteri (fun i _ -> v.m_diff.(i) <- Op.( v'.m_diff.(i) * v.m_val ))
         v.m_diff;
     end;
-    ignore Op.( v.m_val *= v'.m_val);
+    ignore Op.(v.m_val *= v'.m_val);
     v
 
   (* DIV *)
