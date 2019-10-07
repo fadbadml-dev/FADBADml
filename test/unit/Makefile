@@ -1,13 +1,13 @@
 include ../../config.make
 
-INCLUDES += -I ../../src fadbad.cma
+INCLUDES += -I ../../lib fadbad.cma
 
-TESTS = test_fadiff.byte test_badiff.byte
+TESTS = test.byte
 
 all: $(TESTS)
 
-test_fadiff.byte: INCLUDES += -I `ocamlfind -query qcheck-core` qcheck_core.cma \
- 			test.cmo
+test.byte: INCLUDES += -I `ocamlfind -query qcheck-core` qcheck_core.cma test_cases.cmo
+test.byte: test.cmo
 
 run: $(TESTS)
 	for test in $(TESTS) ; do ./$$test ; done
