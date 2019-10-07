@@ -11,11 +11,15 @@ struct
   }
 
   type elt = Op.elt
-
   type scalar = Op.scalar
+  let string_of_scalar = Op.string_of_scalar
+
+  let to_string this =
+    Printf.sprintf "{%s | [%s]}" (Op.to_string this.m_val)
+      (String.concat ", " (Array.to_list (Array.map Op.to_string this.m_diff)))
 
   let create () = {
-    m_val = Op.zero ();
+    m_val = Op.create ();
     m_diff = Array.make 0 (Op.zero ());
   }
 
@@ -256,7 +260,7 @@ struct
         v.m_diff
     | true, _ -> Array.iteri (fun i vi -> ignore Op.(vi *= v'.m_val))
                    v.m_diff
-    | _ ->
+    | _ -> (* _, true *)
       setDepend v v';
       Array.iteri (fun i _ -> v.m_diff.(i) <- Op.( v'.m_diff.(i) * v.m_val ))
         v.m_diff;
@@ -312,11 +316,11 @@ struct
     | true, true ->
       Array.iteri (fun i _ ->
           v.m_diff.(i) <-
-            Op.(v.m_diff.(i) - (v.m_val * v'.m_diff.(i)) / v'.m_val)
+            Op.((v.m_diff.(i) - v.m_val * v'.m_diff.(i)) / v'.m_val)
         ) v.m_diff
-    | true, _ -> Array.iteri (fun i vi -> ignore Op.(vi /= v'.m_val))
+    | true, _ -> Array.iteri (fun i _ -> ignore Op.(v.m_diff.(i) /= v'.m_val))
                    v.m_diff
-    | _ ->
+    | _ -> (* _, true *)
       setDepend v v';
       Array.iteri (fun i _ ->
           v.m_diff.(i) <-
