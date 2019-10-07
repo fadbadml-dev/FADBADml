@@ -7,6 +7,9 @@ module OpFun =
     let make f = ref f
     let get f = !f
 
+    let to_string this =
+      "<OpFun.t = (float -> float) ref>"
+
     let copy f = ref !f
 
     let zero () = make (fun _ -> 0.)
