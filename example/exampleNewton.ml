@@ -22,6 +22,9 @@ module OpFun =
       Utils.user_assert (i_l = []) "d_n : cannot get derivative of a float";
       get v
 
+    let identity () = ref (fun x -> x)
+    let apply f x = !f x
+
     let ( ~+ ) f = f
     let ( ~- ) f = ref (fun x -> -. !f x)
 
@@ -101,6 +104,8 @@ let () =
   let min = -3. in
   let max = 3. in
   let nb = 100 in
+  (* let () = print_fun (F.get temp0) min max nb in *)
+  (* let () = print_fun (F.d_n temp0 [0;0]) min max nb in *)
   let () =
     List.iter
       (fun t -> print_fun t min max nb)
