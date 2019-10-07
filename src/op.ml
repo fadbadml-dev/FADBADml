@@ -19,6 +19,9 @@ sig
   (** Type of scalars *)
   (* (t, +, .) should be a commutative S-module where S is the set of scalars *)
 
+  val create : unit -> t
+  (* Create an arbitrary value from nothing *)
+
   val make : elt -> t
   (** Wrap a value *)
 
@@ -26,6 +29,8 @@ sig
   (** Unwrap a value *)
 
   val to_string : t -> string
+
+  val string_of_scalar : scalar -> string
 
   val copy : t -> t
 
@@ -92,10 +97,13 @@ struct
   type elt = float
   type scalar = float
 
+  let create () = ref 7895.
+
   let make x = ref x
   let get f = !f
 
   let to_string x = string_of_float !x
+  let string_of_scalar = string_of_float
 
   let copy x = ref !x
 
