@@ -1,8 +1,8 @@
 open Utils
 
-module type OpS = Op.S
+module type OpS' = Op.S'
 
-module FTypeName (Op : OpS) =
+module FTypeName (Op : OpS') =
 struct
 
   type t = {
@@ -56,11 +56,6 @@ struct
     if i < (length v) then v.m_diff.(i)
     else Op.zero ()
 
-  (** [d_n f \[i1;...;in\]] returns the value of df/dx{_i1}...dx{_in} *)
-  let d_n v i_l =
-    user_assert (i_l <> []) "d_n : got empty list";
-    Op.d_n (v.m_diff.(List.hd i_l)) (List.tl i_l)
-
   (** [d f i] retrieves the derivative of variable of index [i] in
       computation [f] as an [elt] *)
   let d v i = Op.get (deriv v i)
@@ -78,14 +73,6 @@ struct
 
     Array.fill v.m_diff 0 (length v) (Op.zero ());
     v.m_diff.(idx) <- Op.one ()
-
-  (** [diff_n x i dim n] assigns [i] as index of variable [x] out of [dim]
-      up to depth [n] *)
-  let diff_n v idx n d =
-    if d > 0 then begin
-      diff v idx n;
-      Op.diff_n (value v) idx n (d-1)
-    end
 
   (**/**)
   let depend v = (length v) <> 0

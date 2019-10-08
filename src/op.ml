@@ -29,7 +29,6 @@ sig
   (** Unwrap a value *)
 
   val to_string : t -> string
-
   val string_of_scalar : scalar -> string
 
   val copy : t -> t
@@ -43,13 +42,6 @@ sig
 
   val scale : t -> scalar -> t
   val translate : t -> scalar -> t
-
-  val diff_n : t -> int -> int -> int -> unit
-  (** [diff_n x i dim n] assigns [i] as index of variable [x] out of [dim]
-      up to depth [n] *)
-
-  val d_n : t -> int list -> elt
-  (** [d_n f \[i1;...;in\]] returns the value of df/dx1...dxn *)
 
   val ( ~+ ) : t -> t
   (** unary plus (with copy) *)
@@ -91,6 +83,24 @@ sig
   val ( >= ) : t -> t -> bool
 end
 
+module type S' =
+sig
+  include S
+  val diff : t -> int -> int -> unit
+  val d : t -> int -> elt
+end
+
+module Make(Op : S) =
+struct
+  include Op
+  let diff _ _ _ =
+    Utils.user_assert false "diff : cannot differentiate a value";
+    assert false
+  let d _ _ =
+    Utils.user_assert false "d : cannot get derivative of a value";
+    assert false
+end
+
 module OpFloat =
 struct
   type t = float ref
@@ -113,12 +123,6 @@ struct
 
   let scale x a = ref (a *. !x)
   let translate x a = ref (!x +. a)
-
-  let diff_n _ _ _ d =
-    Utils.user_assert (d = 0) "diff_n : cannot differentiate a float"
-  let d_n v i_l =
-    Utils.user_assert (i_l = []) "d_n : cannot get derivative of a float";
-    get v
 
   let ( ~+ ) = copy
   let ( ~- ) x = Stdlib.(ref (~-. !x))

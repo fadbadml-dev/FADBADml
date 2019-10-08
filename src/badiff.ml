@@ -1,8 +1,8 @@
 open Utils
 
-module type OpS = Op.S
+module type OpS' = Op.S'
 
-module Derivatives (Op : OpS) =
+module Derivatives (Op : OpS') =
 struct
   type t = Op.t array ref
 
@@ -21,11 +21,12 @@ struct
 
   let has_values this = length this > 0
   let check_has_values this =
-    user_assert (has_values this) "Propagating node with no derivatives"
+    user_assert (has_values this)
+      "Derivatives.check_has_values: Propagating node with no derivatives"
 
   let check_bounds this i =
     user_assert (i < length this && i >= 0)
-      ("check_bounds: Index " ^ (string_of_int i) ^
+      ("Derivatives.check_bounds: Index " ^ (string_of_int i) ^
        " out of range [0," ^ (string_of_int (length this)) ^ "]")
 
   let get this i =
@@ -36,7 +37,7 @@ struct
 
   let diff this i n =
     user_assert (i < n && i >= 0)
-      ("diff: Index " ^ (string_of_int i) ^
+      ("Derivatives.diff: Index " ^ (string_of_int i) ^
        " out of range [0," ^ (string_of_int n) ^ "]");
     let res = if has_values this then this else ref (make n (Op.zero ())) in
     !res.(i) <- Op.one ();
@@ -46,7 +47,7 @@ struct
     check_has_values v';
     if has_values v then begin
       user_assert (length v = length v')
-        ("cAdd: Size mismatch " ^
+        ("Derivatives.cAdd: Size mismatch " ^
          (string_of_int (length v)) ^ "<>" ^ (string_of_int (length v')));
       iteri (fun i _ -> ignore Op.(!v.(i) += !v'.(i))) v;
     end else v := copy v'
@@ -55,7 +56,7 @@ struct
     check_has_values v';
     if has_values v then begin
       user_assert (length v = length v')
-        ("cSub: Size mismatch " ^
+        ("Derivatives.cSub: Size mismatch " ^
          (string_of_int (length v)) ^ "<>" ^ (string_of_int (length v')));
       iteri (fun i _ -> ignore Op.(!v.(i) -= !v'.(i))) v;
     end else v := map Op.(~-) v'
@@ -65,7 +66,7 @@ struct
     check_has_values v';
     if has_values v then begin
       user_assert (length v = length v')
-        ("cMac: Size mismatch " ^
+        ("Derivatives.cMac: Size mismatch " ^
          (string_of_int (length v)) ^ "<>" ^ (string_of_int (length v')));
       iteri (fun i _ -> ignore Op.(!v.(i) += a * !v'.(i))) v;
     end else v := map (fun v' -> Op.(a * v')) v'
@@ -75,14 +76,14 @@ struct
     check_has_values v';
     if has_values v then begin
       user_assert (length v = length v')
-        ("cSmac: Size mismatch " ^
+        ("Derivatives.cSmac: Size mismatch " ^
          (string_of_int (length v)) ^ "<>" ^ (string_of_int (length v')));
       iteri (fun i _ -> ignore Op.(!v.(i) -= a * !v'.(i))) v;
     end else v := map (fun v' -> Op.(- a * v')) v'
 
 end
 
-module BTypeName (Op : OpS) =
+module BTypeName (Op : OpS') =
 struct
   module D = Derivatives(Op)
 
@@ -90,7 +91,7 @@ struct
   type scalar = Op.scalar
 
   type op =
-    | CONST | SCALE of scalar
+    | CONST | SCALE of scalar | TRANS of scalar
     | ADD | SUB | MUL | DIV | POW
     | POS | NEG | INV | SQR | SQRT | EXP | LOG | SIN | COS | TAN
     | ASIN | ACOS | ATAN
@@ -114,7 +115,9 @@ struct
   }
 
   let string_of_op = function
-    | CONST -> "CONST" | SCALE f -> Printf.sprintf "SCALE %s" (Op.string_of_scalar f)
+    | CONST -> "CONST"
+    | SCALE f -> Printf.sprintf "SCALE %s" (Op.string_of_scalar f)
+    | TRANS f -> Printf.sprintf "TRANS %s" (Op.string_of_scalar f)
     | ADD -> "ADD" | SUB -> "SUB" | MUL -> "MUL" | DIV -> "DIV" | POW -> "POW"
     | POS -> "POS" | NEG -> "NEG" | INV -> "INV" | SQR -> "SQR" | SQRT -> "SQRT"
     | EXP -> "EXP" | LOG -> "LOG" | SIN -> "SIN" | COS -> "COS" | TAN -> "TAN"
@@ -123,10 +126,13 @@ struct
   let to_short_string this = string_of_op this.operator
 
   let rec to_string this =
-    Printf.sprintf "{\n\toperator = %s\n\toperands = \n\t\t[%s]\n\trc = %d\n\tvalue = %s\n\tderivatives = %s\n}"
+    (Printf.sprintf "{\n\toperator = %s\n\toperands =\n\t\t[%s]\n\t"
       (string_of_op this.operator)
-      (String.concat ", " (Array.to_list (Array.map to_short_string this.operands)))
-      this.rc (Op.to_string this.value) (D.to_string this.derivatives)
+      (String.concat ", " (Array.to_list
+        (Array.map to_short_string this.operands))))
+    ^
+    (Printf.sprintf "rc = %d\n\tvalue = %s\n\tderivatives = %s\n}"
+      this.rc (Op.to_string this.value) (D.to_string this.derivatives))
 
   let string_of_scalar = Op.string_of_scalar
 
@@ -137,8 +143,9 @@ struct
 
   let get_operands this i =
     user_assert (i < Array.length this.operands && i >= 0)
-      ("get_operands: Index " ^ (string_of_int i) ^
-       " out of range [0," ^ (string_of_int (Array.length this.operands)) ^ "]");
+      ("BTypeName.get_operands: Index " ^ (string_of_int i) ^
+       " out of range [0," ^ (string_of_int (Array.length this.operands)) ^
+       "]");
     this.operands.(i)
 
   let create () = let v = Op.create () in {
@@ -200,7 +207,8 @@ struct
     | CONST -> ()
     | SCALE f ->
       let t = get_operands this 0 in
-      D.cAdd t.derivatives (ref (Array.map (fun x -> Op.scale x f) !(this.derivatives)))
+      D.cAdd t.derivatives
+        (ref (Array.map (fun x -> Op.scale x f) !(this.derivatives)))
     | ADD ->
       let t1 = get_operands this 0 in
       let t2 = get_operands this 1 in
@@ -231,6 +239,7 @@ struct
       let tmp2 = Op.((value this) * (log t1_val)) in
       mac_der t1 tmp1 this;
       mac_der t2 tmp2 this
+    | TRANS _
     | POS ->
       let t = get_operands this 0 in
       add_der t this
@@ -284,7 +293,7 @@ struct
   (* this.operands <- [||] *)
 
   and decRef this =
-    user_assert (this.rc > 0) "decRef: Ressource counter negative";
+    user_assert (this.rc > 0) "BTypeName.decRef: Ressource counter negative";
     this.rc <- this.rc - 1;
     if this.rc = 0 then
       if D.has_values this.derivatives then begin
@@ -301,19 +310,6 @@ struct
     decRef this
   (* cut the array of derivatives to save some memory space *)
   (* this.derivatives := [||] *)
-
-  (** [d_n f \[i1;...;in\]] returns the value of df/dx{_i1}...dx{_in} *)
-  let d_n this i_l =
-    user_assert (i_l <> []) "d_n : got empty list";
-    Op.d_n (!(this.derivatives).(List.hd i_l)) (List.tl i_l)
-
-  (** [diff_n x i dim n] assigns [i] as index of variable [x] out of [dim]
-        up to depth [n] *)
-  let diff_n this idx n d =
-    if d > 0 then begin
-      diff this idx n;
-      Op.diff_n (value this) idx n (d-1)
-    end
 
   let un_op operator operation t =
     incRef t;
@@ -347,7 +343,7 @@ struct
     t1
 
   let scale t f = un_op (SCALE f) (fun x -> Op.scale x f) t
-  let translate t f = { t with value = Op.translate (value t) f }
+  let translate t f = un_op (TRANS f) (fun x -> Op.translate x f) t
 
   let ( ~+ ) = un_op POS Op.(~+)
   let ( ~- ) = un_op NEG Op.(~-)
