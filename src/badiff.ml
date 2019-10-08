@@ -165,17 +165,11 @@ struct
     derivatives = D.create ();
   }
 
+  let integer i = lift (Op.integer i)
+  let make n = lift (Op.make n)
   let zero () = lift (Op.zero ())
   let one () = lift (Op.one ())
   let two () = lift (Op.two ())
-
-  let make n = let v = Op.make n in {
-      operator = CONST;
-      operands = [||];
-      rc = 0;
-      value = v;
-      derivatives = D.create ();
-    }
 
   let copy this =
     {
@@ -335,7 +329,7 @@ struct
   let bin_cOp operator operation t1 t2 =
     incRef t2;
     let copy_t1 = copy t1 in
-    copy_t1.rc <- 1;
+    incRef copy_t1;
     t1.operator <- operator;
     t1.operands <- [|copy_t1; t2|];
     t1.rc <- 0;

@@ -25,6 +25,9 @@ sig
   val make : elt -> t
   (** Wrap a value *)
 
+  val integer : int -> t
+  (** Wrap an integer *)
+
   val get : t -> elt
   (** Unwrap a value *)
 
@@ -112,6 +115,8 @@ struct
 
   let make x = ref x
   let get f = !f
+
+  let integer i = ref (float i)
 
   let to_string x = string_of_float !x
   let string_of_scalar = string_of_float

@@ -23,11 +23,12 @@ struct
     m_diff = Array.make 0 (Op.zero ());
   }
 
-  let make v = { (create ()) with m_val = Op.make v; }
   let get v = Op.get v.m_val
 
   let lift v = { (create ()) with m_val = v; }
 
+  let make v = lift (Op.make v)
+  let integer i = lift (Op.integer i)
   let zero () = lift (Op.zero ())
   let one () = lift (Op.one ())
   let two () = lift (Op.two ())
