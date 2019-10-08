@@ -7,7 +7,7 @@ struct
   type t = Op.t array ref
 
   let create () = ref [||]
-  let make n e = Array.make n e
+  let make n e = Array.init n (fun _ -> Op.copy e)
   let map f this = Array.map f !this
   let copy this = map Op.copy this
   let mapi f this = Array.mapi f !this

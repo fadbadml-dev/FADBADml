@@ -67,7 +67,7 @@ struct
        " out of bounds [0," ^ (string_of_int n) ^ "]");
 
     if (length v) = 0 then begin
-      v.m_diff <- Array.make n (Op.zero ());
+      v.m_diff <- Array.init n (fun _ -> Op.zero ());
     end else
       user_assert ((length v) = n) "derivative vectors not of same length";
 
@@ -80,7 +80,7 @@ struct
   let setDepend v v' =
     internal_assert ((length v') > 0) "input is not a dependent variable";
     if ((length v) = 0) then begin
-      v.m_diff <- Array.make (length v') (Op.zero ());
+      v.m_diff <- Array.init (length v') (fun _ -> Op.zero ());
     end else
       user_assert ((length v) = (length v'))
         ("derivative vectors not of the same length "
@@ -93,7 +93,7 @@ struct
     internal_assert ((length v1) > 0) "lhs-input is not a dependent variable";
     internal_assert ((length v2) > 0) "rhs-input is not a dependent variable";
     if ((length v) = 0) then begin
-      v.m_diff <- Array.make (length v1) (Op.zero ());
+      v.m_diff <- Array.init (length v1) (fun _ -> Op.zero ());
     end else
       user_assert ((length v) = (length v1))
         ("derivative vectors not of the same length "
