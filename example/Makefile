@@ -3,7 +3,7 @@ include ../config.make
 FADBAD = ../src/fadbad.cma
 INCLUDES += -I ../src/ fadbad.cma
 
-EXAMPLES = exampleFAD.byte exampleFADFAD.byte exampleNewton.byte
+EXAMPLES = exampleFAD.byte exampleFADFAD.byte exampleNewton.byte exampleTAD.byte
 
 all: $(EXAMPLES)
 

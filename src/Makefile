@@ -1,4 +1,4 @@
-CMO = op.cmo utils.cmo fadiff.cmo badiff.cmo
+CMO = op.cmo utils.cmo fadiff.cmo badiff.cmo tadiff.cmo
 SORTED_CMO = $(shell ocamldep -sort $(CMO:.cmo=.ml))
 
 all: fadbad.cma
