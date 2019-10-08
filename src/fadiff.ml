@@ -47,6 +47,11 @@ struct
     m_diff = Array.map Op.copy v.m_diff;
   }
 
+  let deepcopy v = {
+    m_val = Op.deepcopy v.m_val;
+    m_diff = Array.map Op.deepcopy v.m_diff;
+  }
+
   let length v = Array.length v.m_diff
   let value v = v.m_val
 

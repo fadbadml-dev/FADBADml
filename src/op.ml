@@ -32,6 +32,7 @@ sig
   val string_of_scalar : scalar -> string
 
   val copy : t -> t
+  val deepcopy : t -> t
 
   val zero : unit -> t
   (** Construct a fresh value corresponding to 0 *)
@@ -116,6 +117,7 @@ struct
   let string_of_scalar = string_of_float
 
   let copy x = ref !x
+  let deepcopy x = copy x
 
   let zero () = ref 0.
   let one () = ref 1.

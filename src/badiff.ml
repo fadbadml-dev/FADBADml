@@ -10,6 +10,7 @@ struct
   let make n e = Array.init n (fun _ -> Op.copy e)
   let map f this = Array.map f !this
   let copy this = map Op.copy this
+  let deepcopy this = map Op.deepcopy this
   let mapi f this = Array.mapi f !this
   let iter f this = Array.iter f !this
   let iteri f this = Array.iteri f !this
@@ -190,8 +191,8 @@ struct
       operator = this.operator;
       operands = Array.map deepcopy this.operands;
       rc = this.rc;
-      value = Op.copy this.value;
-      derivatives = ref (D.copy this.derivatives);
+      value = Op.deepcopy this.value;
+      derivatives = ref (D.deepcopy this.derivatives);
     }
 
   let value this = this.value
