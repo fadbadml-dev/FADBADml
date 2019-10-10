@@ -42,6 +42,9 @@ let int_float_range low high : float QCheck.arbitrary =
 
 (* TEST CASES *)
 
+let rec fact n = if n = 0 then 1 else n * (fact (n-1))
+let rec pochhammer f i = if i = 0 then 1. else f *. (pochhammer (f+.1.) (i-1))
+
 module Make(Op : Fadbad.OpS) =
 struct
 
@@ -50,8 +53,8 @@ struct
     udesc : string;
     uarbitrary : float QCheck.arbitrary;
     ufad : Op.t -> Op.t;
-    uf : float -> float;
-    udfdx : float -> float;
+    (* udfdx i x = d^if/dx^i x for i >= 1 *)
+    udfdx : int -> float -> float;
   }
 
   type binary_test = {
@@ -59,9 +62,10 @@ struct
     bdesc : string;
     barbitrary : (float * float) QCheck.arbitrary;
     bfad : Op.t -> Op.t -> Op.t;
-    bf : float -> float -> float;
-    bdfdx : float -> float -> float;
-    bdfdy : float -> float -> float;
+    (* udfdx i x = d^if/dx^i x for i >= 1 *)
+    bdfdx : int -> float -> float -> float;
+    (* udfdy i x = d^if/dy^i x for i >= 1 *)
+    bdfdy : int -> float -> float -> float;
   }
 
   let pi = 3.14159265359
@@ -72,8 +76,7 @@ struct
       udesc = "f(x) = + x";
       uarbitrary = QCheck.float;
       ufad = (fun x -> Op.(+x));
-      uf = (fun x -> x);
-      udfdx = (fun _ -> 1.);
+      udfdx = (fun i x -> match i with 0 -> x | 1 -> 1. | _ -> 0.);
     }
 
   let test_neg =
@@ -82,8 +85,7 @@ struct
       udesc = "f(x) = - x";
       uarbitrary = QCheck.float;
       ufad = (fun x -> Op.(-x));
-      uf = (fun x -> -.x);
-      udfdx = (fun _ -> -1.);
+      udfdx = (fun i x -> match i with 0 -> -. x | 1 -> -1. | _ -> 0.);
     }
 
   let test_inv =
@@ -92,8 +94,8 @@ struct
       udesc = "f(x) = 1 / x";
       uarbitrary = non_zero_float;
       ufad = (fun x -> Op.inv x);
-      uf = (fun x -> 1. /. x);
-      udfdx = (fun x -> -1. /. (x *. x));
+      udfdx = (fun i x ->
+        (-1. ** (float i)) *. (float (fact i)) /. (x ** (float (i+1))));
     }
 
   let test_sqr =
@@ -102,8 +104,12 @@ struct
       udesc = "f(x) = x * x";
       uarbitrary = QCheck.float;
       ufad = (fun x -> Op.sqr x);
-      uf = (fun x -> x *. x);
-      udfdx = (fun x -> 2. *. x);
+      udfdx = (fun i x ->
+                match i with
+                | 0 -> x *. x
+                | 1 -> 2. *. x
+                | 2 -> 2.
+                | _ -> 0.);
     }
 
   let test_sqrt =
@@ -112,8 +118,9 @@ struct
       udesc = "f(x) = sqrt x";
       uarbitrary = QCheck.pos_float;
       ufad = (fun x -> Op.sqrt x);
-      uf = sqrt;
-      udfdx = (fun x -> 1. /. (2. *. sqrt x));
+      udfdx = (fun i x ->
+        (-1. ** (float i)) *. (pochhammer (-0.5) i) *.
+        (x ** (0.5 -. (float i))))
     }
 
   let test_log =
@@ -122,8 +129,10 @@ struct
       udesc = "f(x) = log x";
       uarbitrary = non_zero_pfloat;
       ufad = (fun x -> Op.log x);
-      uf = log;
-      udfdx = (fun x -> 1. /. x);
+      udfdx = (fun i x ->
+                match i with
+                | 0 -> log x
+                | _ -> test_inv.udfdx (i-1) x);
     }
 
   let test_sin =
@@ -132,8 +141,15 @@ struct
       udesc = "f(x) = sin x";
       uarbitrary = QCheck.float;
       ufad = (fun x -> Op.sin x);
-      uf = sin;
-      udfdx = cos;
+      udfdx =
+        let aux i x =
+          match i with
+          | 0 -> sin x
+          | 1 -> cos x
+          | 2 -> -. sin x
+          | 3 -> -. cos x
+          | _ -> assert false
+        in (fun i x -> aux (i mod 4) x);
     }
 
   let test_cos =
@@ -142,8 +158,10 @@ struct
       udesc = "f(x) = cos x";
       uarbitrary = QCheck.float;
       ufad = (fun x -> Op.cos x);
-      uf = cos;
-      udfdx = (fun x -> -. sin x);
+      udfdx = (fun i x ->
+                match i with
+                | 0 -> cos x
+                | _ -> -. test_sin.udfdx (i-1) x);
     }
 
   let test_tan =
@@ -152,8 +170,13 @@ struct
       udesc = "f(x) = tan x";
       uarbitrary = QCheck.float;
       ufad = (fun x -> Op.tan x);
-      uf = tan;
-      udfdx = (fun x -> 1. +. (tan x) *. (tan x));
+      udfdx =
+        let rec tan_der i x =
+          match i with
+          | 0 -> tan x
+          | 1 -> 1. +. (tan x) *. (tan x)
+          | _ -> (float i) *. (1. +. (tan x) *. (tan x)) *. (tan_der (i-1) x)
+        in tan_der;
     }
 
   let test_asin =
@@ -162,8 +185,15 @@ struct
       udesc = "f(x) = asin x";
       uarbitrary = QCheck.float_range (-1.) 1.;
       ufad = (fun x -> Op.asin x);
-      uf = asin;
-      udfdx = (fun x -> 1. /. (sqrt (1. -. x *. x)));
+      udfdx = (fun i x ->
+        match i with
+        | 0 -> asin x
+        | 1 -> 1./.(sqrt (1.-.(x**2.)))
+        | 2 -> x/.((1.-.(x**2.))**1.5)
+        | 3 -> (2.*.(x**2.)+.1.)/.((1.-.(x**2.))**2.5)
+        | 4 -> (3.*.x*.(2.*.(x**2.)+.3.))/.((1.-.(x**2.))**2.5)
+        | _ -> Printf.eprintf "derivative %d of asin/acos not defined" i; exit 1
+      );
     }
 
   let test_acos =
@@ -172,8 +202,11 @@ struct
       udesc = "f(x) = acos x";
       uarbitrary = QCheck.float_range (-1.) 1.;
       ufad = (fun x -> Op.acos x);
-      uf = acos;
-      udfdx = (fun x -> -1. /. (sqrt (1. -. x *. x)));
+      udfdx = (fun i x ->
+        match i with
+        | 0 -> acos x
+        | _ -> -. test_asin.udfdx i x
+      );
     }
 
   let test_atan =
@@ -182,8 +215,18 @@ struct
       udesc = "f(x) = atan x";
       uarbitrary = QCheck.float_range (-.pi /. 2.) (pi /. 2.);
       ufad = (fun x -> Op.atan x);
-      uf = atan;
-      udfdx = (fun x -> 1. /. (1. +. x *. x));
+      udfdx =
+        (* atan_der i x computes the i-th and (i+1)-th derivatives of atan *)
+        let rec atan_der i x =
+          match i with
+          | 0 -> (atan x, 0.)
+          | 1 -> (1. /. (1. +. x *. x), - 2. *. x /. ((1. +. x *. x) ** 2.))
+          | _ ->
+            let n = float i in
+            let der_im1, der_i = atan_der (i-1) x in
+            (der_i,
+            (2.*.(n+.1.)*.x*.der_i +. (n+.1.)*.n*.der_im1) /. (1. +. x *. x))
+        in (fun i x -> fst (atan_der i x));
     }
 
   let unary = [|
@@ -194,47 +237,25 @@ struct
   |]
 
   let test_add =
+    let der i x y = match i with | 0 -> x +. y | 1 -> 1. | _ -> 0. in
     {
       bname = "add";
       bdesc = "f(x, y) = x + y";
       barbitrary = QCheck.pair QCheck.float QCheck.float;
       bfad = (fun x y -> Op.(x + y));
-      bf = ( +. );
-      bdfdx = (fun _ _ -> 1.);
-      bdfdy = (fun _ _ -> 1.);
-    }
-
-  let test_cAdd =
-    {
-      bname = "cAdd";
-      bdesc = "f(x, y) = x += y";
-      barbitrary = QCheck.pair QCheck.float QCheck.float;
-      bfad = (fun x y -> Op.(x += y));
-      bf = ( +. );
-      bdfdx = (fun _ _ -> 1.);
-      bdfdy = (fun _ _ -> 1.);
+      bdfdx = der;
+      bdfdy = der;
     }
 
   let test_sub =
+    let der a i x y = match i with | 0 -> x -. y | 1 -> a | _ -> 0. in
     {
       bname = "sub";
       bdesc = "f(x, y) = x - y";
       barbitrary = QCheck.pair QCheck.float QCheck.float;
       bfad = (fun x y -> Op.(x - y));
-      bf = ( -. );
-      bdfdx = (fun _ _ -> 1.);
-      bdfdy = (fun _ _ -> -1.);
-    }
-
-  let test_cSub =
-    {
-      bname = "cSub";
-      bdesc = "f(x, y) = x -= y";
-      barbitrary = QCheck.pair QCheck.float QCheck.float;
-      bfad = (fun x y -> Op.(x -= y));
-      bf = ( -. );
-      bdfdx = (fun _ _ -> 1.);
-      bdfdy = (fun _ _ -> -1.);
+      bdfdx = der 1.;
+      bdfdy = der (-1.);
     }
 
   let test_mul =
@@ -243,21 +264,8 @@ struct
       bdesc = "f(x, y) = x * y";
       barbitrary = QCheck.pair QCheck.float QCheck.float;
       bfad = (fun x y -> Op.(x * y));
-      bf = ( *. );
-      bdfdx = (fun _ y -> y);
-      bdfdy = (fun x _ -> x);
-    }
-
-  let test_cMul =
-    {
-      bname = "cMul";
-      bdesc = "f(x, y) = (x *= y)";
-      barbitrary = QCheck.pair QCheck.float QCheck.float;
-      bfad = (fun x y -> Op.(x *= y));
-      bf = ( *. );
-      (* bdfdx = (fun _ y -> y); *)
-      bdfdx = (fun _ y -> 1.);
-      bdfdy = (fun x _ -> x);
+      bdfdx = (fun i x y -> (test_pos.udfdx i x) *. y);
+      bdfdy = (fun i x y -> x *. (test_pos.udfdx i y));
     }
 
   let test_div =
@@ -266,35 +274,21 @@ struct
       bdesc = "f(x, y) = x / y";
       barbitrary = QCheck.pair QCheck.float QCheck.float;
       bfad = (fun x y -> Op.(x / y));
-      bf = ( /. );
-      bdfdx = (fun _ y -> 1. /. y);
-      bdfdy = (fun x y -> -. x /. (y *. y));
-    }
-
-  let test_cDiv =
-    {
-      bname = "cDiv";
-      bdesc = "f(x, y) = (x /= y)";
-      barbitrary = QCheck.pair QCheck.float QCheck.float;
-      bfad = (fun x y -> Op.(x /= y));
-      bf = ( /. );
-      (* bdfdx = (fun _ y -> 1. /. y); *)
-      bdfdx = (fun _ y -> 1.);
-      bdfdy = (fun x y -> -. x /. (y *. y));
+      bdfdx = (fun i x y -> (test_pos.udfdx i x) /. y);
+      bdfdy = (fun i x y -> x *. (test_inv.udfdx i y));
     }
 
   let test_pow =
     {
       bname = "pow";
       bdesc = "f(x, y) = x ^ y";
-      barbitrary = QCheck.pair (QCheck.float_range 0. 100.) (QCheck.float_range (-100.) 100.);
+      barbitrary = QCheck.pair (QCheck.float_range 0. 100.)
+                               (QCheck.float_range (-100.) 100.);
       bfad = (fun x y -> Op.(x ** y));
-      bf = ( ** );
-      bdfdx = (fun x y -> y *. x ** (y -. 1.));
-      bdfdy = (fun x y -> (log x) *. x ** y);
+      bdfdx = (fun i x y ->
+        (pochhammer (1. -. (float i) +. y) i) *. x ** (y -. (float i)));
+      bdfdy = (fun i x y -> ((log x) ** (float i)) *. x ** y);
     }
 
-  let binary = [| test_add; test_sub; test_mul; test_div;
-                  test_cAdd; test_cSub; test_cMul; test_cDiv;
-                  test_pow |]
+  let binary = [| test_add; test_sub; test_mul; test_div; test_pow |]
 end

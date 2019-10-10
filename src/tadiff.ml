@@ -9,11 +9,11 @@ struct
     values : Op.t array;
   }
 
-  let to_string this =
-    Printf.sprintf "[%s]" (String.concat ", " (Array.to_list
-      (Array.map Op.to_string (Array.sub this.values 0 this.n))))
+  let max_length = 40
 
-  let to_derivatives this =
+  let get_values this = Array.sub this.values 0 this.n
+
+  let to_derivatives values =
     let rec mult_by_fact last_fact i arr =
       if i >= Array.length arr then arr
       else if i = 0 then mult_by_fact 1 1 arr
@@ -22,11 +22,17 @@ struct
         arr.(i) <- Op.((integer new_fact) * arr.(i));
         mult_by_fact new_fact (i+1) arr
       end
-    in
-    { this with
-      values = mult_by_fact 1 0 (Array.copy this.values) }
+    in mult_by_fact 1 0 (Array.copy values)
 
-  let max_length = 40
+  let get_derivatives this = to_derivatives (get_values this)
+
+  let string_of_arr arr =
+    Printf.sprintf "[%s]" (String.concat ", " (Array.to_list
+      (Array.map Op.to_string arr)))
+  let string_of_values this = string_of_arr (get_values this)
+  let string_of_derivatives this = string_of_arr (get_derivatives this)
+  let to_string = string_of_values
+
 
   let copy this = {
     n = this.n;
@@ -99,6 +105,12 @@ struct
     mutable tvalues : TValues.t;
   }
 
+  let tvalues this = TValues.get_values this.tvalues
+  let derivatives this = TValues.get_derivatives this.tvalues
+
+  let get_tvalues this = Array.map Op.get (tvalues this)
+  let get_derivatives this = Array.map Op.get (derivatives this)
+
   let string_of_op = function
     | CONST -> "CONST"
     | SCALE f -> Printf.sprintf "SCALE %s" (Op.string_of_scalar f)
@@ -115,8 +127,8 @@ struct
         (Array.map to_short_string this.operands))))
     ^
     (Printf.sprintf "tvalues = %s\n\tderivatives = %s\n}"
-      (TValues.to_string this.tvalues)
-      (TValues.to_string (TValues.to_derivatives this.tvalues)))
+      (TValues.string_of_values this.tvalues)
+      (TValues.string_of_derivatives this.tvalues))
   let string_of_scalar = Op.string_of_scalar
 
   let get_operands this i =
@@ -332,7 +344,11 @@ struct
     t1.operator <- operator;
     t1.operands <- [|copy_t1; t2|];
     let length = min (TValues.size t1.tvalues) (TValues.size t2.tvalues) in
-    t1.tvalues <- TValues.create length
+    t1.tvalues <- TValues.create length;
+    t1
+
+  let scale t f = un_op (SCALE f) t
+  let translate t f = un_op (TRANS f) t
 
   let ( ~+ ) = un_op POS
   let ( ~- ) = un_op NEG
