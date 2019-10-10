@@ -95,8 +95,12 @@ struct
 
   type op =
     | CONST | SCALE of scalar | TRANS of scalar
+    (* while computing the derivatives of SIN or COS, we also compute
+       the derivatives of COS or SIN. the argument of the constructor is
+       used to store those values (to avoid computing at each call of eval) *)
+    | SIN of Op.t array | COS of Op.t array
     | ADD | SUB | MUL | DIV | POW
-    | POS | NEG | INV | SQR | SQRT | EXP | LOG | SIN | COS | TAN
+    | POS | NEG | INV | SQR | SQRT | EXP | LOG | TAN
     | ASIN | ACOS | ATAN
 
   type t = {
@@ -117,7 +121,7 @@ struct
     | TRANS f -> Printf.sprintf "TRANS %s" (Op.string_of_scalar f)
     | ADD -> "ADD" | SUB -> "SUB" | MUL -> "MUL" | DIV -> "DIV" | POW -> "POW"
     | POS -> "POS" | NEG -> "NEG" | INV -> "INV" | SQR -> "SQR" | SQRT -> "SQRT"
-    | EXP -> "EXP" | LOG -> "LOG" | SIN -> "SIN" | COS -> "COS" | TAN -> "TAN"
+    | EXP -> "EXP" | LOG -> "LOG" | SIN _ -> "SIN" | COS _ -> "COS" | TAN -> "TAN"
     | ASIN -> "ASIN" | ACOS -> "ACOS" | ATAN -> "ATAN"
   let to_short_string this = string_of_op this.operator
   let rec to_string this =
@@ -207,8 +211,23 @@ struct
   let rec eval this k =
     match this.operator with
     | CONST -> k+1
-    | SCALE f -> assert false
-    | TRANS f -> assert false
+    | SCALE f ->
+      let t = get_operands this 0 in
+      let l = eval t k in
+      for i = length this to l-1 do
+        TValues.set this.tvalues i Op.(scale (deriv t i) f)
+      done;
+      TValues.set_length this.tvalues l;
+      l
+    | TRANS f ->
+      let t = get_operands this 0 in
+      let l = eval t k in
+      if (length this) = 0 then set this 0 Op.(translate (value t) f);
+      for i = length this to l-1 do
+        TValues.set this.tvalues i (deriv t i)
+      done;
+      TValues.set_length this.tvalues l;
+      l
     | ADD ->
       let t1 = get_operands this 0 in
       let t2 = get_operands this 1 in
@@ -272,9 +291,61 @@ struct
       done;
       TValues.set_length this.tvalues l;
       l
-    | INV -> assert false
-    | SQR -> assert false
-    | SQRT -> assert false
+    | INV ->
+      let t = get_operands this 0 in
+      let l = eval t k in
+      let rec aux acc i j =
+        if i >= l then ()
+        else if j > i then begin
+          TValues.set this.tvalues i Op.(acc / (value t));
+          aux (Op.zero ()) (i+1) 1
+        end else aux Op.(acc - (deriv t j) * (deriv this Stdlib.(i-j))) i (j+1)
+      in
+      if (length this) = 0 then set this 0 Op.(inv (value t));
+      aux (Op.zero ()) (length this) 1;
+      TValues.set_length this.tvalues l;
+      l
+    | SQR ->
+      let t = get_operands this 0 in
+      let l = eval t k in
+      let rec aux acc i j =
+        let m = (i + 1) / 2 in
+        if i >= l then ()
+        else if j >= m then begin
+          let new_val = Op.((two ()) * acc) in
+          let new_val =
+            if i mod 2 = 0 then Op.(new_val + (sqr (deriv t m))) else new_val
+          in
+          TValues.set this.tvalues i new_val;
+          aux (Op.zero ()) (i+1) 0
+        end else aux Op.(acc + (deriv t j) * (deriv t Stdlib.(i-j))) i (j+1)
+      in
+      if (length this) = 0 then set this 0 Op.(sqr (value t));
+      aux (Op.zero ()) (length this) 0;
+      TValues.set_length this.tvalues l;
+      l
+    | SQRT ->
+      let t = get_operands this 0 in
+      let l = eval t k in
+      let rec aux acc i j =
+        let m = (i + 1) / 2 in
+        if i >= l then ()
+        else if j >= m then begin
+          let new_val = Op.((two ()) * acc) in
+          let new_val =
+            if i mod 2 = 0 then Op.(new_val + (sqr (deriv this m))) else new_val
+          in
+          let new_val =
+            Op.(((deriv t i) - new_val) / ((two ()) * (value this)))
+          in
+          TValues.set this.tvalues i new_val;
+          aux (Op.zero ()) (i+1) 1
+        end else aux Op.(acc + (deriv this j) * (deriv this Stdlib.(i-j))) i (j+1)
+      in
+      if (length this) = 0 then set this 0 Op.(sqrt (value t));
+      aux (Op.zero ()) (length this) 1;
+      TValues.set_length this.tvalues l;
+      l
     | EXP ->
       let t = get_operands this 0 in
       let l = eval t k in
@@ -318,12 +389,126 @@ struct
       aux (deriv t i) i 1;
       TValues.set_length this.tvalues l;
       l
-    | SIN -> assert false
-    | COS -> assert false
-    | TAN -> assert false
-    | ASIN -> assert false
-    | ACOS -> assert false
-    | ATAN -> assert false
+    | SIN tcoeff_cos ->
+      let t = get_operands this 0 in
+      let l = eval t k in
+      let rec aux acc_this acc_cos i j =
+        if i >= l then ()
+        else if j >= i then begin
+          TValues.set this.tvalues i Op.(acc_this / (integer i));
+          tcoeff_cos.(i) <- Op.(acc_cos / (integer i));
+          aux (Op.zero ()) (Op.zero ()) (i+1) 0
+        end else
+          aux
+            Op.(acc_this + (integer Stdlib.(j+1)) * tcoeff_cos.(Stdlib.(i-1-j))
+                  * (deriv t Stdlib.(j+1)))
+            Op.(acc_cos - (integer Stdlib.(j+1)) * (deriv this Stdlib.(i-1-j))
+                  * (deriv t Stdlib.(j+1)))
+            i (j+1)
+      in
+      if (length this) = 0 then begin
+        set this 0 Op.(sin (value t));
+        tcoeff_cos.(0) <- Op.(cos (value t));
+      end;
+      aux (Op.zero ()) (Op.zero ()) (length this) 0;
+      TValues.set_length this.tvalues l;
+      l
+    | COS tcoeff_sin ->
+      let t = get_operands this 0 in
+      let l = eval t k in
+      let rec aux acc_this acc_sin i j =
+        if i >= l then ()
+        else if j >= i then begin
+          TValues.set this.tvalues i Op.(acc_this / (integer i));
+          tcoeff_sin.(i) <- Op.(acc_sin / (integer i));
+          aux (Op.zero ()) (Op.zero ()) (i+1) 0
+        end else
+          aux
+            Op.(acc_this - (integer Stdlib.(j+1)) * tcoeff_sin.(Stdlib.(i-1-j))
+                  * (deriv t Stdlib.(j+1)))
+            Op.(acc_sin + (integer Stdlib.(j+1)) * (deriv this Stdlib.(i-1-j))
+                  * (deriv t Stdlib.(j+1)))
+            i (j+1)
+      in
+      if (length this) = 0 then begin
+        set this 0 Op.(cos (value t));
+        tcoeff_sin.(0) <- Op.(sin (value t));
+      end;
+      aux (Op.zero ()) (Op.zero ()) (length this) 0;
+      TValues.set_length this.tvalues l;
+      l
+    | TAN ->
+      let t1 = get_operands this 0 in
+      let t2 = get_operands this 1 in
+      let l = min (eval t1 k) (eval t2 k) in
+      let rec aux acc i j =
+        if i >= l then ()
+        else if j >= i then begin
+          TValues.set this.tvalues i
+            Op.(((deriv t1 i) - acc / (integer i)) / (value t2));
+          aux (Op.zero ()) (i+1) 1
+        end else
+          aux Op.(acc + (integer j) * (deriv this j)
+            * (deriv t2 Stdlib.(i-j))) i (j+1)
+      in
+      if (length this) = 0 then set this 0 Op.(tan (value t1));
+      aux (Op.zero ()) (length this) 1;
+      TValues.set_length this.tvalues l;
+      l
+    | ASIN ->
+      let t1 = get_operands this 0 in
+      let t2 = get_operands this 1 in
+      let l = min (eval t1 k) (eval t2 k) in
+      let rec aux acc i j =
+        if i >= l then ()
+        else if j >= i then begin
+          TValues.set this.tvalues i
+            Op.(((deriv t1 i) - acc / (integer i)) / (value t2));
+          aux (Op.zero ()) (i+1) 1
+        end else
+          aux Op.(acc + (integer j) * (deriv this j)
+            * (deriv t2 Stdlib.(i-j))) i (j+1)
+      in
+      if (length this) = 0 then set this 0 Op.(asin (value t1));
+      aux (Op.zero ()) (length this) 1;
+      TValues.set_length this.tvalues l;
+      l
+    | ACOS ->
+      let t1 = get_operands this 0 in
+      let t2 = get_operands this 1 in
+      let l = min (eval t1 k) (eval t2 k) in
+      let rec aux acc i j =
+        if i >= l then ()
+        else if j >= i then begin
+          TValues.set this.tvalues i
+            Op.(- ((deriv t1 i) + acc / (integer i)) / (value t2));
+          aux (Op.zero ()) (i+1) 1
+        end else
+          aux Op.(acc + (integer j) * (deriv this j)
+            * (deriv t2 Stdlib.(i-j))) i (j+1)
+      in
+      if (length this) = 0 then set this 0 Op.(acos (value t1));
+      aux (Op.zero ()) (length this) 1;
+      TValues.set_length this.tvalues l;
+      l
+    | ATAN ->
+      let t1 = get_operands this 0 in
+      let t2 = get_operands this 1 in
+      let l = min (eval t1 k) (eval t2 k) in
+      let rec aux acc i j =
+        if i >= l then ()
+        else if j >= i then begin
+          TValues.set this.tvalues i
+            Op.(((deriv t1 i) - acc / (integer i)) / (value t2));
+          aux (Op.zero ()) (i+1) 1
+        end else
+          aux Op.(acc + (integer j) * (deriv this j)
+            * (deriv t2 Stdlib.(i-j))) i (j+1)
+      in
+      if (length this) = 0 then set this 0 Op.(atan (value t1));
+      aux (Op.zero ()) (length this) 1;
+      TValues.set_length this.tvalues l;
+      l
 
   let un_op operator t = {
     operator;
@@ -370,12 +555,22 @@ struct
   let sqrt = un_op SQRT
   let log = un_op LOG
   let exp = un_op EXP
-  let sin = un_op SIN
-  let cos = un_op COS
-  let tan = un_op TAN
-  let asin = un_op ASIN
-  let acos = un_op ACOS
-  let atan = un_op ATAN
+  let sin t =
+    un_op (SIN (Array.init (TValues.size t.tvalues) (fun _ -> Op.zero ()))) t
+  let cos t =
+    un_op (COS (Array.init (TValues.size t.tvalues) (fun _ -> Op.zero ()))) t
+  (*
+     cf. the implementation in FADBAD++ (tadiff.h class TTypeNameTAN and function tan)
+     the TAN operator creates a node `sqr (cos x)` in order to use its derivatives
+     to compute the n-th derivative of (tan x) with the formula tan x = 1/cos²(x)
+  *)
+  let tan t = bin_op TAN t (sqr (cos t))
+  (* same than TAN *)
+  let asin t = bin_op ASIN t (sqrt ((one ()) - (sqr t)))
+  (* same than TAN *)
+  let acos t = bin_op ACOS t (sqrt ((one ()) - (sqr t)))
+  (* same than TAN *)
+  let atan t = bin_op ATAN t ((one ()) + (sqr t))
 
   let ( ** ) t1 t2 = exp (t2 * (log t1))
 

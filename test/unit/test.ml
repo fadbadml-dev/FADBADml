@@ -163,7 +163,7 @@ struct
   module Op = T(OpFloat)
   include MakeTestCases(Op)
 
-  let max_order = 4
+  let max_order = 10
 
   let compute_unary t v =
     let x = Op.make v in
@@ -222,8 +222,8 @@ struct
     Printf.printf "\tDESC : %s\n" (Compute.udesc t);
     Printf.printf "\tx = %f\n" v;
     Printf.printf "\tdfdx : expected [%s], got [%s] ... %s\n"
-      (String.concat "; " (Array.to_list (Array.map string_of_float tad_der)))
       (String.concat "; " (Array.to_list (Array.map string_of_float expected_der)))
+      (String.concat "; " (Array.to_list (Array.map string_of_float tad_der)))
       (string_of_bool (for_all2 eq_float tad_der expected_der))
 
   let show_test_binary t (v1, v2) =
@@ -231,8 +231,8 @@ struct
     Printf.printf "\tDESC : %s\n" (Compute.bdesc t);
     Printf.printf "\tx, y = %e, %e\n" v1 v2;
     Printf.printf "\tdfdx, dfdy : expected [%s], got [%s] ... %s\n"
-      (String.concat "; " (Array.to_list (Array.map string_of_float_tuple tad_der)))
       (String.concat "; " (Array.to_list (Array.map string_of_float_tuple expected_der)))
+      (String.concat "; " (Array.to_list (Array.map string_of_float_tuple tad_der)))
       (string_of_bool (for_all2 eq_float_tuple tad_der expected_der))
 
   let show_result show_test test (cell, res) =

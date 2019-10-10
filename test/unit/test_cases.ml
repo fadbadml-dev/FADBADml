@@ -42,7 +42,17 @@ let int_float_range low high : float QCheck.arbitrary =
 
 (* TEST CASES *)
 
-let rec fact n = if n = 0 then 1 else n * (fact (n-1))
+let fact_hashtbl =
+  let res = Hashtbl.create 10 in
+  Hashtbl.add res 0 1; res
+let rec fact n =
+  if Hashtbl.mem fact_hashtbl n then Hashtbl.find fact_hashtbl n
+  else begin
+    let res = n * (fact (n-1)) in
+    Hashtbl.add fact_hashtbl n res;
+    res
+  end
+
 let rec pochhammer f i = if i = 0 then 1. else f *. (pochhammer (f+.1.) (i-1))
 
 module Make(Op : Fadbad.OpS) =
@@ -95,7 +105,8 @@ struct
       uarbitrary = non_zero_float;
       ufad = (fun x -> Op.inv x);
       udfdx = (fun i x ->
-        (-1. ** (float i)) *. (float (fact i)) /. (x ** (float (i+1))));
+        (if i mod 2 = 0 then 1. else -1.) *. (float (fact i))
+          /. (x ** (float (i+1))));
     }
 
   let test_sqr =
@@ -119,7 +130,7 @@ struct
       uarbitrary = QCheck.pos_float;
       ufad = (fun x -> Op.sqrt x);
       udfdx = (fun i x ->
-        (-1. ** (float i)) *. (pochhammer (-0.5) i) *.
+        (if i mod 2 = 0 then 1. else -1.) *. (pochhammer (-0.5) i) *.
         (x ** (0.5 -. (float i))))
     }
 
@@ -171,12 +182,33 @@ struct
       uarbitrary = QCheck.float;
       ufad = (fun x -> Op.tan x);
       udfdx =
-        let rec tan_der i x =
+        (*
+           let `P(0)=X` and `P(n+1)=(1 + X²)*(P(n-1))'` a serie of polynomials
+           (where P' is the derivative of P)
+           then the n-th derivative of tan(x) is P(n)(tan(x))
+        *)
+        let get_coeff poly i =
+          if i < List.length poly then List.nth poly i else 0. in
+        let mul poly1 poly2 =
+          let rec aux poly1 poly2 i j =
+            if j > i then 0. else
+            (get_coeff poly1 j) *. (get_coeff poly2 (i-j))
+              +. (aux poly1 poly2 i (j+1)) in
+          List.init ((List.length poly1) + (List.length poly2))
+            (fun i -> aux poly1 poly2 i 0) in
+        let deriv poly = List.tl (List.mapi (fun i v -> (float i) *. v) poly) in
+        let eval poly x =
+          let rec aux acc l =
+            match l with
+            | [] -> acc
+            | h::t -> aux (x *. acc +. h) t
+          in
+          aux 0. (List.rev poly) in
+        let rec poly i =
           match i with
-          | 0 -> tan x
-          | 1 -> 1. +. (tan x) *. (tan x)
-          | _ -> (float i) *. (1. +. (tan x) *. (tan x)) *. (tan_der (i-1) x)
-        in tan_der;
+          | 0 -> [0.;1.]
+          | _ -> mul [1.;0.;1.] (deriv (poly (i-1)))
+        in (fun i x -> eval (poly i) (tan x));
     }
 
   let test_asin =
@@ -191,7 +223,13 @@ struct
         | 1 -> 1./.(sqrt (1.-.(x**2.)))
         | 2 -> x/.((1.-.(x**2.))**1.5)
         | 3 -> (2.*.(x**2.)+.1.)/.((1.-.(x**2.))**2.5)
-        | 4 -> (3.*.x*.(2.*.(x**2.)+.3.))/.((1.-.(x**2.))**2.5)
+        | 4 -> (3.*.x*.(2.*.(x**2.)+.3.))/.((1.-.(x**2.))**3.5)
+        | 5 -> (24.*.(x**4.)+.72.*.(x**2.)+.9.)/.((1.-.(x**2.))**4.5)
+        | 6 -> (15.*.x*.(8.*.(x**4.)+.40.*.(x**2.)+.15.))/.((1.-.(x**2.))**5.5)
+        | 7 -> (45.*.(16.*.(x**6.)+.120.*.(x**4.)+.90.*.(x**2.)+.5.))/.((1.-.(x**2.))**6.5)
+        | 8 -> (315.*.x*.(16.*.(x**6.)+.168.*.(x**4.)+.210.*.(x**2.)+.35.))/.((1.-.(x**2.))**7.5)
+        | 9 -> (315.*.(128.*.(x**8.)+.1792.*.(x**6.)+.3360.*.(x**4.)+.1120.*.(x**2.)+.35.))/.((1.-.(x**2.))**8.5)
+        | 10 -> (2835.*.x*.(128.*.(x**8.)+.2304.*.(x**6.)+.6048.*.(x**4.)+.3360.*.(x**2.)+.315.))/.((1.-.(x**2.))**9.5)
         | _ -> Printf.eprintf "derivative %d of asin/acos not defined" i; exit 1
       );
     }
@@ -216,17 +254,26 @@ struct
       uarbitrary = QCheck.float_range (-.pi /. 2.) (pi /. 2.);
       ufad = (fun x -> Op.atan x);
       udfdx =
-        (* atan_der i x computes the i-th and (i+1)-th derivatives of atan *)
-        let rec atan_der i x =
+        (*
+          d^n atan(x) / dx^n (x) =
+            (-sign x)^(n-1) * (n-1)! * sin^n(theta(x)) * sin(n*theta(x))
+          with theta(x) = arcsin(1/sqrt(1+x²))
+
+          proof : recursion.
+            (we have that d theta(x) / dx = - (sign x) * sin²(n*theta(x)))
+        *)
+        let sign x = if x >= 0. then 1. else -1. in
+        (fun i x ->
           match i with
-          | 0 -> (atan x, 0.)
-          | 1 -> (1. /. (1. +. x *. x), - 2. *. x /. ((1. +. x *. x) ** 2.))
+          | 0 -> atan x
           | _ ->
             let n = float i in
-            let der_im1, der_i = atan_der (i-1) x in
-            (der_i,
-            (2.*.(n+.1.)*.x*.der_i +. (n+.1.)*.n*.der_im1) /. (1. +. x *. x))
-        in (fun i x -> fst (atan_der i x));
+            let sin_theta = 1. /. (sqrt (1. +. x *. x)) in
+            let theta = asin sin_theta in
+            ((if i mod 2 = 0 then -.(sign x) else 1.) *. (float (fact (i-1))))
+              /. ((1. +. x *. x) ** (n /. 2.))
+              *. (sin (n *. theta))
+        );
     }
 
   let unary = [|
