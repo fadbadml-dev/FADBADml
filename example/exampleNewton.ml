@@ -4,17 +4,24 @@ module OpFun =
     type t = elt ref
     type scalar = float
 
+    let identity () = ref (fun x -> x)
+
+    let create = identity
+
     let make f = ref f
+    let integer i = ref (fun _ -> float i)
     let get f = !f
 
     let to_string this =
       "<OpFun.t = (float -> float) ref>"
+    let string_of_scalar = string_of_float
 
     let copy f = ref !f
+    let deepcopy = copy
 
-    let zero () = make (fun _ -> 0.)
-    let one () = make (fun _ -> 1.)
-    let two () = make (fun _ -> 2.)
+    let zero () = integer 0
+    let one () = integer 1
+    let two () = integer 2
 
     let scale f a = make (fun x -> a *. (!f x))
     let translate f a = make (fun x -> (!f x) +. a)
@@ -25,7 +32,6 @@ module OpFun =
       Utils.user_assert (i_l = []) "d_n : cannot get derivative of a float";
       get v
 
-    let identity () = ref (fun x -> x)
     let apply f x = !f x
 
     let ( ~+ ) f = f
@@ -66,15 +72,16 @@ module OpFun =
     let ( >= ) f1 f2 = Stdlib.(raise (Failure "not implemented"))
   end
 
-module F = Fadbad.F(Fadbad.F(OpFun))
+module F = Fadbad.F(OpFun)
+module FF = Fadbad.F(F)
 
 let f_heat1D f =
-  let alpha = F.one () in
-  let dfdxx = F.d_n f [0;0] in
-  F.(alpha * (F.make dfdxx))
+  let alpha = FF.one () in
+  let dfdxx = F.d (FF.deriv f 0) 0 in
+  FF.(alpha * (FF.make dfdxx))
 
 let newton_step f x0 dt =
-  let open F in
+  let open FF in
   x0 + (dt * (f x0))
 
 let newton_integration f x0 dt (tEnd : float) =
@@ -82,8 +89,8 @@ let newton_integration f x0 dt (tEnd : float) =
     if t > tEnd then
       List.rev result
     else
-      let x1 = newton_step f x0 (F.make (fun _ -> dt)) in
-      aux ((F.get x0) :: result) x1 (t +. dt)
+      let x1 = newton_step f x0 (FF.make (fun _ -> dt)) in
+      aux ((FF.get x0) :: result) x1 (t +. dt)
   in
   aux [] x0 0.
 
@@ -100,9 +107,11 @@ let () =
   let tEnd = 0.2 in
   let dt = 0.05 in
   let x = F.make (fun x -> x) in
-  let () = F.diff_n x 0 1 2 in
-  (* let temp0 = F.(inv (1. &+ (sqr (x)))) in (* does not work! *) *)
-  let temp0 = F.sin x in
+  let () = F.diff x 0 1 in
+  let x = FF.lift x in
+  let () = FF.diff x 0 1 in
+  (* let temp0 = FF.(inv (translate (sqr (x)) 1.)) in (\* does not work! *\) *)
+  let temp0 = FF.sin x in
   let result = newton_integration f_heat1D temp0 dt tEnd in
   let min = -3. in
   let max = 3. in
