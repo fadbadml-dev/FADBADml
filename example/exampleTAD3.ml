@@ -12,16 +12,14 @@ type lorenz = {
 
 let create_lorenz x y z p =
   let open T in
-  let s = make s in
-  let r = make r in
-  let q = make q in
   let x = make x in
   let y = make y in
   let z = make z in 
   let p = make p in
-  let xp = p * (s * (y - x)) in
-  let yp = p * (x * (r - z) - y) in
-  let zp = p * ((x * y) - (q * z)) in
+  let rmz = translate (-z) r in
+  let xp = p * (scale (x-y) s) in
+  let yp = p * (x * rmz - y) in
+  let zp = p * ((x * y) - (scale z q)) in
   let pp = make 0. in
   { x; y; z; p; xp; yp; zp; pp }
 
