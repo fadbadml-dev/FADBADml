@@ -9,6 +9,7 @@ EXAMPLES = \
 	exampleNewton.byte \
 	exampleTAD1.byte \
 	exampleTAD2.byte \
+	exampleTAD3.byte \
 	monteCarlo.byte
 
 all: $(EXAMPLES)
