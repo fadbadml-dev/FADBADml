@@ -7,7 +7,8 @@ EXAMPLES = \
 	exampleFAD.byte \
 	exampleFADFAD.byte \
 	exampleNewton.byte \
-	exampleTAD.byte \
+	exampleTAD1.byte \
+	exampleTAD2.byte \
 	monteCarlo.byte
 
 all: $(EXAMPLES)
