@@ -5,7 +5,10 @@ INCLUDES += -I ../src/ fadbad.cma
 
 EXAMPLES = \
 	exampleFAD.byte \
+	exampleBAD.byte \
 	exampleFADFAD.byte \
+	exampleBADFAD1.byte \
+	exampleBADFAD2.byte \
 	exampleNewton.byte \
 	exampleTAD1.byte \
 	exampleTAD2.byte \
