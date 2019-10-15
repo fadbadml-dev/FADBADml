@@ -28,7 +28,7 @@ struct
   let check_bounds this i =
     user_assert (i < length this && i >= 0)
       ("Derivatives.check_bounds: Index " ^ (string_of_int i) ^
-       " out of range [0," ^ (string_of_int (length this)) ^ "]")
+       " out of range [0," ^ (string_of_int (length this - 1)) ^ "]")
 
   let get this i =
     if has_values this then begin
@@ -39,7 +39,7 @@ struct
   let diff this i n =
     user_assert (i < n && i >= 0)
       ("Derivatives.diff: Index " ^ (string_of_int i) ^
-       " out of range [0," ^ (string_of_int n) ^ "]");
+       " out of range [0," ^ (string_of_int (n - 1)) ^ "]");
     let res = if has_values this then this else ref (make n (Op.zero ())) in
     !res.(i) <- Op.one ();
     this := !res
@@ -145,7 +145,7 @@ struct
   let get_operands this i =
     user_assert (i < Array.length this.operands && i >= 0)
       ("BTypeName.get_operands: Index " ^ (string_of_int i) ^
-       " out of range [0," ^ (string_of_int (Array.length this.operands)) ^
+       " out of range [0," ^ (string_of_int (Array.length this.operands - 1)) ^
        "]");
     this.operands.(i)
 
