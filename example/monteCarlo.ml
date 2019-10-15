@@ -2,6 +2,23 @@ module Op = Fadbad.Op.OpFloat
 
 module type OpFloatS = Fadbad.Op.S with type elt = float and type scalar = float
 
+type 'a dprice =
+  {
+    price:        'a;
+    d_price_spot: 'a;
+    d_price_vol:  'a;
+    d_price_r:    'a;
+  }
+
+type 'a ddprice =
+  {
+    price:          'a;
+    d_price_spot:   'a;
+    d_price_vol:    'a;
+    d_price_r:      'a;
+    d_price_2_spot: 'a;
+  }
+
 let get_one_gaussian_by_summation () =
   let rec sum_rand acc n =
     if n = 0 then
@@ -47,7 +64,7 @@ module SimpleMonteCarlo (Op : OpFloatS) =
           in
           aux (sum + this_payoff) Stdlib.(nb - 1)
       in
-      let mean = scale (aux (make 0.) nb_paths) (1. /. (float_of_int nb_paths)) in
+      let mean = scale (aux (zero ()) nb_paths) (1. /. (float nb_paths)) in
       mean * (exp (scale r (-. expiry)))
   end
 
@@ -55,23 +72,6 @@ module BADSimpleMonteCarlo (Op : OpFloatS) =
   struct
     module BOp = Fadbad.B(Op)
     module SMC = SimpleMonteCarlo(BOp)
-
-    type price =
-      {
-        price: Op.t;
-        d_price_spot: Op.t;
-        d_price_vol: Op.t;
-        d_price_r: Op.t;
-      }
-
-    let create_price () =
-      let open Op in
-      {
-        price = zero ();
-        d_price_spot = zero ();
-        d_price_vol = zero ();
-        d_price_r = zero ();
-      }
 
     let compute expiry strike spot vol r nb_paths =
       let open BOp in
@@ -87,7 +87,7 @@ module BADSimpleMonteCarlo (Op : OpFloatS) =
         d_price_r = deriv b_r 0;
       }
 
-    let print r =
+    let print (r : Op.t dprice) =
       let open Op in
       Printf.printf
         "BAD:\nPrice = %f\ndPriceSpot = %f\ndPriceVol = %f\ndPriceR = %f\n\n"
@@ -98,23 +98,6 @@ module FADSimpleMonteCarlo (Op : OpFloatS) =
   struct
     module FOp = Fadbad.F(Op)
     module SMC = SimpleMonteCarlo(FOp)
-
-    type price =
-      {
-        price: Op.t;
-        d_price_spot: Op.t;
-        d_price_vol: Op.t;
-        d_price_r: Op.t;
-      }
-
-    let create_price () =
-      let open Op in
-      {
-        price = zero ();
-        d_price_spot = zero ();
-        d_price_vol = zero ();
-        d_price_r = zero ();
-      }
 
     let compute expiry strike spot vol r nb_paths =
       let open FOp in
@@ -132,7 +115,7 @@ module FADSimpleMonteCarlo (Op : OpFloatS) =
         d_price_r = deriv f_price 2;
       }
 
-    let print r =
+    let print (r : Op.t dprice) =
       let open Op in
       Printf.printf
         "FAD:\nPrice = %f\ndPriceSpot = %f\ndPriceVol = %f\ndPriceR = %f\n\n"
@@ -144,15 +127,6 @@ module FADFADSimpleMonteCarlo (Op : OpFloatS) =
   struct
     module FOp = Fadbad.F(Op)
     module FSMC = FADSimpleMonteCarlo(FOp)
-
-    type price =
-      {
-        price: Op.t;
-        d_price_spot: Op.t;
-        d_price_vol: Op.t;
-        d_price_r: Op.t;
-        d_price_2_spot: Op.t;
-      }
 
     let compute expiry strike spot vol r nb_paths =
       let open FOp in
@@ -182,15 +156,6 @@ module FADBADSimpleMonteCarlo (Op : OpFloatS) =
   struct
     module FOp = Fadbad.F(Op)
     module BSMC = BADSimpleMonteCarlo(FOp)
-
-    type price =
-      {
-        price: Op.t;
-        d_price_spot: Op.t;
-        d_price_vol: Op.t;
-        d_price_r: Op.t;
-        d_price_2_spot: Op.t;
-      }
 
     let compute expiry strike spot vol r nb_paths =
       let open FOp in
