@@ -10,6 +10,7 @@ EXAMPLES = \
 	exampleBADFAD1.byte \
 	exampleBADFAD2.byte \
 	exampleBADFAD3.byte \
+	exampleBADFAD4.byte \
 	exampleNewton.byte \
 	exampleTAD1.byte \
 	exampleTAD2.byte \
