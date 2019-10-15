@@ -1,21 +1,24 @@
+include ../config
+
 CMO = op.cmo utils.cmo fadiff.cmo badiff.cmo tadiff.cmo
 SORTED_CMO = $(shell ocamldep -sort $(CMO:.cmo=.ml))
 
-all: fadbad.cma
+all: byte opt
+
+byte: fadbad.cma
+opt : fadbad.cmxa
 
 fadbad.cma: $(CMO) fadbad.cmo
-	ocamlc -a -o $@ $(SORTED_CMO) fadbad.ml
+	$(OCAMLC) -a -o $@ $(OCAMLFLAGS) $(SORTED_CMO) fadbad.ml
 
-%.cmi:%.mli
-	ocamlc $<
-%.cmo:%.ml
-	ocamlc -c $<
+fadbad.cmxa: $(CMO) fadbad.cmo
+	$(OCAMLOPT) -a -o $@ $(OCAMLFLAGS) $(SORTED_CMO) fadbad.ml
 
 clean:
-	rm -rf *.cmo *.cmi .depend
+	rm -rf *.cm[ox] *.o .depend
 
 cleanall: clean
-	rm -rf fadbad.cma
+	rm -rf fadbad.cma fadbad.cmxa fadbad.a *.cmi
 
 -include .depend
 .depend:

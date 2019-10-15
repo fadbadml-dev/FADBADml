@@ -1,4 +1,4 @@
-include ../config.make
+include ../config
 
 FADBAD = ../src/fadbad.cma
 INCLUDES += -I ../src/ fadbad.cma

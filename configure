@@ -1,0 +1,77 @@
+#!/bin/sh
+
+prefix=.
+version=~dev
+
+while : ; do
+  case "$1" in
+    "") break;;
+
+    --prefix)
+	prefix=$2; shift;;
+    --prefix=*)
+	prefix=`expr "$1" : '--[^=]*=\(.*\)'`;;
+  esac
+  shift
+done
+
+cat > config <<ENDOFFILE
+# # # THIS FILE IS GENERATED AUTOMATICALLY BY CONFIGURE # # #
+
+LIBDIR := ${prefix}/lib/fadbadml
+
+OCAMLC = ocamlc
+OCAMLOPT = ocamlopt
+
+# implicit rules
+
+.SUFFIXES : .mli .ml .cmi .cmo .cmx .mll .mly .zls .zli .byte .opt
+
+%.cmi: %.mli
+	\$(OCAMLC) \$(OCAMLFLAGS) -c \$(INCLUDES) \$<
+
+%.cmo %.cmi: %.ml
+	\$(OCAMLC) \$(OCAMLFLAGS) -c \$(INCLUDES) \$<
+
+%.cmx %.cmi: %.ml
+	\$(OCAMLOPT) \$(OCAMLOPTFLAGS) -c \$(INCLUDES:.cma=.cmxa) \$<
+
+%.byte: %.cmo
+	\$(OCAMLC) \$(OCAMLFLAGS) -o \$@ \$(INCLUDES) \$<
+
+%.opt: %.cmx
+	\$(OCAMLOPT) \$(OCAMLOPTFLAGS) -o \$@ \$(INCLUDES:.cma=.cmxa) \$<
+ENDOFFILE
+
+cat > META <<ENDOFFILE
+directory = "${prefix}/lib/fadbadml"
+version = "${version}"
+description = "FADBAD++ for OCaml"
+archive(byte) = "fadbad.cma"
+archive(native) = "fadbad.cmxa"
+ENDOFFILE
+
+cat > opam <<ENDOFFILE
+opam-version: "2.0"
+name: "fadbadml"
+version: "${version}"
+synopsis: "FADBAD++ for OCaml"
+maintainer: [
+  ["francois-bidet <francois.bidet@polytechnique.edu>"]
+  ["ismailbennani <ismail.lahkim.bennani@ens.fr>"]
+]
+authors: [
+  ["francois-bidet <francois.bidet@polytechnique.edu>"]
+  ["ismailbennani <ismail.lahkim.bennani@ens.fr>"]
+]
+license: ""
+homepage: "https://github.com/ismailbennani/FADBADml"
+bug-reports: "https://github.com/ismailbennani/FADBADml/issues"
+build: [
+  ["./configure" {ocaml-version > "4.08"} "--prefix=%{prefix}%"]
+  [make "byte"] { !ocaml-native }
+  [make "opt"] { ocaml-native }
+]
+install: [make "install"]
+dev-repo: "git+https://github.com/ismailbennani/FADBADml"
+ENDOFFILE

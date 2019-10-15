@@ -1,13 +1,16 @@
-include ../../config.make
+include ../../config
+
+QCHECK := $(shell ocamlfind query qcheck-core 2> /dev/null)
+
+ifdef QCHECK
 
 INCLUDES += -I ../../lib fadbad.cma
-
-TESTS = test.byte
-
+TESTS = run_test.byte
 all: $(TESTS)
-
-test.byte: INCLUDES += -I `ocamlfind -query qcheck-core` qcheck_core.cma test_cases.cmo
-test.byte: test.cmo
+run_test.byte: INCLUDES += -I `ocamlfind -query qcheck-core` qcheck_core.cma test_cases.cmo
+else
+$(error You need to install QuichCheck (run `opam install qcheck`) to run the tests)
+endif
 
 run: $(TESTS)
 	for test in $(TESTS) ; do ./$$test ; done
