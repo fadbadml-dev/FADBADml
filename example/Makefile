@@ -15,7 +15,8 @@ EXAMPLES = \
 	exampleTAD1.byte \
 	exampleTAD2.byte \
 	exampleTAD3.byte \
-	monteCarlo.byte
+	monteCarlo.byte \
+	exampleString.byte
 
 all: $(EXAMPLES)
 
