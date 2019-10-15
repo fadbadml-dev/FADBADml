@@ -1,0 +1,3 @@
+let node f x = y where
+    rec init x0 = x 
+    and y = (MyOp.make 2.) -> (MyOp.( * ) x0 (pre y))
