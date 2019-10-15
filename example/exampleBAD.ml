@@ -1,4 +1,4 @@
-module Op = Fadbad.Op.OpFloat
+module Op = Fadbad.OpFloat
 module B = Fadbad.B(Op)
 
 let func x y =

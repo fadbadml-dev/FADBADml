@@ -1,4 +1,4 @@
-module Op = Fadbad.Op.OpFloat
+module Op = Fadbad.OpFloat
 
 module type OpFloatS = Fadbad.Op.S with type elt = float and type scalar = float
 
