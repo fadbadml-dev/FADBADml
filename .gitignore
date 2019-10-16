@@ -26,3 +26,5 @@ setup.log
 config
 META
 opam
+
+*.hidden

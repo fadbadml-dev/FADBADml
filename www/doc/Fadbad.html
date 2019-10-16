@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="../css/doc_style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Badiff.html">
+<link rel="next" href="Fadiff.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Badiff" rel="Chapter" href="Badiff.html">
+<link title="Fadbad" rel="Chapter" href="Fadbad.html">
+<link title="Fadiff" rel="Chapter" href="Fadiff.html">
+<link title="Op" rel="Chapter" href="Op.html">
+<link title="Tadiff" rel="Chapter" href="Tadiff.html">
+<link title="Utils" rel="Chapter" href="Utils.html"><title>Fadbad</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Badiff.html" title="Badiff">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Fadiff.html" title="Fadiff">Next</a>
+</div>
+<h1>Module <a href="type_Fadbad.html">Fadbad</a></h1>
+
+<pre><span id="MODULEFadbad"><span class="keyword">module</span> Fadbad</span>: <code class="code">sig</code> <a href="Fadbad.html">..</a> <code class="code">end</code></pre><hr width="100%">
+
+<pre><span id="MODULETYPEOpS"><span class="keyword">module type</span> <a href="Fadbad.OpS.html">OpS</a></span> = <code class="type"><a href="Op.S.html">Op.S</a></code></pre>
+<pre><span id="MODULEOp"><span class="keyword">module</span> <a href="Fadbad.Op.html">Op</a></span>: <code class="type"><a href="Op.html">Op</a></code></pre>
+<pre><span id="MODULEOpFloat"><span class="keyword">module</span> <a href="Fadbad.OpFloat.html">OpFloat</a></span>: <code class="type"><a href="Op.OpFloat.html">Op.OpFloat</a></code></pre>
+<pre><span id="MODULEF"><span class="keyword">module</span> <a href="Fadbad.F.html">F</a></span> <code class="code">(</code><code class="code">Operators</code><code class="code"> : </code><code class="type"><a href="Fadbad.OpS.html">OpS</a></code><code class="code">) </code>: <code class="type"><a href="Fadiff.FTypeName.html">Fadiff.FTypeName</a></code><code class="code">(</code><code class="type"><a href="Op.Make.html">Op.Make</a></code><code class="code">(</code><code class="type">Operators</code><code class="code">)</code><code class="code">)</code></pre>
+<pre><span id="MODULEB"><span class="keyword">module</span> <a href="Fadbad.B.html">B</a></span> <code class="code">(</code><code class="code">Operators</code><code class="code"> : </code><code class="type"><a href="Fadbad.OpS.html">OpS</a></code><code class="code">) </code>: <code class="type"><a href="Badiff.BTypeName.html">Badiff.BTypeName</a></code><code class="code">(</code><code class="type"><a href="Op.Make.html">Op.Make</a></code><code class="code">(</code><code class="type">Operators</code><code class="code">)</code><code class="code">)</code></pre>
+<pre><span id="MODULET"><span class="keyword">module</span> <a href="Fadbad.T.html">T</a></span> <code class="code">(</code><code class="code">Operators</code><code class="code"> : </code><code class="type"><a href="Fadbad.OpS.html">OpS</a></code><code class="code">) </code>: <code class="type"><a href="Tadiff.TTypeName.html">Tadiff.TTypeName</a></code><code class="code">(</code><code class="type"><a href="Op.Make.html">Op.Make</a></code><code class="code">(</code><code class="type">Operators</code><code class="code">)</code><code class="code">)</code></pre></body></html>

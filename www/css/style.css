@@ -1,0 +1,56 @@
+body {
+    width:100%;
+    height:100%;
+    background-color: rgb(241,226,236);
+}
+
+#logo, menu {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#logo {
+    margin-top: 10%;
+}
+
+menu {
+    margin-top: 2%;
+    text-align: center;
+    padding-left: 0px;
+}
+
+menuitem {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+menuitem a {
+    color: black;
+}
+
+#auth, #licence, #credits {
+    margin-top: 2%;
+    text-align: center;
+}
+
+#auth ul {
+    list-style-type: none;
+}
+
+#authors {
+    padding-left: 0px;
+}
+
+#authors .name {
+    font-size: 20px;
+}
+
+#authors li a {
+    text-decoration: none;
+    color: black
+}
+
+#authors .email {
+    color: gray;
+}
