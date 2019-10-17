@@ -20,6 +20,21 @@ struct
       (String.concat ", "
          (Array.to_list (Array.map Op.to_string !this)))
 
+   let rec fprint_t_list ff t_l =
+     let rec aux ff t_l =
+       match t_l with
+       | [] -> ()
+       | x :: q -> Format.fprintf ff ";@,%s%a"
+        (Op.string_of_elt (Op.get x)) aux q
+     in
+     match t_l with
+     | [] -> ()
+     | x :: q -> Format.printf "@[<2>%s%a@]"
+        (Op.string_of_elt (Op.get x)) aux q
+
+  let fprint ff this =
+    Format.fprintf ff "@[<2>[%a]@]" fprint_t_list (Array.to_list !this)
+
   let has_values this = length this > 0
   let check_has_values this =
     user_assert (has_values this)
@@ -126,6 +141,44 @@ struct
 
   let to_short_string this = string_of_op this.operator
 
+  let rec fprint_t_list ff t_l =
+    let rec aux ff t_l =
+      match t_l with
+      | [] -> ()
+      | x :: q -> Format.fprintf ff ";@,%a%a" fprint_t x aux q
+    in
+    match t_l with
+    | [] -> ()
+    | x :: q -> Format.printf "@[<2>%a%a@]" fprint_t x aux q
+
+  and fprint_t ff this =
+    let fprint_value ff value =
+      Format.fprintf ff "@[<2>value@ =@ %s@]"
+        (Op.string_of_elt (Op.get value))
+    in
+    let fprint_operator ff op =
+      Format.fprintf ff "@[<2>operator@ =@ %s@]" (string_of_op op)
+    in
+    let fprint_operands ff operands =
+      Format.fprintf ff "@[<2>operands@ =@ [%a]@]"
+        fprint_t_list (Array.to_list operands)
+    in
+    let fprint_rc ff rc =
+      Format.fprintf ff "@[<2>rc@ =@ %d@]" rc
+    in
+    let fprint_derivatives ff derivatives =
+      Format.fprintf ff "@[<2>derivatives@ =@ %a@]"
+        D.fprint derivatives
+    in
+    Format.fprintf ff "@[<2>{@;%a;@;%a;@;%a;@;%a;@;%a;@;}@]"
+      fprint_value this.value
+      fprint_operator this.operator
+      fprint_operands this.operands
+      fprint_rc this.rc
+      fprint_derivatives this.derivatives
+
+  let fprint ff this = Format.fprintf ff "%a" fprint_t this
+
   let rec to_string this =
     (Printf.sprintf "{\n\toperator = %s\n\toperands =\n\t\t[%s]\n\t"
       (string_of_op this.operator)
@@ -136,6 +189,7 @@ struct
       this.rc (Op.to_string this.value) (D.to_string this.derivatives))
 
   let string_of_scalar = Op.string_of_scalar
+  let string_of_elt = Op.string_of_elt
 
   let add_der this d = D.cAdd this.derivatives d.derivatives
   let sub_der this d = D.cSub this.derivatives d.derivatives
@@ -284,8 +338,8 @@ struct
       mac_der t tmp this
 
   let rec propagateChildren this =
-    Array.iter decRef this.operands
-  (* this.operands <- [||] *)
+    Array.iter decRef this.operands;
+    (* this.operands <- [||] *)
 
   and decRef this =
     user_assert (this.rc > 0) "BTypeName.decRef: Ressource counter negative";
@@ -298,16 +352,21 @@ struct
 
   let incRef this = this.rc <- this.rc + 1
 
-  let diff this idx n =
+  let rec incRef_subtree this =
     incRef this;
-    D.diff this.derivatives idx n;
-    (* decRef cuts the sub-tree below [this] to save some memory space *)
-    decRef this
-  (* cut the array of derivatives to save some memory space *)
-  (* this.derivatives := [||] *)
+    if this.rc = 1 then
+      Array.iter incRef_subtree this.operands
+
+  let compute_list t_l =
+    List.iter incRef_subtree t_l;
+    List.iter decRef t_l
+
+  let compute this = compute_list [this]
+
+  let diff this idx n =
+    D.diff this.derivatives idx n
 
   let un_op operator operation t =
-    incRef t;
     {
       operator;
       operands = [|t|];
@@ -317,7 +376,6 @@ struct
     }
 
   let bin_op operator operation t1 t2 =
-    incRef t1; incRef t2;
     {
       operator;
       operands = [|t1; t2|];
@@ -327,9 +385,7 @@ struct
     }
 
   let bin_cOp operator operation t1 t2 =
-    incRef t2;
     let copy_t1 = copy t1 in
-    incRef copy_t1;
     t1.operator <- operator;
     t1.operands <- [|copy_t1; t2|];
     t1.rc <- 0;
