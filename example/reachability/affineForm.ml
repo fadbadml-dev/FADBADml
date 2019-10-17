@@ -56,6 +56,12 @@ let make_float f =
     t_noises = [];
   }
 
+let make_bounds min max =
+  {
+    t_center = (min +. max) /. 2.;
+    t_noises = [(Index.get_fresh (), (max -. min) /. 2.)];
+  }
+
 let integer i =
   {
     t_center = float i;

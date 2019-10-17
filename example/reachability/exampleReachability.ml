@@ -1,3 +1,6 @@
+module Interval = Sets.Interval
+module AAF = Sets.AffineForm
+
 module F = Fadbad.F(Interval)
 
 exception Picard_not_contract
@@ -14,12 +17,16 @@ let rec picard x0 f dt x nb_max =
 
 let () =
   let open Interval in
-  let i = make {min = 2.3; max = 5.2; } in
-  let () = Printf.printf "i = %s\n" (to_string i) in
+  let i1 = {min = -2.3; max = 5.2} in
+  let () = Printf.printf "i1 = %s\n" (to_string i1) in
+  let i2 = {min = 2.; max = 2.} in
+  let () = Printf.printf "i2 = %s\n" (to_string i2) in
+  let i3 = i1 ** i2 in
+  let () = Printf.printf "i3 = %s\n" (to_string i3) in
   ()
 
 let () =
-  let open AffineForm in
+  let open AAF in
   let e0 = create_noise () in
   let e1 = create_noise () in
   let x1 = (make_float 1.) + e1 in

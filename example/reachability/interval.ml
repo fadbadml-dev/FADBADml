@@ -11,13 +11,19 @@ type t =
     mutable max: scalar;
   }
 
+let is_point i = i.min = i.max
+let is_positive i = 0. < i.min
+let is_negative i = i.max < 0.
+let is_null i = i.min = 0. && i.max = 0.
+let is_not_positive i = i.max <= 0.
+let is_not_negative i = 0. <= i.min
+
 let create () = { min = Float.nan; max = Float.nan; }
 
 let make_point f = { min = f; max = f; }
-let make (i : elt) : t = {
-    min = i.min;
-    max = i.max;
-  }
+let make_bounds min max = {min; max}
+let make (i : elt) : t = make_bounds i.min i.max
+
 
 let integer i = make_point (float i)
 
@@ -144,6 +150,7 @@ let sqrt i =
   }
 
 let log i =
+  Utils.user_assert (is_not_negative i) "(Interval) log not defined for negative numbers";
   {
     min = log i.min;
     max = log i.max;
@@ -155,7 +162,33 @@ let exp i =
     max = exp i.max;
   }
 
-let ( ** ) i1 i2 = exp (i2 * (log i1))
+let pow_int i n =
+  let pmin = Stdlib.(i.min ** (float n)) in
+  let pmax = Stdlib.(i.max ** (float n)) in
+  if n mod 2 = 0 then
+    if 0. <= i.min then
+      {
+        min = pmin;
+        max  = pmax;
+      }
+    else if i.max <= 0. then
+      {
+        min = pmax;
+        max = pmin;
+      }
+    else
+      {
+        min = 0.;
+        max = max pmin pmax;
+      }
+  else
+    {
+      min = pmin;
+      max = pmax;
+    }
+
+let ( ** ) i1 i2 =
+  exp (i2 * (log i1))
 
 let sin i =
   assert false (* TODO *)
