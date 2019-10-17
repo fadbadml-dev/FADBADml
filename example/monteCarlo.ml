@@ -78,6 +78,7 @@ module BADSimpleMonteCarlo (Op : OpFloatS) =
       let b_r = lift r in
       let b_price = SMC.compute expiry strike b_spot b_vol b_r nb_paths in
       let () = diff b_price 0 1 in
+      let () = compute b_price in
       {
         price = value b_price;
         d_price_spot = deriv b_spot 0;
