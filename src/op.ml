@@ -33,6 +33,7 @@ sig
 
   val to_string : t -> string
   val string_of_scalar : scalar -> string
+  val string_of_elt : elt -> string
 
   val copy : t -> t
   val deepcopy : t -> t
@@ -120,6 +121,7 @@ struct
 
   let to_string x = string_of_float !x
   let string_of_scalar = string_of_float
+  let string_of_elt = string_of_float
 
   let copy x = ref !x
   let deepcopy x = copy x

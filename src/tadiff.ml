@@ -134,6 +134,7 @@ struct
       (TValues.string_of_values this.tvalues)
       (TValues.string_of_derivatives this.tvalues))
   let string_of_scalar = Op.string_of_scalar
+  let string_of_elt = Op.string_of_elt
 
   let get_operands this i =
     user_assert (i < Array.length this.operands && i >= 0)

@@ -13,6 +13,7 @@ struct
   type elt = Op.elt
   type scalar = Op.scalar
   let string_of_scalar = Op.string_of_scalar
+  let string_of_elt = Op.string_of_elt
 
   let to_string this =
     Printf.sprintf "{%s | [%s]}" (Op.to_string this.m_val)
