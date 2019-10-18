@@ -23,6 +23,8 @@ let eq_float a b = eq_float a b 1e-10
 
 let eq_float_tuple (a1,a2) (b1,b2) = (eq_float a1 b1) && (eq_float a2 b2)
 
+let string_of_float_tuple (f1, f2) = Printf.sprintf "(%f,%f)" f1 f2
+
 let check_results results =
   Array.for_all (fun (cell, res) ->
       match res.QCheck.TestResult.state with
@@ -133,6 +135,7 @@ struct
     let x = Op.make v in
     let v_fad = (ufad t) x in
     Op.diff v_fad 0 1;
+    Op.compute v_fad;
     (* value of f *)
     let vf = Op.get v_fad in
     let actual_vf = (udfdx t) 0 v in
@@ -146,6 +149,7 @@ struct
     let y = Op.make v2 in
     let v_fad = (bfad t) x y in
     Op.diff v_fad 0 1;
+    Op.compute v_fad;
     (* value of f *)
     let vf = Op.get v_fad in
     let actual_vf = (bdfdx t) 0 v1 v2 in
@@ -163,7 +167,7 @@ struct
   module Op = T(OpFloat)
   include MakeTestCases(Op)
 
-  let max_order = 10
+  let max_order = 4
 
   let compute_unary t v =
     let x = Op.make v in
@@ -188,22 +192,56 @@ struct
     Op.set y 1 (OpFloat.one ());
     ignore (Op.eval v_fad max_order);
     let tad_dery = Op.get_derivatives v_fad in
-    let tad_der = Array.map2 (fun x y -> (x,y)) tad_derx tad_dery in
-    (* derivative of f *)
-    let expected_der = Array.init (max_order + 1)
-      (fun i -> (bdfdx t) i v1 v2, (bdfdy t) i v1 v2) in
-    tad_der, expected_der
+    try
+      let tad_der = Array.map2 (fun x y -> (x,y)) tad_derx tad_dery in
+      (* derivative of f *)
+      let expected_der = Array.init (max_order + 1)
+        (fun i -> (bdfdx t) i v1 v2, (bdfdy t) i v1 v2) in
+      tad_der, expected_der
+    with Invalid_argument s ->
+      Printf.eprintf
+        "Fatal error in compute_binary: exception Invalid_argument \"%s\"
+          a1 = [%s]
+          a2 = [%s]\n"
+        s
+        (String.concat "; "
+           (Array.to_list (Array.map string_of_float tad_derx)))
+        (String.concat "; "
+           (Array.to_list (Array.map string_of_float tad_dery)));
+      exit 1
 end
 
 module Test(Compute : Compute) =
 struct
   let compare_unary t v =
     let tad_der, expected_der = Compute.compute_unary t v in
-    for_all2 eq_float tad_der expected_der
+    try
+      for_all2 eq_float tad_der expected_der
+    with Invalid_argument s ->
+      Printf.eprintf
+        "Fatal error in compare_unary: %s\na1 = [%s]\na2 = [%s]\n"
+        s
+        (String.concat "; "
+           (Array.to_list (Array.map string_of_float tad_der)))
+        (String.concat "; "
+           (Array.to_list (Array.map string_of_float expected_der)));
+      false
 
   let compare_binary t (v1, v2) =
     let tad_der, expected_der = Compute.compute_binary t (v1, v2) in
-    for_all2 eq_float_tuple tad_der expected_der
+    try
+      for_all2 eq_float_tuple tad_der expected_der
+    with Invalid_argument s ->
+      Printf.eprintf
+        "Fatal error in compare_binary: exception Invalid_argument \"%s\"
+          a1 = [%s]
+          a2 = [%s]\n"
+        s
+        (String.concat "; "
+           (Array.to_list (Array.map string_of_float_tuple tad_der)))
+        (String.concat "; "
+           (Array.to_list (Array.map string_of_float_tuple expected_der)));
+      false
 
   let test_unary ?count:(count=100) f =
     let cell = QCheck.(Test.make_cell ~name:(Compute.uname f)
@@ -224,7 +262,8 @@ struct
     Printf.printf "\tdfdx : expected [%s], got [%s] ... %s\n"
       (String.concat "; " (Array.to_list (Array.map string_of_float expected_der)))
       (String.concat "; " (Array.to_list (Array.map string_of_float tad_der)))
-      (string_of_bool (for_all2 eq_float tad_der expected_der))
+      (string_of_bool (false))
+      (* (string_of_bool (for_all2 eq_float tad_der expected_der)) *)
 
   let show_test_binary t (v1, v2) =
     let tad_der, expected_der = Compute.compute_binary t (v1, v2) in
@@ -233,7 +272,8 @@ struct
     Printf.printf "\tdfdx, dfdy : expected [%s], got [%s] ... %s\n"
       (String.concat "; " (Array.to_list (Array.map string_of_float_tuple expected_der)))
       (String.concat "; " (Array.to_list (Array.map string_of_float_tuple tad_der)))
-      (string_of_bool (for_all2 eq_float_tuple tad_der expected_der))
+      (string_of_bool (false))
+      (* (string_of_bool (for_all2 eq_float_tuple tad_der expected_der)) *)
 
   let show_result show_test test (cell, res) =
     begin match res.QCheck.TestResult.state with
