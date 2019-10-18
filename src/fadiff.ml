@@ -1,8 +1,8 @@
 open Utils
 
-module type OpS' = Op.S'
+module type OpS = Op.S
 
-module FTypeName (Op : OpS') =
+module FTypeName (Op : OpS) =
 struct
 
   type t = {

@@ -1,8 +1,8 @@
 open Utils
 
-module type OpS' = Op.S'
+module type OpS = Op.S
 
-module Derivatives (Op : OpS') =
+module Derivatives (Op : OpS) =
 struct
   type t = Op.t array ref
 
@@ -99,7 +99,7 @@ struct
 
 end
 
-module BTypeName (Op : OpS') =
+module BTypeName (Op : OpS) =
 struct
   module D = Derivatives(Op)
 

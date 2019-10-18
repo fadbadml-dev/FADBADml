@@ -1,8 +1,8 @@
 open Utils
 
-module type OpS' = Op.S'
+module type OpS = Op.S
 
-module TValues(Op : OpS') =
+module TValues(Op : OpS) =
 struct
   type t = {
     mutable n : int;
@@ -86,7 +86,7 @@ struct
     this.values.(i) <- v
 end
 
-module TTypeName(Op : OpS') =
+module TTypeName(Op : OpS) =
 struct
   module TValues = TValues(Op)
 

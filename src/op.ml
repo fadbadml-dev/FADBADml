@@ -88,24 +88,6 @@ sig
   val ( >= ) : t -> t -> bool
 end
 
-module type S' =
-sig
-  include S
-  val diff : t -> int -> int -> unit
-  val d : t -> int -> elt
-end
-
-module Make(Op : S) =
-struct
-  include Op
-  let diff _ _ _ =
-    Utils.user_assert false "diff : cannot differentiate a value";
-    assert false
-  let d _ _ =
-    Utils.user_assert false "d : cannot get derivative of a value";
-    assert false
-end
-
 module OpFloat =
 struct
   type t = float ref
