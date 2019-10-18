@@ -14,6 +14,7 @@ let () =
   let () = F.diff (BF.value y) 1 2 in
   let f  = func x y in
   let () = BF.diff f 0 1 in
+  let () = BF.compute f in
   let f_val = BF.get f in
   let dfdx = BF.d x 0 in
   let dfdy = BF.d y 0 in

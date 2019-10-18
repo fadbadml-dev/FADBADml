@@ -15,6 +15,7 @@ module OpFun =
     let to_string this =
       "<OpFun.t = (float -> float) ref>"
     let string_of_scalar = string_of_float
+    let string_of_elt e = "<OpFun.elt = float -> float>"
 
     let copy f = ref !f
     let deepcopy = copy

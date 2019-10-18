@@ -38,6 +38,7 @@ module DFunc (Func : FuncS) (Op : Fadbad.Op.S) =
       let y = lift y in
       let f = Func.exec x y in
       let () = diff f 0 1 in
+      let () = compute f in
       {
         value = value f;
         dx = deriv x 0;

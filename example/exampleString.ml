@@ -10,6 +10,7 @@ module OpString =
     let get s = !s
     let to_string s = !s
     let string_of_scalar f = string_of_float f
+    let string_of_elt e = e
 
     let copy s = ref !s
     let deepcopy = copy
@@ -148,6 +149,7 @@ let bad () =
   let y = B.make "y" in
   let f = Func.exec x y in
   let () = B.diff f 0 1 in
+  let () = B.compute f in
   let f_val = B.get f in
   let dfdx = B.d x 0 in
   let dfdy = B.d y 0 in

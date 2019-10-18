@@ -11,6 +11,7 @@ let () =
   let y = B.make 2. in
   let f  = func x y in
   let () = B.diff f 0 1 in
+  let () = B.compute f in
   let f_val = B.get f in
   let dfdx = B.d x 0 in
   let dfdy = B.d y 0 in
