@@ -3,7 +3,7 @@ all: main.byte
 myOp.zci:myOp.zli
 	zeluc myOp.zli
 myOp.zli:
-	echo "type t val make : float -> t val ( * ) : t -> t -> t" > myOp.zli
+	echo "type t val make : float -> t val ( * ) : t -> t -> t val get : t -> float" > myOp.zli
 myOp.cmo:myOp.ml
 	ocamlc -c -o $@ -I ../../lib fadbad.cma myOp.ml
 myOp.ml:

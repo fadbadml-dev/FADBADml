@@ -6,7 +6,7 @@ let step (Ztypes.Node { alloc; reset; step }) =
   step mem
 
 let _ =
-  let step = step Func.f in
+  let step = step Func.aut in
 
   let x0 = Op.make 5. in
   Op.diff x0 0 1;
