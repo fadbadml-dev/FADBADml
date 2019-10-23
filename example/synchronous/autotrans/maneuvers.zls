@@ -1,0 +1,88 @@
+open MyOp
+
+let hybrid passing_maneuver_c() = make throttle, make brake_torque where
+    rec brake_torque = 0.
+    and init throttle = 60.
+    and automaton
+    | State1 ->
+        do
+            der throttle = -20. /. 14.9
+        unless up(40. -. throttle) then State2
+    | State2 ->
+        do
+            der throttle = 600.
+        unless up(throttle -. 100.) then State3
+    | State3 ->
+        do
+            der throttle = (58.8235 -. 100.) /. (50. -. 15.)
+        unless up(-.throttle)
+        then do next throttle = 0. in State4
+    | State4 ->
+        do
+            der throttle = 0.
+        done
+
+let hybrid gradual_acceleration_c() = make throttle, brake where
+    der throttle = (24. -. 13.4) /. 50. init 13.4
+    and init brake = make 0.
+
+let hybrid hard_braking_c() = throttle, brake_torque where
+    rec der t = 1. init 0.
+    and init throttle = make 50.
+    and init brake_torque = make 0.
+    and present up(t -. 5.1) -> do throttle = make 1. done
+    and present up(t -. 10.) -> do brake_torque = make 325. done
+
+let hybrid coasting_c() = throttle, brake_torque where
+    rec der t = 1. init 0.
+    and init throttle = make 80.
+    and init brake_torque = make 0.
+    and present up(t -. 4.8) -> do throttle = make 1. done
+
+let node passing_maneuver_d(t) = throttle, brake_torque where
+    rec tstep = t -> (t - pre t)
+    and init brake_torque = make 0.
+    and init dthrottle_state1 = make (-20. /. 14.9)
+    and init dthrottle_state2 = make 600.
+    and init dthrottle_state3 = make ((58.8235 -. 100.) /. (50. -. 15.))
+    and init dthrottle_state4 = make 0.
+    and throttle = make 60. -> (pre throttle + pre dthrottle * tstep)
+    and automaton
+        | State1 ->
+            do
+              dthrottle = dthrottle_state1
+            unless (get throttle < 40.)
+              then State2
+        | State2 ->
+            do
+              dthrottle = dthrottle_state2
+            unless (get throttle > 100.)
+              then State3
+        | State3 ->
+            do
+              dthrottle = dthrottle_state3
+            unless (get throttle <= 0.)
+              then State4
+        | State4 ->
+            do
+              dthrottle = dthrottle_state4
+            done
+
+let node gradual_acceleration_d(t) = throttle, brake where
+    rec derthrottle = (24. -. 13.4) /. 50.
+    and throttle = translate (scale t derthrottle) 13.4
+    and init brake = make 0.
+
+let node hard_braking_d(t) = throttle, brake_torque where
+    rec init throttle_low = make 1.
+    and init throttle_high = make 50.
+    and init brake_low = make 0.
+    and init brake_high = make 325.
+    and throttle = if get t >= 5.1 then throttle_low else throttle_high
+    and brake_torque = if get t >= 10. then brake_high else brake_low
+
+let node coasting_d(t) = throttle, brake_torque where
+    rec init throttle_low = make 1.
+    and init throttle_high = make 80.
+    and throttle = if get t >= 4.8 then throttle_low else throttle_high
+    and init brake_torque = make 0.
