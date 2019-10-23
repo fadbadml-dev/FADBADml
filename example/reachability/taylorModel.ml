@@ -1,52 +1,21 @@
-open Sets
+module Make (Op : Fadbad.OpS) = struct
+  type t =
+    {
+      dim: int; (* space dimension *)
+      coef: (Op.t array) list; (* [a_{n}, a_{n-1}, ..., a_{0}] *)
+      t0: Op.t;
+      dt_max: Op.t;
+    }
 
-type t =
-  {
-    mutable dependent: AffineForm.t list; (* first coefficients *)
-    mutable independent : Interval.t list; (* remaind coefficients *)
-  }
-
-let create () =
-  {
-    dependent = [];
-    independent = [];
-  }
-
-let add_dependent tm aaf =
-  let () =
-    Utils.user_assert
-      (tm.independent = [])
-      "Cannot add dependent coefficient because some independent ones are already defined"
-  in
-  let () = tm.dependent <- (aaf :: tm.dependent) in
-  tm
-
-let add_independent tm i =
-  let () = tm.independent <- (i :: tm.independent) in
-  ()
-
-let eval tm dt =
-  let eval_dep l =
-    let open AffineForm in
-    let rec eval_dep r l =
+  let eval tm dt =
+    let open Op in
+    let rec aux r l =
       match l with
       | [] -> r
-      | h::t -> eval_dep ((dt * r) + h) t
+      | h::t ->
+         let r = Array.map (fun x -> dt * x) r in
+         let r = Array.map2 (fun x h -> x + h) r h in
+         aux r t
     in
-    eval_dep (zero ()) l
-  in
-  let eval_ind l i0 =
-    let dt = to_interval dt in
-    let open Interval in
-    let rec eval_ind r l powdt =
-      match l with
-      | [] -> r
-      | h::t -> eval_ind (r + (h * powdt)) t (powdt * dt)
-    in
-    eval_ind (zero ()) l (pow_int dt i0)
-  in
-  let dep = eval_dep tm.dependent in
-  match tm.independent with
-  | [] -> dep
-  | l ->
-     AffineForm.(dep + (to_affine_form (eval_ind l (List.length tm.dependent))))
+    aux (Array.make tm.dim (zero ())) tm.coef
+end

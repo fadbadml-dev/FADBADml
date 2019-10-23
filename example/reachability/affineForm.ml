@@ -42,7 +42,11 @@ let create_noise () =
     t_noises = [(Index.get_fresh (), 1.)];
   }
 
-let create () = ref []
+let create () =
+  {
+    t_center = 0.;
+    t_noises = [];
+  }
 
 let make aaf =
   {
@@ -74,6 +78,42 @@ let get x =
     noises = x.t_noises;
   }
 
+let get_min_max x =
+  let radius = radius x in
+  let center = x.t_center in
+  (center -. radius, center +. radius)
+
+(* gather all noises smaller (absolute value) than threshold *)
+let reduce x threshold =
+  let rec aux rc rl l =
+    match l with
+    | [] -> List.rev ((Index.get_fresh (), rc) :: rl)
+    | (i,c)::t ->
+       let abs = abs_float c in
+       if abs < threshold then
+         aux (abs +. rc) rl t
+       else
+         aux rc ((i,c)::rl) t
+  in
+  { x with t_noises = aux 0. [] x.t_noises }
+
+let noises_to_points lx ly =
+  let rec aux r lx ly =
+    match lx, ly with
+    | [], [] -> r
+    | [], hy::ty -> aux ((0.,hy)::r) [] ty
+    | hx::tx, [] -> aux ((hx,0.)::r) tx []
+    | hx::tx, hy::ty ->
+       raise (Failure "TODO")
+  in
+  aux [] lx ly
+
+let print2d x y =
+  let threshold = 1e-3 in
+  let x = reduce x threshold in
+  let y = reduce y threshold in
+  raise (Failure "TODO")
+
 let to_string x =
   String.concat " + "
     ((string_of_float x.t_center)
@@ -83,6 +123,13 @@ let to_string x =
            x.t_noises))
 
 let string_of_scalar = string_of_float
+let string_of_elt x =
+  String.concat " + "
+    ((string_of_float x.center)
+     :: (List.map
+           (fun (i,x) ->
+             (string_of_float x) ^ " * e_{" ^ (Index.to_string i) ^ "}")
+           x.noises))
 
 let copy x =
   {
@@ -134,7 +181,7 @@ let ( - ) x1 x2 =
   let rec apply_list r l1 l2 =
     match l1, l2 with
     | [], [] -> List.rev r
-    | [], _ -> List.rev_append r l2
+    | [], (i2,h2)::t2 -> apply_list ((i2,-.h2)::r) [] t2
     | _, [] -> List.rev_append r l1
     | (i1,h1)::t1, (i2,h2)::t2 ->
        let comp = Index.compare i1 i2 in
@@ -189,6 +236,8 @@ let ( /= ) = cumul_op ( / )
 let ( ** ) x1 x2 = raise (Failure "( ** ) not implemented")
 
 let inv x = raise (Failure "inv not implemented")
+let sqr x = raise (Failure "inv not implemented")
+let sqrt x = raise (Failure "inv not implemented")
 let log x = raise (Failure "log not implemented")
 let exp x = raise (Failure "exp not implemented")
 let sin x = raise (Failure "sin not implemented")
@@ -204,3 +253,10 @@ let ( < ) x1 x2 = raise (Failure "( < ) not implemented")
 let ( <= ) x1 x2 = raise (Failure "( <= ) not implemented")
 let ( > ) x1 x2 = raise (Failure "( > ) not implemented")
 let ( >= ) x1 x2 = raise (Failure "( >= ) not implemented")
+
+
+let add = ( + )
+let sub = ( - )
+let mul = ( * )
+let div = ( / )
+let neg = ( ~- )

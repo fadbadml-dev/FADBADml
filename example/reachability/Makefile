@@ -2,7 +2,7 @@ include ../../config
 
 INCLUDES += -I ../../lib fadbad.cma
 
-CMO = interval.cmo affineForm.cmo sets.cmo exampleReachability.cmo
+CMO = fode.cmo interval.cmo affineForm.cmo sets.cmo exampleReachability.cmo
 
 all: objects exampleReachability.byte
 

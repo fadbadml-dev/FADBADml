@@ -1,5 +1,5 @@
 S src/
-S example/
+S example/**
 S test/
 S test/unit/
 

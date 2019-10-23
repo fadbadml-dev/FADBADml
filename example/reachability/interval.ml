@@ -33,9 +33,27 @@ let get (i : t) : elt =
     max = i.max;
   }
 
+let get_min i = i.min
+let get_max i = i.max
+let get_min_max i = (i.min, i.max)
+
+let radius i =
+  let min, max = get_min_max i in
+  (max -. min) /. 2.
+
+let print2d x y =
+  let () = Printf.printf "%f\t%f\n" x.min y.min in
+  let () = Printf.printf "%f\t%f\n" x.max y.min in
+  let () = Printf.printf "%f\t%f\n" x.max y.max in
+  let () = Printf.printf "%f\t%f\n" x.min y.max in
+  let () = Printf.printf "%f\t%f\n" x.min y.min in
+  ()
+
 let to_string i =
   Printf.sprintf "[%f,%f]" i.min i.max
 let string_of_scalar = string_of_float
+let string_of_elt (i : elt) =
+  Printf.sprintf "[%f,%f]" i.min i.max
 
 let copy i = {
     min = i.min;
@@ -67,13 +85,13 @@ let ( += ) i1 i2 =
   i1
 
 let ( - ) i1 i2 = {
-    min = i1.min -. i2.min;
-    max = i1.max -. i2.max;
+    min = i1.min -. i2.max;
+    max = i1.max -. i2.min;
   }
 
 let ( -= ) i1 i2 =
-  let () = i1.min <- i1.min -. i2.min in
-  let () = i1.max <- i1.max -. i2.max in
+  let () = i1.min <- i1.min -. i2.max in
+  let () = i1.max <- i1.max -. i2.min in
   i1
 
 let ( * ) i1 i2 =
@@ -229,3 +247,9 @@ let ( >= ) i1 i2 =
 (** [subset s1 s2] tests whether the set s1 is a subset of the set s2. *)
 let subset i1 i2 =
   Stdlib.(i2.min <= i1.min && i1.max <= i2.max)
+
+let add = ( + )
+let sub = ( - )
+let mul = ( * )
+let div = ( / )
+let neg = ( ~- )
