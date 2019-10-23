@@ -28,9 +28,9 @@ module OpFun =
     let translate f a = make (fun x -> (!f x) +. a)
 
     let diff_n _ _ _ d =
-      Utils.user_assert (d = 0) "diff_n : cannot differentiate a float"
+      Fadbad_utils.user_assert (d = 0) "diff_n : cannot differentiate a float"
     let d_n v i_l =
-      Utils.user_assert (i_l = []) "d_n : cannot get derivative of a float";
+      Fadbad_utils.user_assert (i_l = []) "d_n : cannot get derivative of a float";
       get v
 
     let apply f x = !f x

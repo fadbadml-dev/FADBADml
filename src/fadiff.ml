@@ -1,4 +1,4 @@
-open Utils
+open Fadbad_utils
 
 module type OpS = Op.S
 
@@ -113,10 +113,6 @@ struct
 
   let ( = ) v v' = Op.( v.m_val = v'.m_val )
   let ( <> ) v v' = Op.( v.m_val <> v'.m_val )
-  let ( <= ) v v' = Op.( v.m_val <= v'.m_val )
-  let ( < ) v v' = Op.( v.m_val < v'.m_val )
-  let ( >= ) v v' = Op.( v.m_val >= v'.m_val )
-  let ( > ) v v' = Op.( v.m_val > v'.m_val )
 
   (* ------------------------------ *)
   (* ARITHMETIC OPERATORS *)

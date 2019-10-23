@@ -1,4 +1,4 @@
-open Utils
+open Fadbad_utils
 
 module type OpS = Op.S
 
@@ -427,9 +427,5 @@ struct
 
   let ( = ) t1 t2 = Op.((value t1) = (value t2))
   let ( <> ) t1 t2 = Op.((value t1) <> (value t2))
-  let ( < ) t1 t2 = Op.((value t1) < (value t2))
-  let ( <= ) t1 t2 = Op.((value t1) <= (value t2))
-  let ( > ) t1 t2 = Op.((value t1) > (value t2))
-  let ( >= ) t1 t2 = Op.((value t1) >= (value t2))
 
 end

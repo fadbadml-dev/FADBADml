@@ -1,6 +1,6 @@
 include ../config
 
-CMO = op.cmo utils.cmo fadiff.cmo badiff.cmo tadiff.cmo
+CMO = op.cmo fadbad_utils.cmo fadiff.cmo badiff.cmo tadiff.cmo
 SORTED_CMO = $(shell ocamldep -sort $(CMO:.cmo=.ml))
 
 all: byte opt

@@ -82,6 +82,10 @@ sig
 
   val ( = ) : t -> t -> bool
   val ( <> ) : t -> t -> bool
+end
+
+module type OrderedS = sig
+  include S
   val ( < ) : t -> t -> bool
   val ( <= ) : t -> t -> bool
   val ( > ) : t -> t -> bool
@@ -147,8 +151,13 @@ struct
 
   let ( = ) x y = Stdlib.(!x = !y)
   let ( <> ) x y = Stdlib.(!x <> !y)
+end
+
+module OrderedFloat =
+struct
+  include OpFloat
   let ( < ) x y = Stdlib.(!x < !y)
   let ( <= ) x y = Stdlib.(!x <= !y)
   let ( > ) x y = Stdlib.(!x > !y)
-  let ( >= ) x y = Stdlib.(!x >= !y)
+  let ( <= ) x y = Stdlib.(!x >= !y)
 end
