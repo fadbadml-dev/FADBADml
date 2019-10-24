@@ -339,7 +339,7 @@ struct
 
   let rec propagateChildren this =
     Array.iter decRef this.operands;
-    (* this.operands <- [||] *)
+    this.operands <- [||]
 
   and decRef this =
     user_assert (this.rc > 0) "BTypeName.decRef: Ressource counter negative";
