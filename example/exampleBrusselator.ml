@@ -36,7 +36,7 @@ struct
   let brusselator v =
     let open Op in
     {
-      x = translate ((sqr v.x) * v.y - (scale v.x 1.7) - v.x) 1.;
+      x = translate ((sqr v.x) * v.y - (scale v.x 2.7)) 1.;
       y = (scale v.x 1.7) - (sqr v.x) * v.y;
     }
 
@@ -153,8 +153,8 @@ let main_tad nsteps dt ncoeff =
     t := !t +. dt;
   done;
 
-  TOp.set mem.lastv.x 1 (OpFloat.one ());
-  TOp.set mem.lastv.y 1 (OpFloat.one ());
+  TOp.set v0.x 1 (OpFloat.one ());
+  TOp.set v0.y 1 (OpFloat.one ());
 
   let exec_t = Unix.gettimeofday () in
   ignore (TOp.eval mem.lastv.x ncoeff);
@@ -169,7 +169,7 @@ let main_tad nsteps dt ncoeff =
       tad_x = TOp.get mem.lastv.x;
       tad_y = TOp.get mem.lastv.y;
       tad_dxdt = TOp.get_derivatives mem.lastv.x;
-      tad_dydt = TOp.get_derivatives mem.lastv.x;
+      tad_dydt = TOp.get_derivatives mem.lastv.y;
     }
   }
 
