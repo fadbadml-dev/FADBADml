@@ -1,6 +1,7 @@
 module type S = sig
   include Fadbad.OpS with type scalar = float
 
+  val make_float: float -> t
   val make_bounds: float -> float -> t
   val get_min_max: t -> (float * float)
   val print2d: t -> t -> unit

@@ -21,6 +21,7 @@ let is_not_negative i = 0. <= i.min
 let create () = { min = Float.nan; max = Float.nan; }
 
 let make_point f = { min = f; max = f; }
+let make_float f = make_point f
 let make_bounds min max = {min; max}
 let make (i : elt) : t = make_bounds i.min i.max
 
@@ -168,7 +169,11 @@ let sqrt i =
   }
 
 let log i =
-  Utils.user_assert (is_not_negative i) "(Interval) log not defined for negative numbers";
+  if not (is_not_negative i) then begin
+      Printf.eprintf
+        "User assertion failed: %s\n"
+        "(Interval) log not defined for negative numbers";
+      exit 1 end;
   {
     min = log i.min;
     max = log i.max;
