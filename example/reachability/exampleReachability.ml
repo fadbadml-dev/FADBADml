@@ -41,10 +41,11 @@ module Experiment (Func : Fode.S) (Op : Sets.S) = struct
     in
     print print_state l
 
-  let run s0 t0 t_end =
-    let () = Integrator.set_dt 1e-2 in
-    let () = Integrator.set_order 3 in
+  let run s0 t0 t_end dt order =
+    let () = Integrator.set_dt dt in
+    let () = Integrator.set_order order in
     let l = Integrator.integrate s0 t0 t_end in
+    let () = Printf.fprintf Stdlib.stderr "Print...\n%!" in
     let () = print l in
     ()
 end
@@ -55,6 +56,15 @@ let () =
   let module Exp = Experiment(Brusselator)(Op) in
   let s0 = [| Op.make_bounds 1.45 1.55; Op.make_bounds 2.95 3.05 |] in
   let t0 = 0. in
-  let tEnd = 8. in
-  let () = Exp.run s0 t0 tEnd in
+  let tEnd = ref 8. in
+  let dt = ref 1e-1 in
+  let order = ref 3 in
+
+  Arg.(parse [
+           "-tend", Set_float tEnd, "final time";
+           "-dt", Set_float dt, "time step";
+           "-order", Set_int order, "Taylor model order";
+  ]) (fun s -> ()) "./exampleReachability [-tend tEnd] [-dt dt] [-order order]";
+
+  let () = Exp.run s0 t0 !tEnd !dt !order in
   ()

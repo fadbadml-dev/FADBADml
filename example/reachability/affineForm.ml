@@ -355,7 +355,7 @@ let to_points x y =
   let y0 = y.t_center in
   let points = noises_to_points x.t_noises y.t_noises in
   let s = powerset points in
-  List.map
+  List.rev_map
     (List.fold_left (fun (ax,ay) (x,y) -> (ax +. x, ay +. y)) (x0,y0))
     s
 

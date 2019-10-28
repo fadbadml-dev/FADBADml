@@ -137,7 +137,7 @@ module Make (Func : Fode.S) (Op : Sets.S) = struct
     let deltaT = Op.make_bounds 0. !dt in
     let rec aux r s t =
       if t > tEnd then
-        s :: r
+        r
       else
         let () = Printf.fprintf Stdlib.stderr "time: %s\n%!" (string_of_float t) in
         let tm = step s (Op.make_float t) in
