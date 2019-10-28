@@ -6,7 +6,10 @@ INCLUDES += -I ../../src/ fadbad.cma unix.cma
 
 TARGET = fad bad tad
 
-all: $(TARGET:=_cpp) $(TARGET:=_ml)
+all: cpp ml
+
+cpp: $(TARGET:=_cpp)
+ml: $(TARGET:=_ml)
 
 %.cpp_out: %_cpp
 	./$< > $@
@@ -22,8 +25,11 @@ cleanall: clean
 
 # comparisons
 
+$(TARGET:%=compare_%): cpp ml
+	./compare.py -prog $(@:compare_%=%) -n 100
+
 compare_fad_bad: fad_cpp fad_ml bad_cpp bad_ml
-	./compare_fad_bad.py -n 100
+	./compare.py -prog fad_bad -n 100
 
 # dependencies
 mldeps = common.cmo brusselator.cmo

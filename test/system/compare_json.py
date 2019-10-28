@@ -10,13 +10,13 @@ def eq_float_eps(f1, f2, epsilon):
     abs2 = abs(f2)
     diff = abs(f1 - f2)
 
-    if (f1 == f2):
+    if f1 == f2:
         return True
     elif is_nan(f1):
         return is_nan(f2)
     elif is_nan(f2):
         return is_nan(f1)
-    elif (f1 == 0) or (f2 == 0) or (abs1 + abs2 < float_info.epsilon):
+    elif f1 == 0 or f2 == 0 or abs1 + abs2 < float_info.epsilon:
         return (diff < (epsilon * float_info.epsilon))
     else:
         return (diff / (min(abs1 + abs2, float_info.max)) < epsilon)
@@ -26,22 +26,22 @@ def eq_float(f1, f2):
 
 def forall2(fun, l1, l2):
     for i in range(len(l1)):
-        if (i > len(l2)): raise IndexError
-        if (not fun(l1[i], l2[i])):
+        if i >= len(l2): raise IndexError
+        if not fun(l1[i], l2[i]):
             return False
     return True
 
 def eq_structures(json1, json2, ignoredFields=[], verbose=False):
-    if (type(json1) == dict and type(json2) == dict):
+    if type(json1) == dict and type(json2) == dict:
         keys = list(json1.keys()) + list(json2.keys())
         keys = [k for k in keys if k not in ignoredFields]
         for key in keys:
-            if (key not in json1.keys() or key not in json2.keys()):
-                if (verbose):
+            if key not in json1.keys() or key not in json2.keys():
+                if verbose:
                     print("Field %s is not in one of the two structures" % key)
                 return False
-            if (not eq_structures(json1[key], json2[key], ignoredFields)):
-                if (verbose):
+            if not eq_structures(json1[key], json2[key], ignoredFields):
+                if verbose:
                     print("JSON at field %s" % key)
                     print(json1[key])
                     print("and")
@@ -49,15 +49,15 @@ def eq_structures(json1, json2, ignoredFields=[], verbose=False):
                     print("are not equal")
                 return False
         return True
-    elif (type(json1) == list and type(json2) == list):
+    elif type(json1) == list and type(json2) == list:
         return forall2(eq_structures, json1, json2)
-    elif (type(json1) == str and type(json2) == str or\
-          type(json1) == int and type(json2) == int or\
-          type(json1) == bool and type(json2) == bool):
+    elif type(json1) == str and type(json2) == str or\
+         type(json1) == int and type(json2) == int or\
+         type(json1) == bool and type(json2) == bool:
         return (json1 == json2)
-    elif (type(json1) == float and type(json2) == float):
+    elif type(json1) == float and type(json2) == float:
         return eq_float(json1, json2)
-    elif (json1 is None and json2 is None):
+    elif json1 is None and json2 is None:
         return True
     else:
         print("Unknown JSON type")
@@ -66,7 +66,7 @@ def eq_structures(json1, json2, ignoredFields=[], verbose=False):
 def eq_list(eq_fun, l, **kwargs):
     first_elt = l[0]
     for i in range(1, len(l)):
-        if (not eq_fun(first_elt, l[i], **kwargs)):
+        if not eq_fun(first_elt, l[i], **kwargs):
             return False
     return True
 
@@ -89,16 +89,16 @@ if __name__ == "__main__":
 
     args = parser.parse_args();
 
-    if (args.verbose):
+    if args.verbose:
         print("Ignored fields:")
-        if (args.ignore is not None):
+        if args.ignore is not None:
             for ign in args.ignore:
                 print("\t%s" % ign)
         print("JSONS:")
         for js in args.json:
             print("\t%s" % js)
 
-    if (eq_str_json_list(args.json, args.ignore, verbose=args.verbose)):
+    if eq_str_json_list(args.json, args.ignore, verbose=args.verbose):
         print("OK")
         exit(0)
     else:
