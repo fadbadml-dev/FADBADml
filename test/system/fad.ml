@@ -41,10 +41,9 @@ let main_fad nsteps dt =
     t := !t +. dt;
   done;
   (* end loop *)
-  let cur_exec_time = Unix.gettimeofday () -. exec_t in
 
-  {
-    exec_time = cur_exec_time;
+  let res = {
+    exec_time = 0.;
     dt; nsteps;
     values = {
       fad_t = !t;
@@ -55,7 +54,9 @@ let main_fad nsteps dt =
       fad_dxdy0 = FOp.d mem.lastv.x 1;
       fad_dydy0 = FOp.d mem.lastv.y 1;
     }
-  }
+  } in
+  let cur_exec_time = Unix.gettimeofday () -. exec_t in
+  { res with exec_time = cur_exec_time }
 
 let _ =
   let nsteps = ref default_nsteps in
