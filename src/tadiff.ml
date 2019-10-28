@@ -211,7 +211,7 @@ struct
 
   let rec eval this k =
     match this.operator with
-    | CONST -> k
+    | CONST -> TValues.set_length this.tvalues k; k
     | SCALE f ->
       let t = get_operands this 0 in
       let l = eval t k in
