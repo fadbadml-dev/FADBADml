@@ -4,7 +4,7 @@ CC = g++
 CFLAGS = -Ifadbad++
 INCLUDES += -I ../../src/ fadbad.cma unix.cma
 
-TARGET = fad bad
+TARGET = fad bad tad
 
 all: $(TARGET:=_cpp) $(TARGET:=_ml)
 
@@ -28,8 +28,8 @@ compare_fad_bad: fad_cpp fad_ml bad_cpp bad_ml
 # dependencies
 mldeps = common.cmo brusselator.cmo
 
-fad.cmo bad.cmo: $(mldeps)
-fad.byte bad.byte: INCLUDES += $(mldeps)
+fad.cmo bad.cmo tad.cmo: $(mldeps)
+fad.byte bad.byte tad.byte: INCLUDES += $(mldeps)
 
 # implicit rules
 

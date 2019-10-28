@@ -5,6 +5,7 @@ using namespace std;
 
 int default_nsteps = 10;
 double default_dt = 0.001;
+int default_ncoeff = 5;
 
 template<typename T>
 struct result {
@@ -25,9 +26,9 @@ void print_double_vector(const string name, vector<double> a) {
   if (a.size() == 0)
     cout << "\"" << name << "\":  []";
   else {
-    cout << name << " = [" << a[0];
+    cout << "\"" << name << "\": [" << a[0];
     for(int i = 1; i < a.size(); i++) {
-      cout << "; " << a[i];
+      cout << fixed << ", " << a[i];
     }
     cout << "]";
   }
