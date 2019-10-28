@@ -177,7 +177,7 @@ struct
     ignore (Op.eval v_fad max_order);
     let tad_der = Op.get_derivatives v_fad in
     (* expected values of d^if/dx^i *)
-    let expected_der = Array.init (max_order + 1) (fun i -> (udfdx t) i v) in
+    let expected_der = Array.init max_order (fun i -> (udfdx t) i v) in
     tad_der, expected_der
 
   let compute_binary t (v1, v2) =
@@ -195,7 +195,7 @@ struct
     try
       let tad_der = Array.map2 (fun x y -> (x,y)) tad_derx tad_dery in
       (* derivative of f *)
-      let expected_der = Array.init (max_order + 1)
+      let expected_der = Array.init max_order
         (fun i -> (bdfdx t) i v1 v2, (bdfdy t) i v1 v2) in
       tad_der, expected_der
     with Invalid_argument s ->
