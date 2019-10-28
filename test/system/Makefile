@@ -20,6 +20,11 @@ cleanall: clean
 
 .PRECIOUS : $(TARGET:_ml) $(TARGET:_cpp)
 
+# comparisons
+
+compare_fad_bad: fad_cpp fad_ml bad_cpp bad_ml
+	./compare_fad_bad.py -n 100
+
 # dependencies
 mldeps = common.cmo brusselator.cmo
 

@@ -1,9 +1,10 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
-int nsteps = 10;
-double dt = 0.001;
+int default_nsteps = 10;
+double default_dt = 0.001;
 
 template<typename T>
 struct result {
@@ -13,12 +14,16 @@ struct result {
   T values;
 };
 
-void print_double(const string name, double f) { cout << name << " = " << f; }
-void print_int(const string name, int i) { cout << name << " = " << i; }
+void print_double(const string name, double f) {
+  cout << fixed << "\"" << name << "\": " << f;
+}
+void print_int(const string name, int i) {
+  cout << "\"" << name << "\": " << i;
+}
 
 void print_double_vector(const string name, vector<double> a) {
   if (a.size() == 0)
-    cout << name << " = []";
+    cout << "\"" << name << "\":  []";
   else {
     cout << name << " = [" << a[0];
     for(int i = 1; i < a.size(); i++) {
@@ -32,11 +37,28 @@ template<typename T>
 void print_res(void(*print_values)(const string,T), result<T> res) {
   cout << "{" << endl;
   print_double("exec_time", res.exec_time);
-  cout << endl;
+  cout << "," << endl;
   print_double("dt", res.dt);
-  cout << endl;
+  cout << "," << endl;
   print_int("nsteps", res.nsteps);
-  cout << endl;
+  cout << "," << endl;
   print_values("values", res.values);
   cout << endl << "}";
+}
+
+// next two functions taken from
+// https://stackoverflow.com/questions/865668/how-to-parse-command-line-arguments-in-c
+char* getCmdOption(char ** begin, char ** end, const std::string & option)
+{
+    char ** itr = std::find(begin, end, option);
+    if (itr != end && ++itr != end)
+    {
+        return *itr;
+    }
+    return 0;
+}
+
+bool cmdOptionExists(char** begin, char** end, const std::string& option)
+{
+    return std::find(begin, end, option) != end;
 }

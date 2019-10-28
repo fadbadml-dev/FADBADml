@@ -11,7 +11,7 @@ type fad_values = {
 }
 
 let print_fad_values ff values =
-  Format.fprintf ff "@[<v 2>{@;%a@;%a@;%a@;%a@;%a@;%a@;%a@]@;}"
+  Format.fprintf ff "@[<v 2>{@;%a,@;%a,@;%a,@;%a,@;%a,@;%a,@;%a@]@;}"
     (print_float "t") values.fad_t
     (print_float "x") values.fad_x
     (print_float "y") values.fad_y
@@ -57,4 +57,16 @@ let main_fad nsteps dt =
     }
   }
 
-let _ = Format.printf "%a@." print_fad_res (main_fad nsteps dt)
+let _ =
+  let nsteps = ref default_nsteps in
+  let dt = ref default_dt in
+
+  Arg.(parse [
+    "-n", Set_int nsteps,
+      Printf.sprintf "number of steps to compute (default: %d)" !nsteps;
+    "-dt", Set_float dt,
+      Printf.sprintf "size of one step (default: %f)" !dt;
+  ]) (fun s -> ()) "usage: ./fad_ml [[-]-help] [-n N] [-dt DT]\n";
+
+  let res = main_fad !nsteps !dt in
+  Format.printf "%a@." print_fad_res res

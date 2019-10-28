@@ -17,19 +17,19 @@ struct bad_values {
 };
 
 void print_bad_values(const string name, const bad_values values) {
-  cout << name << " = {" << endl;
+  cout << "\"" << name << "\": {" << endl;
   print_double("t", values.t);
-  cout << endl;
+  cout << "," << endl;
   print_double("x", values.x);
-  cout << endl;
+  cout << "," << endl;
   print_double("y", values.y);
-  cout << endl;
+  cout << "," << endl;
   print_double("dx/dx0", values.dxdx0);
-  cout << endl;
+  cout << "," << endl;
   print_double("dy/dx0", values.dydx0);
-  cout << endl;
+  cout << "," << endl;
   print_double("dx/dy0", values.dxdy0);
-  cout << endl;
+  cout << "," << endl;
   print_double("dy/dy0", values.dydy0);
   cout << endl << "}";
 }
@@ -73,7 +73,30 @@ void main_bad(int nsteps, double dt, result<bad_values> &res) {
   res.values = values;
 }
 
-int main() {
+int main(int argc, char** argv) {
+  if(cmdOptionExists(argv, argv+argc, "-help") ||
+     cmdOptionExists(argv, argv+argc, "--help"))
+  {
+      cout << "usage: ./bad_cpp [[-]-help] [-n N] [-dt DT]" << endl;
+      cout << endl;
+      cout << "  -n number of steps to compute (default: " <<
+        default_nsteps << ")" << endl;
+      cout << "  -dt size of one step (default: " << default_dt << ")" << endl;
+      cout << "  -help Display this list of options" << endl;
+      cout << "  --help Display this list of options" << endl;
+      return 0;
+  };
+
+  int nsteps; double dt;
+
+  char* nsteps_str = getCmdOption(argv, argv+argc, "-n");
+  if (nsteps_str) nsteps = atoi(nsteps_str);
+  else nsteps = default_nsteps;
+
+  char* dt_str = getCmdOption(argv, argv+argc, "-dt");
+  if (dt_str) dt = stod(dt_str);
+  else dt = default_dt;
+
   result<bad_values> res;
   main_bad(nsteps, dt, res);
   print_bad_res(res);

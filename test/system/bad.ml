@@ -11,7 +11,7 @@ type bad_values = {
 }
 
 let print_bad_values ff values =
-  Format.fprintf ff "@[<v 2>{@;%a@;%a@;%a@;%a@;%a@;%a@;%a@]@;}"
+  Format.fprintf ff "@[<v 2>{@;%a,@;%a,@;%a,@;%a,@;%a,@;%a,@;%a@]@;}"
     (print_float "t") values.bad_t
     (print_float "x") values.bad_x
     (print_float "y") values.bad_y
@@ -58,4 +58,16 @@ let main_bad nsteps dt =
     }
   }
 
-let _ = Format.printf "%a@." print_bad_res (main_bad nsteps dt)
+let _ =
+  let nsteps = ref default_nsteps in
+  let dt = ref default_dt in
+
+  Arg.(parse [
+    "-n", Set_int nsteps,
+      Printf.sprintf "number of steps to compute (default: %d)" !nsteps;
+    "-dt", Set_float dt,
+      Printf.sprintf "size of one step (default: %f)" !dt;
+  ]) (fun s -> ()) "usage: ./bad_ml [[-]-help] [-n N] [-dt DT]\n";
+
+  let res = main_bad !nsteps !dt in
+  Format.printf "%a@." print_bad_res res
