@@ -134,6 +134,7 @@ module Make (Func : Fode.S) (Op : Sets.S) = struct
   (* return list of states at each step *)
   let integrate s0 t0 tEnd =
     let dtOp = Op.make_float !dt in
+    let deltaT = Op.make_bounds 0. !dt in
     let rec aux r s t =
       if t > tEnd then
         s :: r
@@ -143,7 +144,8 @@ module Make (Func : Fode.S) (Op : Sets.S) = struct
         (* let () = print_endline (string_of_int (List.length tm.coef)) in *)
         let next_s = TM.eval tm dtOp in
         let next_t = t +. !dt in
-        aux (s :: r) next_s next_t
+        let between_approx = TM.eval tm deltaT in
+        aux (between_approx :: r) next_s next_t
     in
     aux [] s0 t0
 end

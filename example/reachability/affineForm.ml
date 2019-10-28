@@ -95,41 +95,24 @@ let reduce x threshold =
        else
          aux rc ((i,c)::rl) t
   in
-  { x with t_noises = aux 0. [] x.t_noises }
-
-let noises_to_points lx ly =
-  let rec aux r lx ly =
-    match lx, ly with
-    | [], [] -> r
-    | [], hy::ty -> aux ((0.,hy)::r) [] ty
-    | hx::tx, [] -> aux ((hx,0.)::r) tx []
-    | hx::tx, hy::ty ->
-       raise (Failure "TODO")
-  in
-  aux [] lx ly
-
-let print2d x y =
-  let threshold = 1e-3 in
-  let x = reduce x threshold in
-  let y = reduce y threshold in
-  raise (Failure "TODO")
+  { x with t_noises = (aux 0. [] x.t_noises) }
 
 let to_string x =
   String.concat " + "
-    ((string_of_float x.t_center)
-     :: (List.map
-           (fun (i,x) ->
-             (string_of_float x) ^ " * e_{" ^ (Index.to_string i) ^ "}")
-           x.t_noises))
+                ((string_of_float x.t_center)
+                 :: (List.map
+                       (fun (i,x) ->
+                         (string_of_float x) ^ " * e_{" ^ (Index.to_string i) ^ "}")
+                       x.t_noises))
 
 let string_of_scalar = string_of_float
 let string_of_elt x =
   String.concat " + "
-    ((string_of_float x.center)
-     :: (List.map
-           (fun (i,x) ->
-             (string_of_float x) ^ " * e_{" ^ (Index.to_string i) ^ "}")
-           x.noises))
+                ((string_of_float x.center)
+                 :: (List.map
+                       (fun (i,x) ->
+                         (string_of_float x) ^ " * e_{" ^ (Index.to_string i) ^ "}")
+                       x.noises))
 
 let copy x =
   {
@@ -254,9 +237,132 @@ let ( <= ) x1 x2 = raise (Failure "( <= ) not implemented")
 let ( > ) x1 x2 = raise (Failure "( > ) not implemented")
 let ( >= ) x1 x2 = raise (Failure "( >= ) not implemented")
 
-
 let add = ( + )
 let sub = ( - )
 let mul = ( * )
 let div = ( / )
 let neg = ( ~- )
+
+
+(******************************************************************************)
+(*                                Print                                       *)
+(******************************************************************************)
+
+let print_points l =
+  let rec print l =
+    match l with
+    | [] -> ()
+    | (x,y)::t ->
+       let () = Printf.printf "%f\t%f\n" x y in
+       print t
+  in
+  print l
+
+let cross_product v1 v2 =
+  let x1,y1 = v1 in
+  let x2,y2 = v2 in
+  x1 *. y2 -. y1 *. x2
+
+(* implements Graham scan *)
+let convex_hull l =
+  let open Stdlib in
+  let rec find_initial p rl l =
+    match l with
+    | [] -> (p, rl)
+    | h::t ->
+       let x,y = h in
+       let px,py = p in
+       if y < py || ((y = py) && x < px) then
+         find_initial h (p::rl) t
+       else
+         find_initial p (h::rl) t
+  in
+  let is_turn_left (x1,y1) (x2,y2) (x3,y3) =
+    let v1 = (x2 -. x1, y2 -. y1) in
+    let v2 = (x3 -. x2, y3 -. y2) in
+    (cross_product v1 v2) > 0.
+  in
+  let rec make_hull r l =
+    match l with
+    | [] -> r
+    | h::t ->
+       match r with
+       | [] | _::[] -> make_hull (h::r) t
+       | r1::r2::rt ->
+          if is_turn_left r2 r1 h then
+            make_hull (h::r) t
+          else
+            make_hull (r2::rt) l
+  in  (* find point with the lowest y-coordinate,
+     if more than one, the one of them with the lowest x-coordinate *)
+  let p, l =
+    match l with
+    | [] -> raise (Failure "no convex hull of empty set of points")
+    | h::t -> find_initial h [] t
+  in
+  let px, py = p in
+  (* sort points list `l` in increasing order of
+     the angle they and `p` make with the x-axis *)
+  let l =
+    List.sort
+      (fun (x1,y1) (x2,y2) ->
+        let v1 = (x1 -. px, y1 -. py) in
+        let v2 = (x2 -. px, y2 -. py) in
+        let c = cross_product v2 v1 in
+        if c < 0. then
+          -1
+        else if c > 0. then
+          1
+        else
+          0)
+      l
+  in
+  (* scan *)
+  p :: (make_hull [p] l)
+
+let noises_to_points lx ly =
+  let rec aux (rx,ry) rl lx ly =
+    match lx, ly with
+    | [], [] -> (rx,0.)::(0.,ry)::rl
+    | [], (_,hy)::ty ->
+       let new_ry = ry +. (abs_float hy) in
+       aux (rx, new_ry) rl [] ty
+    | (_,hx)::tx, [] ->
+       let new_rx = rx +. (abs_float hx) in
+       aux (new_rx ,ry) rl tx []
+    | (ix,hx)::tx, (iy,hy)::ty ->
+       let comp = Index.compare ix iy in
+       if Stdlib.(comp = 0) then
+         aux (rx,ry) ((hx,hy)::rl) tx ty
+       else if Stdlib.(comp < 0) then
+         let new_rx = rx +. (abs_float hx) in
+         aux (new_rx, ry) rl tx ly
+       else
+         let new_ry = ry +. (abs_float hy) in
+         aux (rx, new_ry) rl lx ty
+  in
+  aux (0.,0.) [] lx ly
+
+let to_points x y =
+  let rec powerset l =
+    match l with
+    | [] -> [[]]
+    | h::t ->
+       let r = powerset t in
+       List.rev_append r (List.map (fun s -> h::s) r)
+  in
+  let x0 = x.t_center in
+  let y0 = y.t_center in
+  let points = noises_to_points x.t_noises y.t_noises in
+  let s = powerset points in
+  List.map
+    (List.fold_left (fun (ax,ay) (x,y) -> (ax +. x, ay +. y)) (x0,y0))
+    s
+
+let print2d x y =
+  let threshold = 1e-3 in
+  let x = reduce x threshold in
+  let y = reduce y threshold in
+  let points = to_points x y in
+  let hull = convex_hull points in
+  print_points hull

@@ -26,7 +26,7 @@ exampleReachability.byte: INCLUDES += interval.cmo affineForm.cmo sets.cmo taylo
 
 clean:
 	rm -rf *.cm[ixo] *.byte .depend
-	rm data.dat picture.svg
+	rm -f data.dat picture.svg
 
 cleanall: clean
 

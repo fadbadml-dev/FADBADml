@@ -1,4 +1,3 @@
-
 module Brusselator (Op : Fadbad.OpS with type scalar = float) = struct
   let a = 1.
   let b = 1.7
@@ -40,7 +39,7 @@ module Experiment (Func : Fode.S) (Op : Sets.S) = struct
          let () = Printf.printf "\n" in
          print printer t
     in
-    print print_intervals l
+    print print_state l
 
   let run s0 t0 t_end =
     let () = Integrator.set_dt 1e-2 in
