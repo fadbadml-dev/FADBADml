@@ -5,6 +5,7 @@ from random import random, randint
 from compare_json import eq_str_json_list
 from multiprocessing import Pool, Array
 from time import sleep, time
+from functools import partial
 
 exe = ["fad_cpp", "fad_ml", "bad_cpp", "bad_ml"]
 global_env = {}
@@ -28,7 +29,8 @@ def compare_once(nsteps, dt):
 
     return jsons, ok
 
-def compare_(id, n, verbose=False):
+def compare_(id, n, mindt=0., maxdt=1., minsteps=0, maxsteps=2, verbose=False,
+             **kwargs):
     starttime = time()
     padsize = len(str(n))
     for i in range(n):
@@ -37,8 +39,8 @@ def compare_(id, n, verbose=False):
             cur_time = time() - starttime;
             print("testing: | %*d/%d | (approx time: %.2fs)" %\
                 (padsize, i, n, cur_time), end="\r")
-        nsteps = randint(0, 2)
-        dt = random()
+        nsteps = randint(minsteps, maxsteps)
+        dt = random() * (maxdt - mindt) + mindt
 
         jsons, ok = compare_once(nsteps, dt)
 
@@ -52,9 +54,9 @@ def compare_(id, n, verbose=False):
     if verbose: print()
     return [], True
 
-def compare(n): return compare_(0, n, verbose=True)
+def compare(n, **kwargs): return compare_(0, n, verbose=True, **kwargs)
 
-def compare_parallel(n, nprocess=4):
+def compare_parallel(n, nprocess=4, **kwargs):
     quotient = int(n / nprocess)
     remainder = n % nprocess
     total_runs = [quotient]*nprocess
@@ -64,7 +66,7 @@ def compare_parallel(n, nprocess=4):
 
     with Pool(nprocess) as p:
         args = [(i, total_runs[i]) for i in range(nprocess)]
-        res = p.starmap_async(compare_, args)
+        res = p.starmap_async(partial(compare_, **kwargs), args)
         count = 0
         while True:
             res.wait(0)
@@ -96,20 +98,35 @@ def compare_parallel(n, nprocess=4):
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="check that all the given \
-    json structures are equal, except for ignored fields")
-    parser.add_argument('-n', type=int, default=50,
+    parser = argparse.ArgumentParser(description="runs fad_cpp, fad_ml, \
+    bad_cpp and bad_ml with the same arguments nstep and dt and checks that \
+    their results are equal")
+    parser.add_argument('-n', '-ntests', type=int, default=50,
                         help='number of tests to run')
-    parser.add_argument('-j', type=int, default=8,
-                        help='number of processes to run')
+    parser.add_argument('-j', '-nprocesses', type=int, default=8,
+                        help='number of processes to spawn')
+    parser.add_argument('-minsteps', type=int, default=0,
+                        help='minimal number of steps')
+    parser.add_argument('-maxsteps', type=int, default=2,
+                        help='maximal number of steps')
+    parser.add_argument('-mindt', type=float, default=0.,
+                        help='minimal size of step')
+    parser.add_argument('-maxdt', type=float, default=1.,
+                        help='maximal size of step')
     args = parser.parse_args();
 
     global_env["progress"] = Array('i', args.j)
 
+    kwargs = { "ntests": args.n, "nprocesses": args.j,
+               "minsteps": args.minsteps, "maxsteps": args.maxsteps,
+               "mindt": args.mindt, "maxdt": args.maxdt }
+
+    print("Options:", kwargs)
+
     if args.j == 1:
-        _, ok = compare(args.n)
+        _, ok = compare(args.n, **kwargs)
     else:
-        _, ok = compare_parallel(args.n, nprocess=args.j)
+        _, ok = compare_parallel(args.n, nprocess=args.j, **kwargs)
     if (ok):
         print("OK")
         exit(0)
