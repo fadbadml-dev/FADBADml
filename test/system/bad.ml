@@ -42,9 +42,10 @@ let main_bad nsteps dt =
   BOp.diff mem.lastv.x 0 2;
   BOp.diff mem.lastv.y 1 2;
   BOp.compute_list [mem.lastv.x; mem.lastv.y];
+  let cur_exec_time = Unix.gettimeofday () -. exec_t in
 
-  let res = {
-    exec_time = 0.;
+  {
+    exec_time = cur_exec_time;
     dt; nsteps;
     values = {
       bad_t = !t;
@@ -55,9 +56,7 @@ let main_bad nsteps dt =
       bad_dxdy0 = BOp.d v0.y 0;
       bad_dydy0 = BOp.d v0.y 1;
     }
-  } in
-  let cur_exec_time = Unix.gettimeofday () -. exec_t in
-  { res with exec_time = cur_exec_time }
+  }
 
 let _ =
   let nsteps = ref default_nsteps in
