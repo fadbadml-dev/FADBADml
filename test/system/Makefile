@@ -31,6 +31,8 @@ $(TARGET:%=compare_%): cpp ml
 compare_fad_bad: fad_cpp fad_ml bad_cpp bad_ml
 	./compare.py -prog fad_bad -n 100
 
+test: compare_fad_bad compare_tad
+
 # dependencies
 mldeps = common.cmo brusselator.cmo
 

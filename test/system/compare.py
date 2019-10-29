@@ -54,6 +54,7 @@ def compare_(id, ntests, mindt=0., maxdt=1., minsteps=0, maxsteps=2,
                 for js in jsons:
                     print("\t%s" % js)
             return jsons, False
+    global_env["progress"][id] = ntests
     if verbose: print()
     return [], True
 
@@ -86,6 +87,12 @@ def compare_parallel(ntests, nprocesses=4, **kwargs):
             sleep(0.1)
         p.close()
         p.join()
+    cur_count = ""
+    for i in range(nprocesses):
+        cur_count += "%*d/%d | " %\
+            (padsize, global_env["progress"][i], args[i][1])
+    print("testing: |", cur_count, "(approx time: %.2fs)" %\
+            (count / 10), end="\r")
     for (jsons, ok) in res.get():
         if not ok:
             print()
