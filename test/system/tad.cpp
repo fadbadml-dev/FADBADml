@@ -59,13 +59,13 @@ void main_tad(int nsteps, double dt, int ncoeff, result<tad_values> &res) {
   values.t = t;
   values.x = v.x[0];
   values.y = v.y[0];
-  values.dxdt.resize(ncoeff);
-  values.dydt.resize(ncoeff);
+  values.dxdt.resize(ncoeff+1);
+  values.dydt.resize(ncoeff+1);
   values.dxdt[0] = v.x[0];
   values.dydt[0] = v.y[0];
 
   int factj = 1;
-  for (int i = 1; i < ncoeff; i++) {
+  for (int i = 1; i < ncoeff+1; i++) {
     factj *= i;
     values.dxdt[i] = v.x[i] * factj;
     values.dydt[i] = v.y[i] * factj;

@@ -25,7 +25,10 @@ def get_str_jsons(nsteps, dt):
 
 def compare_once(nsteps, dt):
     jsons = list(get_str_jsons(nsteps, dt))
-    ok = eq_str_json_list(jsons, ["exec_time"])
+    try:
+        ok = eq_str_json_list(jsons, ["exec_time"])
+    except Exception as e:
+        return jsons, False
 
     return jsons, ok
 
