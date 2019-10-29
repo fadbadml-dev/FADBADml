@@ -347,9 +347,17 @@ let to_points x y =
   let rec powerset l =
     match l with
     | [] -> [[]]
-    | h::t ->
+    | (x,y)::t ->
        let r = powerset t in
-       List.rev_append r (List.map (fun s -> h::s) r)
+       List.rev_append
+         r
+         (List.rev_append
+            (List.rev_map
+               (fun s -> (-.x,-.y)::s)
+               r)
+            (List.rev_map
+               (fun s -> (x,y)::s)
+               r))
   in
   let x0 = x.t_center in
   let y0 = y.t_center in
@@ -359,8 +367,7 @@ let to_points x y =
     (List.fold_left (fun (ax,ay) (x,y) -> (ax +. x, ay +. y)) (x0,y0))
     s
 
-let print2d x y =
-  let threshold = 1e-3 in
+let print2d x y threshold =
   let x = reduce x threshold in
   let y = reduce y threshold in
   let points = to_points x y in

@@ -42,7 +42,7 @@ let radius i =
   let min, max = get_min_max i in
   (max -. min) /. 2.
 
-let print2d x y =
+let print2d x y _ =
   let () = Printf.printf "%f\t%f\n" x.min y.min in
   let () = Printf.printf "%f\t%f\n" x.max y.min in
   let () = Printf.printf "%f\t%f\n" x.max y.max in

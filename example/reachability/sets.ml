@@ -4,7 +4,7 @@ module type S = sig
   val make_float: float -> t
   val make_bounds: float -> float -> t
   val get_min_max: t -> (float * float)
-  val print2d: t -> t -> unit
+  val print2d: t -> t -> float -> unit
 
   val radius: t -> float
 end

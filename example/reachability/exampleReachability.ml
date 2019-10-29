@@ -15,6 +15,9 @@ end
 
 module Experiment (Func : Fode.S) (Op : Sets.S) = struct
   module Integrator = ContinuousIntegrator.Make(Func)(Op)
+  module TM = TaylorModel.Make(Op)
+
+  let display_threshold = ref 3e-3
 
   let to_interval x =
     let min, max = Op.get_min_max x in
@@ -28,7 +31,7 @@ module Experiment (Func : Fode.S) (Op : Sets.S) = struct
   let print_state s dimX dimY =
     let x = Array.get s dimX in
     let y = Array.get s dimY in
-    Op.print2d x y
+    Op.print2d x y !display_threshold
 
   let print l =
     let rec print printer l =
@@ -41,12 +44,28 @@ module Experiment (Func : Fode.S) (Op : Sets.S) = struct
     in
     print print_state l
 
-  let run s0 t0 t_end dt order =
+  let to_op l dt =
+    let rec to_op r l =
+      match l with
+      | [] -> r
+      | h::t ->
+         let s = TM.eval h dt in
+         to_op (s::r) t
+    in
+    to_op [] l
+
+
+  let run s0 t0 t_end dt order threshold =
+    let () = display_threshold := threshold in
     let () = Integrator.set_dt dt in
     let () = Integrator.set_order order in
     let l = Integrator.integrate s0 t0 t_end in
     let () = Printf.fprintf Stdlib.stderr "Print...\n%!" in
-    let () = print l in
+    let instants = (to_op l (Op.make_float 0.)) in
+    let () = print instants in
+    let () = Printf.printf "\n" in
+    let flowpipes = to_op l (Op.make_bounds 0. dt) in
+    let () = print flowpipes in
     ()
 end
 
@@ -59,12 +78,14 @@ let () =
   let tEnd = ref 8. in
   let dt = ref 1e-1 in
   let order = ref 3 in
+  let display_threshold = ref 1e-3 in
 
   Arg.(parse [
            "-tend", Set_float tEnd, "final time";
            "-dt", Set_float dt, "time step";
            "-order", Set_int order, "Taylor model order";
+           "-threshold", Set_float display_threshold, "noises threshold to display zonotopes";
   ]) (fun s -> ()) "./exampleReachability [-tend tEnd] [-dt dt] [-order order]";
 
-  let () = Exp.run s0 t0 !tEnd !dt !order in
+  let () = Exp.run s0 t0 !tEnd !dt !order !display_threshold in
   ()

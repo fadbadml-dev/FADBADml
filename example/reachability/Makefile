@@ -14,7 +14,7 @@ CMO = \
 build: objects exampleReachability.byte
 
 run: exampleReachability.byte exampleReachability.gp
-	./exampleReachability.byte -tend 2.0 -dt 2e-2 -order 3 > data.dat
+	./exampleReachability.byte -tend 2.0 -dt 2e-2 -order 3 -threshold 3e-3 > data.dat
 	gnuplot exampleReachability.gp
 	xdg-open picture.svg
 
