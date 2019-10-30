@@ -106,10 +106,10 @@ def compare_parallel(ntests, nprocesses=4, **kwargs):
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="runs fad_cpp, fad_ml, \
-    bad_cpp and bad_ml with the same arguments nstep and dt and checks that \
-    their results are equal")
-    parser.add_argument('-prog', type=str, default="fad_bad",
+    parser = argparse.ArgumentParser(description="runs fadcpp and fadml, \
+    badcpp and badml or tadcpp and tadml with the same arguments nstep and dt \
+    and checks that their results are equal")
+    parser.add_argument('prog', type=str,
                         help='prog to test : fad, bad, fad_bad or tad')
     parser.add_argument('-n', '-ntests', type=int, default=50,
                         help='number of tests to run')
@@ -134,13 +134,13 @@ if __name__ == "__main__":
     print("Options:", kwargs)
 
     if args.prog == "fad":
-        global_env["exe"] = ["fad_cpp", "fad_ml"]
+        global_env["exe"] = ["fadcpp", "fadml"]
     elif args.prog == "bad":
-        global_env["exe"] = ["bad_cpp", "bad_ml"]
+        global_env["exe"] = ["badcpp", "badml"]
     elif args.prog == "tad":
-        global_env["exe"] = ["tad_cpp", "tad_ml"]
+        global_env["exe"] = ["tadcpp", "tadml"]
     elif args.prog == "fad_bad":
-        global_env["exe"] = ["fad_cpp", "fad_ml", "bad_cpp", "bad_ml"]
+        global_env["exe"] = ["fadcpp", "fadml", "badcpp", "badml"]
     else:
         print("Unknown value '%s' for argument prog" % args.prog, file=sys.stderr)
         parser.print_help(sys.stderr)

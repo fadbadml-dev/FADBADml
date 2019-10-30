@@ -6,29 +6,26 @@ INCLUDES += -I ../../src/ fadbad.cma unix.cma
 
 TARGET = fad bad tad
 
-all: cpp ml
+all: cpp opt
 
-cpp: $(TARGET:=_cpp)
-ml: $(TARGET:=_ml)
+cpp: $(TARGET:=cpp)
+byte: $(TARGET:=mlbyte)
+opt: $(TARGET:=mlopt)
 
-%.cpp_out: %_cpp
-	./$< > $@
-%.ml_out: %_ml
-	./$< > $@
 
 clean:
-	@rm -rf *.cm[iox] *.byte
+	@rm -rf *.cm[iox] *.byte *.opt *.o
 cleanall: clean
-	@rm -rf $(TARGET:=_ml) $(TARGET:=_cpp) $(TARGET:=.ml_out) $(TARGET:=.cpp_out)
+	@rm -rf $(TARGET:=ml) $(TARGET:=cpp)
 
-.PRECIOUS : $(TARGET:_ml) $(TARGET:_cpp)
+.PRECIOUS : $(TARGET:ml) $(TARGET:cpp)
 
 # comparisons
 
 $(TARGET:%=compare_%): cpp ml
 	./compare.py -prog $(@:compare_%=%) -n 100
 
-compare_fad_bad: fad_cpp fad_ml bad_cpp bad_ml
+compare_fad_bad: fadcpp fadml badcpp badml
 	./compare.py -prog fad_bad -n 100
 
 test: compare_fad_bad compare_tad
@@ -36,16 +33,20 @@ test: compare_fad_bad compare_tad
 # dependencies
 mldeps = common.cmo brusselator.cmo
 
-fad.cmo bad.cmo tad.cmo: $(mldeps)
-fad.byte bad.byte tad.byte: INCLUDES += $(mldeps)
+$(TARGET:=ml.cmo): $(mldeps)
+$(TARGET:=ml.cmx): $(mldeps:.cmo=.cmx)
+$(TARGET:=ml.byte): INCLUDES += $(mldeps)
+$(TARGET:=ml.opt): INCLUDES += $(mldeps:.cmo=.cmx)
 
 # implicit rules
 
 .cpp.o:
 	$(CC) $(CFLAGS) -c $<
 
-%_cpp:%.o
+%cpp:%cpp.o
 	$(CC) -o $@ $<
 
-%_ml:%.byte
-	mv $< $@
+%mlbyte:%ml.byte
+	mv $< $(@:byte=)
+%mlopt:%ml.opt
+	mv $< $(@:opt=)
