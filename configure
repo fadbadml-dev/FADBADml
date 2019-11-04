@@ -1,6 +1,6 @@
 #!/bin/sh
 
-prefix=.
+prefix=/usr/local
 version=~dev
 
 while : ; do
@@ -49,29 +49,4 @@ version = "${version}"
 description = "FADBAD++ for OCaml"
 archive(byte) = "fadbad.cma"
 archive(native) = "fadbad.cmxa"
-ENDOFFILE
-
-cat > opam <<ENDOFFILE
-opam-version: "2.0"
-name: "fadbadml"
-version: "${version}"
-synopsis: "FADBAD++ for OCaml"
-maintainer: [
-  ["francois-bidet <francois.bidet@polytechnique.edu>"]
-  ["ismailbennani <ismail.lahkim.bennani@ens.fr>"]
-]
-authors: [
-  ["francois-bidet <francois.bidet@polytechnique.edu>"]
-  ["ismailbennani <ismail.lahkim.bennani@ens.fr>"]
-]
-license: ""
-homepage: "https://github.com/ismailbennani/FADBADml"
-bug-reports: "https://github.com/ismailbennani/FADBADml/issues"
-build: [
-  ["./configure" {ocaml-version > "4.08"} "--prefix=%{prefix}%"]
-  [make "byte"] { !ocaml-native }
-  [make "opt"] { ocaml-native }
-]
-install: [make "install"]
-dev-repo: "git+https://github.com/ismailbennani/FADBADml"
 ENDOFFILE

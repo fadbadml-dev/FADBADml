@@ -1,17 +1,17 @@
 include config
 
-all: lib_byte lib_opt
+all: lib
 
 byte: lib_byte
 opt : lib_opt
 
-config:
+config META:
 	./configure
 
-install: config
+install: lib META
 	mkdir -p $(LIBDIR)
-	@echo libdir: $(LIBDIR)
 	cp lib/* $(LIBDIR)
+	$(OCAMLFIND) install websocketml META || true
 
 lib: config
 	$(MAKE) -C src all
@@ -52,6 +52,6 @@ cleanall realclean mrproper: clean
 	$(MAKE) -C example cleanall
 	$(MAKE) -C test cleanall
 	rm -rf lib doc
-	rm -f config META opam
+	rm -f config META
 
 .PHONY: lib doc example test

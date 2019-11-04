@@ -25,6 +25,5 @@ setup.log
 *.depend
 config
 META
-opam
 
 *.hidden
