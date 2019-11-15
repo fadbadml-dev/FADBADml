@@ -4,18 +4,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="Start" href="index.html">
 <link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of extensions" rel=Appendix href="index_extensions.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Index of module types" rel=Appendix href="index_module_types.html">
 <link title="Badiff" rel="Chapter" href="Badiff.html">
 <link title="Fadbad" rel="Chapter" href="Fadbad.html">
+<link title="Fadbad_utils" rel="Chapter" href="Fadbad_utils.html">
 <link title="Fadiff" rel="Chapter" href="Fadiff.html">
 <link title="Op" rel="Chapter" href="Op.html">
-<link title="Tadiff" rel="Chapter" href="Tadiff.html">
-<link title="Utils" rel="Chapter" href="Utils.html"><title>Tadiff.TTypeName</title>
+<link title="Tadiff" rel="Chapter" href="Tadiff.html"><title>Tadiff.TTypeName</title>
 </head>
 <body>
-<code class="code"><span class="keyword">functor</span>&nbsp;(<span class="constructor">Op</span>&nbsp;:&nbsp;<span class="constructor">OpS'</span>)&nbsp;<span class="keywordsign">-&gt;</span><br>
+<code class="code"><span class="keyword">functor</span>&nbsp;(<span class="constructor">Op</span>&nbsp;:&nbsp;<span class="constructor">OpS</span>)&nbsp;<span class="keywordsign">-&gt;</span><br>
 &nbsp;&nbsp;<span class="keyword">sig</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">module</span>&nbsp;<span class="constructor">TValues</span>&nbsp;:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">sig</span><br>
@@ -46,7 +47,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">end</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;elt&nbsp;=&nbsp;<span class="constructor">Op</span>.elt<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;scalar&nbsp;=&nbsp;<span class="constructor">Op</span>.scalar<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;op&nbsp;=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;op&nbsp;=&nbsp;..<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;op&nbsp;+=<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">CONST</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">SCALE</span>&nbsp;<span class="keyword">of</span>&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.scalar<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">TRANS</span>&nbsp;<span class="keyword">of</span>&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.scalar<br>
@@ -68,6 +70,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">ASIN</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">ACOS</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">ATAN</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;op_t&nbsp;=&nbsp;<span class="constructor">Op</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;t&nbsp;=&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">mutable</span>&nbsp;operator&nbsp;:&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.op;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">mutable</span>&nbsp;operands&nbsp;:&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;array;<br>
@@ -81,6 +84,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;to_short_string&nbsp;:&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;to_string&nbsp;:&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;string_of_scalar&nbsp;:&nbsp;<span class="constructor">Op</span>.scalar&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;string_of_elt&nbsp;:&nbsp;<span class="constructor">Op</span>.elt&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_operands&nbsp;:&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;create&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;create_sized&nbsp;:&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t<br>
@@ -96,6 +100,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;reset&nbsp;:&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;value&nbsp;:&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Op</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get&nbsp;:&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Op</span>.elt<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;(&nbsp;!!&nbsp;)&nbsp;:&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Op</span>.elt<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;deriv&nbsp;:&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Op</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;d&nbsp;:&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Op</span>.elt<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;length&nbsp;:&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
@@ -146,8 +151,4 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;(&nbsp;=&nbsp;)&nbsp;:&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;(&nbsp;&lt;&gt;&nbsp;)&nbsp;:&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;(&nbsp;&lt;&nbsp;)&nbsp;:&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;(&nbsp;&lt;=&nbsp;)&nbsp;:&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;(&nbsp;&gt;&nbsp;)&nbsp;:&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;(&nbsp;&gt;=&nbsp;)&nbsp;:&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Tadiff</span>.<span class="constructor">TTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
 &nbsp;&nbsp;<span class="keyword">end</span></code></body></html>

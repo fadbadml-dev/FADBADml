@@ -29,8 +29,8 @@ lib_opt: config
 	cp src/*.cmi src/*.cmxa src/*.a lib
 
 doc: lib
-	mkdir -p www/doc
-	ocamldoc -html -d www/doc -css-style ../css/doc_style.css -short-functors \
+	mkdir -p docs/doc
+	ocamldoc -html -d docs/doc -css-style ../css/doc_style.css -short-functors \
 		-I src src/*.ml
 
 example: lib_byte

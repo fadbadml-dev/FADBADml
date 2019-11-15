@@ -5,28 +5,29 @@
 <meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="Start" href="index.html">
-<link rel="previous" href="Fadbad.OpFloat.html">
-<link rel="next" href="Fadbad.B.html">
+<link rel="previous" href="Fadbad.OrderedFloat.html">
+<link rel="next" href="Fadbad.OrderedF.html">
 <link rel="Up" href="Fadbad.html">
 <link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of extensions" rel=Appendix href="index_extensions.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Index of module types" rel=Appendix href="index_module_types.html">
 <link title="Badiff" rel="Chapter" href="Badiff.html">
 <link title="Fadbad" rel="Chapter" href="Fadbad.html">
+<link title="Fadbad_utils" rel="Chapter" href="Fadbad_utils.html">
 <link title="Fadiff" rel="Chapter" href="Fadiff.html">
 <link title="Op" rel="Chapter" href="Op.html">
-<link title="Tadiff" rel="Chapter" href="Tadiff.html">
-<link title="Utils" rel="Chapter" href="Utils.html"><title>Fadbad.F</title>
+<link title="Tadiff" rel="Chapter" href="Tadiff.html"><title>Fadbad.F</title>
 </head>
 <body>
-<div class="navbar"><a class="pre" href="Fadbad.OpFloat.html" title="Fadbad.OpFloat">Previous</a>
+<div class="navbar"><a class="pre" href="Fadbad.OrderedFloat.html" title="Fadbad.OrderedFloat">Previous</a>
 &nbsp;<a class="up" href="Fadbad.html" title="Fadbad">Up</a>
-&nbsp;<a class="post" href="Fadbad.B.html" title="Fadbad.B">Next</a>
+&nbsp;<a class="post" href="Fadbad.OrderedF.html" title="Fadbad.OrderedF">Next</a>
 </div>
 <h1>Functor <a href="type_Fadbad.F.html">Fadbad.F</a></h1>
 
-<pre><span id="MODULEF"><span class="keyword">module</span> F</span> <code class="code">(</code><code class="code">Operators</code><code class="code"> : </code><code class="type"><a href="Fadbad.OpS.html">OpS</a></code><code class="code">) </code>: <code class="type"><a href="Fadiff.FTypeName.html">Fadiff.FTypeName</a></code><code class="code">(</code><code class="type"><a href="Op.Make.html">Op.Make</a></code><code class="code">(</code><code class="type">Operators</code><code class="code">)</code><code class="code">)</code></pre><table border="0" cellpadding="3" width="100%">
+<pre><span id="MODULEF"><span class="keyword">module</span> F</span> <code class="code">(</code><code class="code">Operators</code><code class="code"> : </code><code class="type"><a href="Fadbad.OpS.html">OpS</a></code><code class="code">) </code>: <code class="type"><a href="Fadiff.FTypeName.html">Fadiff.FTypeName</a></code><code class="code">(</code><code class="type">Operators</code><code class="code">)</code></pre><table border="0" cellpadding="3" width="100%">
 <tr>
 <td align="left" valign="top" width="1%%"><b>Parameters: </b></td>
 <td>
@@ -41,6 +42,11 @@
 </tr>
 </table>
 <hr width="100%">
+<p>Type of a FAD node:</p>
+<ul>
+<li><code class="code">m_val</code> : value of the current node</li>
+<li><code class="code">m_diff</code> : derivatives of the current node wrt. each coordinates</li>
+</ul>
 
 <pre><code><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> = {</code></pre><table class="typetable">
 <tr>
@@ -67,10 +73,10 @@
 <pre><span id="TYPEscalar"><span class="keyword">type</span> <code class="type"></code>scalar</span> = <code class="type">Op.scalar</code> </pre>
 
 
-<pre><span id="VALstring_of_scalar"><span class="keyword">val</span> string_of_scalar</span> : <code class="type">Op.scalar -> string</code></pre>
 <pre><span id="VALto_string"><span class="keyword">val</span> to_string</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEt">t</a> -> string</code></pre>
 <pre><span id="VALcreate"><span class="keyword">val</span> create</span> : <code class="type">unit -> <a href="Fadiff.FTypeName.html#TYPEt">t</a></code></pre>
 <pre><span id="VALget"><span class="keyword">val</span> get</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEt">t</a> -> Op.elt</code></pre>
+<pre><span id="VAL(!!)"><span class="keyword">val</span> (!!)</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEt">t</a> -> Op.elt</code></pre>
 <pre><span id="VALlift"><span class="keyword">val</span> lift</span> : <code class="type">Op.t -> <a href="Fadiff.FTypeName.html#TYPEt">t</a></code></pre>
 <pre><span id="VALmake"><span class="keyword">val</span> make</span> : <code class="type">Op.elt -> <a href="Fadiff.FTypeName.html#TYPEt">t</a></code></pre>
 <pre><span id="VALinteger"><span class="keyword">val</span> integer</span> : <code class="type">int -> <a href="Fadiff.FTypeName.html#TYPEt">t</a></code></pre>
@@ -105,10 +111,6 @@
 
 <pre><span id="VAL(=)"><span class="keyword">val</span> (=)</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEt">t</a> -> <a href="Fadiff.FTypeName.html#TYPEt">t</a> -> bool</code></pre>
 <pre><span id="VAL(<>)"><span class="keyword">val</span> (&lt;&gt;)</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEt">t</a> -> <a href="Fadiff.FTypeName.html#TYPEt">t</a> -> bool</code></pre>
-<pre><span id="VAL(<=)"><span class="keyword">val</span> (&lt;=)</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEt">t</a> -> <a href="Fadiff.FTypeName.html#TYPEt">t</a> -> bool</code></pre>
-<pre><span id="VAL(<)"><span class="keyword">val</span> (&lt;)</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEt">t</a> -> <a href="Fadiff.FTypeName.html#TYPEt">t</a> -> bool</code></pre>
-<pre><span id="VAL(>=)"><span class="keyword">val</span> (&gt;=)</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEt">t</a> -> <a href="Fadiff.FTypeName.html#TYPEt">t</a> -> bool</code></pre>
-<pre><span id="VAL(>)"><span class="keyword">val</span> (&gt;)</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEt">t</a> -> <a href="Fadiff.FTypeName.html#TYPEt">t</a> -> bool</code></pre>
 <pre><span id="VAL(+)"><span class="keyword">val</span> (+)</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEt">t</a> -> <a href="Fadiff.FTypeName.html#TYPEt">t</a> -> <a href="Fadiff.FTypeName.html#TYPEt">t</a></code></pre>
 <pre><span id="VAL(+=)"><span class="keyword">val</span> (+=)</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEt">t</a> -> <a href="Fadiff.FTypeName.html#TYPEt">t</a> -> <a href="Fadiff.FTypeName.html#TYPEt">t</a></code></pre>
 <pre><span id="VAL(-)"><span class="keyword">val</span> (-)</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEt">t</a> -> <a href="Fadiff.FTypeName.html#TYPEt">t</a> -> <a href="Fadiff.FTypeName.html#TYPEt">t</a></code></pre>

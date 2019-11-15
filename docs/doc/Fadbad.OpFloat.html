@@ -6,23 +6,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="Start" href="index.html">
 <link rel="previous" href="Fadbad.Op.html">
-<link rel="next" href="Fadbad.F.html">
+<link rel="next" href="Fadbad.OrderedFloat.html">
 <link rel="Up" href="Fadbad.html">
 <link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of extensions" rel=Appendix href="index_extensions.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Index of module types" rel=Appendix href="index_module_types.html">
 <link title="Badiff" rel="Chapter" href="Badiff.html">
 <link title="Fadbad" rel="Chapter" href="Fadbad.html">
+<link title="Fadbad_utils" rel="Chapter" href="Fadbad_utils.html">
 <link title="Fadiff" rel="Chapter" href="Fadiff.html">
 <link title="Op" rel="Chapter" href="Op.html">
-<link title="Tadiff" rel="Chapter" href="Tadiff.html">
-<link title="Utils" rel="Chapter" href="Utils.html"><title>Fadbad.OpFloat</title>
+<link title="Tadiff" rel="Chapter" href="Tadiff.html"><title>Fadbad.OpFloat</title>
 </head>
 <body>
 <div class="navbar"><a class="pre" href="Fadbad.Op.html" title="Fadbad.Op">Previous</a>
 &nbsp;<a class="up" href="Fadbad.html" title="Fadbad">Up</a>
-&nbsp;<a class="post" href="Fadbad.F.html" title="Fadbad.F">Next</a>
+&nbsp;<a class="post" href="Fadbad.OrderedFloat.html" title="Fadbad.OrderedFloat">Next</a>
 </div>
 <h1>Module <a href="type_Fadbad.OpFloat.html">Fadbad.OpFloat</a></h1>
 
@@ -40,9 +41,11 @@
 <pre><span id="VALcreate"><span class="keyword">val</span> create</span> : <code class="type">unit -> float Stdlib.ref</code></pre>
 <pre><span id="VALmake"><span class="keyword">val</span> make</span> : <code class="type">'a -> 'a Stdlib.ref</code></pre>
 <pre><span id="VALget"><span class="keyword">val</span> get</span> : <code class="type">'a Stdlib.ref -> 'a</code></pre>
+<pre><span id="VAL(!!)"><span class="keyword">val</span> (!!)</span> : <code class="type">'a Stdlib.ref -> 'a</code></pre>
 <pre><span id="VALinteger"><span class="keyword">val</span> integer</span> : <code class="type">int -> float Stdlib.ref</code></pre>
 <pre><span id="VALto_string"><span class="keyword">val</span> to_string</span> : <code class="type">float Stdlib.ref -> string</code></pre>
 <pre><span id="VALstring_of_scalar"><span class="keyword">val</span> string_of_scalar</span> : <code class="type">float -> string</code></pre>
+<pre><span id="VALstring_of_elt"><span class="keyword">val</span> string_of_elt</span> : <code class="type">float -> string</code></pre>
 <pre><span id="VALcopy"><span class="keyword">val</span> copy</span> : <code class="type">'a Stdlib.ref -> 'a Stdlib.ref</code></pre>
 <pre><span id="VALdeepcopy"><span class="keyword">val</span> deepcopy</span> : <code class="type">'a Stdlib.ref -> 'a Stdlib.ref</code></pre>
 <pre><span id="VALzero"><span class="keyword">val</span> zero</span> : <code class="type">unit -> float Stdlib.ref</code></pre>
@@ -73,8 +76,4 @@
 <pre><span id="VALacos"><span class="keyword">val</span> acos</span> : <code class="type">float Stdlib.ref -> float Stdlib.ref</code></pre>
 <pre><span id="VALatan"><span class="keyword">val</span> atan</span> : <code class="type">float Stdlib.ref -> float Stdlib.ref</code></pre>
 <pre><span id="VAL(=)"><span class="keyword">val</span> (=)</span> : <code class="type">'a Stdlib.ref -> 'a Stdlib.ref -> bool</code></pre>
-<pre><span id="VAL(<>)"><span class="keyword">val</span> (&lt;&gt;)</span> : <code class="type">'a Stdlib.ref -> 'a Stdlib.ref -> bool</code></pre>
-<pre><span id="VAL(<)"><span class="keyword">val</span> (&lt;)</span> : <code class="type">'a Stdlib.ref -> 'a Stdlib.ref -> bool</code></pre>
-<pre><span id="VAL(<=)"><span class="keyword">val</span> (&lt;=)</span> : <code class="type">'a Stdlib.ref -> 'a Stdlib.ref -> bool</code></pre>
-<pre><span id="VAL(>)"><span class="keyword">val</span> (&gt;)</span> : <code class="type">'a Stdlib.ref -> 'a Stdlib.ref -> bool</code></pre>
-<pre><span id="VAL(>=)"><span class="keyword">val</span> (&gt;=)</span> : <code class="type">'a Stdlib.ref -> 'a Stdlib.ref -> bool</code></pre></body></html>
+<pre><span id="VAL(<>)"><span class="keyword">val</span> (&lt;&gt;)</span> : <code class="type">'a Stdlib.ref -> 'a Stdlib.ref -> bool</code></pre></body></html>

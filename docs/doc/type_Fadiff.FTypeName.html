@@ -4,26 +4,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="Start" href="index.html">
 <link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of extensions" rel=Appendix href="index_extensions.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Index of module types" rel=Appendix href="index_module_types.html">
 <link title="Badiff" rel="Chapter" href="Badiff.html">
 <link title="Fadbad" rel="Chapter" href="Fadbad.html">
+<link title="Fadbad_utils" rel="Chapter" href="Fadbad_utils.html">
 <link title="Fadiff" rel="Chapter" href="Fadiff.html">
 <link title="Op" rel="Chapter" href="Op.html">
-<link title="Tadiff" rel="Chapter" href="Tadiff.html">
-<link title="Utils" rel="Chapter" href="Utils.html"><title>Fadiff.FTypeName</title>
+<link title="Tadiff" rel="Chapter" href="Tadiff.html"><title>Fadiff.FTypeName</title>
 </head>
 <body>
-<code class="code"><span class="keyword">functor</span>&nbsp;(<span class="constructor">Op</span>&nbsp;:&nbsp;<span class="constructor">OpS'</span>)&nbsp;<span class="keywordsign">-&gt;</span><br>
+<code class="code"><span class="keyword">functor</span>&nbsp;(<span class="constructor">Op</span>&nbsp;:&nbsp;<span class="constructor">OpS</span>)&nbsp;<span class="keywordsign">-&gt;</span><br>
 &nbsp;&nbsp;<span class="keyword">sig</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;t&nbsp;=&nbsp;{&nbsp;m_val&nbsp;:&nbsp;<span class="constructor">Op</span>.t;&nbsp;<span class="keyword">mutable</span>&nbsp;m_diff&nbsp;:&nbsp;<span class="constructor">Op</span>.t&nbsp;array;&nbsp;}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;elt&nbsp;=&nbsp;<span class="constructor">Op</span>.elt<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;scalar&nbsp;=&nbsp;<span class="constructor">Op</span>.scalar<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;string_of_scalar&nbsp;:&nbsp;<span class="constructor">Op</span>.scalar&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;string_of_elt&nbsp;:&nbsp;<span class="constructor">Op</span>.elt&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;to_string&nbsp;:&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;create&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get&nbsp;:&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Op</span>.elt<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;(&nbsp;!!&nbsp;)&nbsp;:&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Op</span>.elt<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;lift&nbsp;:&nbsp;<span class="constructor">Op</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;make&nbsp;:&nbsp;<span class="constructor">Op</span>.elt&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;integer&nbsp;:&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t<br>
@@ -45,10 +48,6 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;(&nbsp;=&nbsp;)&nbsp;:&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;(&nbsp;&lt;&gt;&nbsp;)&nbsp;:&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;(&nbsp;&lt;=&nbsp;)&nbsp;:&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;(&nbsp;&lt;&nbsp;)&nbsp;:&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;(&nbsp;&gt;=&nbsp;)&nbsp;:&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;(&nbsp;&gt;&nbsp;)&nbsp;:&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;addV&nbsp;:&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Op</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;vAdd&nbsp;:&nbsp;<span class="constructor">Op</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;add&nbsp;:&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Fadiff</span>.<span class="constructor">FTypeName</span>.t<br>

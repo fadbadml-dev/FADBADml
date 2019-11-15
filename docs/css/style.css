@@ -1,6 +1,12 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+
 body {
     width:100%;
     height:100%;
+    margin: 0 auto;
     background-color: rgb(241,226,236);
 }
 
@@ -29,9 +35,27 @@ menuitem a {
     color: black;
 }
 
+footer {
+  text-align:center;
+
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  overflow: hidden;
+  color:grey;
+  font-size: 12px;
+}
+
 #auth, #licence, #credits {
     margin-top: 2%;
     text-align: center;
+}
+
+#licence {
+    margin:auto;
+    margin-bottom: 10%;
 }
 
 #auth ul {

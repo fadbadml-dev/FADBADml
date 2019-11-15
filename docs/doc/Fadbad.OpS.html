@@ -5,21 +5,24 @@
 <meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="Start" href="index.html">
+<link rel="next" href="Fadbad.OrderedOpS.html">
 <link rel="Up" href="Fadbad.html">
 <link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of extensions" rel=Appendix href="index_extensions.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Index of module types" rel=Appendix href="index_module_types.html">
 <link title="Badiff" rel="Chapter" href="Badiff.html">
 <link title="Fadbad" rel="Chapter" href="Fadbad.html">
+<link title="Fadbad_utils" rel="Chapter" href="Fadbad_utils.html">
 <link title="Fadiff" rel="Chapter" href="Fadiff.html">
 <link title="Op" rel="Chapter" href="Op.html">
-<link title="Tadiff" rel="Chapter" href="Tadiff.html">
-<link title="Utils" rel="Chapter" href="Utils.html"><title>Fadbad.OpS</title>
+<link title="Tadiff" rel="Chapter" href="Tadiff.html"><title>Fadbad.OpS</title>
 </head>
 <body>
 <div class="navbar">&nbsp;<a class="up" href="Fadbad.html" title="Fadbad">Up</a>
-&nbsp;</div>
+&nbsp;<a class="post" href="Fadbad.OrderedOpS.html" title="Fadbad.OrderedOpS">Next</a>
+</div>
 <h1>Module type <a href="type_Fadbad.OpS.html">Fadbad.OpS</a></h1>
 
 <pre><span id="MODULETYPEOpS"><span class="keyword">module type</span> OpS</span> = <code class="type"><a href="Op.S.html">Op.S</a></code></pre><hr width="100%">
@@ -73,8 +76,15 @@
 </div>
 </div>
 
+<pre><span id="VAL(!!)"><span class="keyword">val</span> (!!)</span> : <code class="type"><a href="Op.S.html#TYPEt">t</a> -> <a href="Op.S.html#TYPEelt">elt</a></code></pre><div class="info ">
+<div class="info-desc">
+<p>Alias for get</p>
+</div>
+</div>
+
 <pre><span id="VALto_string"><span class="keyword">val</span> to_string</span> : <code class="type"><a href="Op.S.html#TYPEt">t</a> -> string</code></pre>
 <pre><span id="VALstring_of_scalar"><span class="keyword">val</span> string_of_scalar</span> : <code class="type"><a href="Op.S.html#TYPEscalar">scalar</a> -> string</code></pre>
+<pre><span id="VALstring_of_elt"><span class="keyword">val</span> string_of_elt</span> : <code class="type"><a href="Op.S.html#TYPEelt">elt</a> -> string</code></pre>
 <pre><span id="VALcopy"><span class="keyword">val</span> copy</span> : <code class="type"><a href="Op.S.html#TYPEt">t</a> -> <a href="Op.S.html#TYPEt">t</a></code></pre>
 <pre><span id="VALdeepcopy"><span class="keyword">val</span> deepcopy</span> : <code class="type"><a href="Op.S.html#TYPEt">t</a> -> <a href="Op.S.html#TYPEt">t</a></code></pre>
 <pre><span id="VALzero"><span class="keyword">val</span> zero</span> : <code class="type">unit -> <a href="Op.S.html#TYPEt">t</a></code></pre><div class="info ">
@@ -130,8 +140,4 @@
 <pre><span id="VALacos"><span class="keyword">val</span> acos</span> : <code class="type"><a href="Op.S.html#TYPEt">t</a> -> <a href="Op.S.html#TYPEt">t</a></code></pre>
 <pre><span id="VALatan"><span class="keyword">val</span> atan</span> : <code class="type"><a href="Op.S.html#TYPEt">t</a> -> <a href="Op.S.html#TYPEt">t</a></code></pre>
 <pre><span id="VAL(=)"><span class="keyword">val</span> (=)</span> : <code class="type"><a href="Op.S.html#TYPEt">t</a> -> <a href="Op.S.html#TYPEt">t</a> -> bool</code></pre>
-<pre><span id="VAL(<>)"><span class="keyword">val</span> (&lt;&gt;)</span> : <code class="type"><a href="Op.S.html#TYPEt">t</a> -> <a href="Op.S.html#TYPEt">t</a> -> bool</code></pre>
-<pre><span id="VAL(<)"><span class="keyword">val</span> (&lt;)</span> : <code class="type"><a href="Op.S.html#TYPEt">t</a> -> <a href="Op.S.html#TYPEt">t</a> -> bool</code></pre>
-<pre><span id="VAL(<=)"><span class="keyword">val</span> (&lt;=)</span> : <code class="type"><a href="Op.S.html#TYPEt">t</a> -> <a href="Op.S.html#TYPEt">t</a> -> bool</code></pre>
-<pre><span id="VAL(>)"><span class="keyword">val</span> (&gt;)</span> : <code class="type"><a href="Op.S.html#TYPEt">t</a> -> <a href="Op.S.html#TYPEt">t</a> -> bool</code></pre>
-<pre><span id="VAL(>=)"><span class="keyword">val</span> (&gt;=)</span> : <code class="type"><a href="Op.S.html#TYPEt">t</a> -> <a href="Op.S.html#TYPEt">t</a> -> bool</code></pre></body></html>
+<pre><span id="VAL(<>)"><span class="keyword">val</span> (&lt;&gt;)</span> : <code class="type"><a href="Op.S.html#TYPEt">t</a> -> <a href="Op.S.html#TYPEt">t</a> -> bool</code></pre></body></html>

@@ -4,6 +4,11 @@ This library is an OCaml porting of [FADBAD++](www.fadbad.com), a software writt
 
 [website](https://fadbadml-dev.github.io/FADBADml/)
 
+# Authors
+
+- François Bidet (francois.bidet@polytechnique.edu)
+- Ismail Bennani (ismail.lahkim.bennani@ens.fr)
+
 # Installation
 
 ## OPAM

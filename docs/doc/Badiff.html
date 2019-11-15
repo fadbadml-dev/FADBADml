@@ -8,15 +8,16 @@
 <link rel="next" href="Fadbad.html">
 <link rel="Up" href="index.html">
 <link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of extensions" rel=Appendix href="index_extensions.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Index of module types" rel=Appendix href="index_module_types.html">
 <link title="Badiff" rel="Chapter" href="Badiff.html">
 <link title="Fadbad" rel="Chapter" href="Fadbad.html">
+<link title="Fadbad_utils" rel="Chapter" href="Fadbad_utils.html">
 <link title="Fadiff" rel="Chapter" href="Fadiff.html">
 <link title="Op" rel="Chapter" href="Op.html">
-<link title="Tadiff" rel="Chapter" href="Tadiff.html">
-<link title="Utils" rel="Chapter" href="Utils.html"><title>Badiff</title>
+<link title="Tadiff" rel="Chapter" href="Tadiff.html"><title>Badiff</title>
 </head>
 <body>
 <div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
@@ -26,6 +27,12 @@
 
 <pre><span id="MODULEBadiff"><span class="keyword">module</span> Badiff</span>: <code class="code">sig</code> <a href="Badiff.html">..</a> <code class="code">end</code></pre><hr width="100%">
 
-<pre><span id="MODULETYPEOpS'"><span class="keyword">module type</span> <a href="Badiff.OpS'.html">OpS'</a></span> = <code class="type"><a href="Op.S'.html">Op.S'</a></code></pre>
-<pre><span id="MODULEDerivatives"><span class="keyword">module</span> <a href="Badiff.Derivatives.html">Derivatives</a></span> <code class="code">(</code><code class="code">Op</code><code class="code"> : </code><code class="type"><a href="Badiff.OpS'.html">OpS'</a></code><code class="code">) </code>: <code class="code">sig</code> <a href="Badiff.Derivatives.html">..</a> <code class="code">end</code></pre>
-<pre><span id="MODULEBTypeName"><span class="keyword">module</span> <a href="Badiff.BTypeName.html">BTypeName</a></span> <code class="code">(</code><code class="code">Op</code><code class="code"> : </code><code class="type"><a href="Badiff.OpS'.html">OpS'</a></code><code class="code">) </code>: <code class="code">sig</code> <a href="Badiff.BTypeName.html">..</a> <code class="code">end</code></pre></body></html>
+<pre><span id="MODULETYPEOpS"><span class="keyword">module type</span> <a href="Badiff.OpS.html">OpS</a></span> = <code class="type"><a href="Op.S.html">Op.S</a></code></pre>
+<pre><span id="MODULETYPEOrderedOpS"><span class="keyword">module type</span> <a href="Badiff.OrderedOpS.html">OrderedOpS</a></span> = <code class="type"><a href="Op.OrderedS.html">Op.OrderedS</a></code></pre>
+<pre><span id="MODULETYPES"><span class="keyword">module type</span> <a href="Badiff.S.html">S</a></span> = <code class="code">sig</code> <a href="Badiff.S.html">..</a> <code class="code">end</code></pre>
+<pre><span id="MODULETYPEOrderedS"><span class="keyword">module type</span> <a href="Badiff.OrderedS.html">OrderedS</a></span> = <code class="code">sig</code> <a href="Badiff.OrderedS.html">..</a> <code class="code">end</code></pre>
+<pre><span id="MODULEDerivatives"><span class="keyword">module</span> <a href="Badiff.Derivatives.html">Derivatives</a></span> <code class="code">(</code><code class="code">Op</code><code class="code"> : </code><code class="type"><a href="Badiff.OpS.html">OpS</a></code><code class="code">) </code>: <code class="code">sig</code> <a href="Badiff.Derivatives.html">..</a> <code class="code">end</code></pre>
+<pre><span id="MODULEBTypeName"><span class="keyword">module</span> <a href="Badiff.BTypeName.html">BTypeName</a></span> <code class="code">(</code><code class="code">Op</code><code class="code"> : </code><code class="type"><a href="Badiff.OpS.html">OpS</a></code><code class="code">) </code>: <code class="code">sig</code> <a href="Badiff.BTypeName.html">..</a> <code class="code">end</code></pre>
+<pre><span id="MODULEOrderedBTypeName"><span class="keyword">module</span> <a href="Badiff.OrderedBTypeName.html">OrderedBTypeName</a></span> <code class="code">(</code><code class="code">Op</code><code class="code"> : </code><code class="type"><a href="Badiff.OrderedOpS.html">OrderedOpS</a></code><code class="code">) </code>: <code class="code">sig</code> <a href="Badiff.OrderedBTypeName.html">..</a> <code class="code">end</code></pre>
+<pre><span id="MODULEB"><span class="keyword">module</span> <a href="Badiff.B.html">B</a></span> <code class="code">(</code><code class="code">Op</code><code class="code"> : </code><code class="type"><a href="Badiff.OpS.html">OpS</a></code><code class="code">) </code>: <code class="type"><a href="Badiff.BTypeName.html">BTypeName</a></code><code class="code">(</code><code class="type"><a href="Op.html">Op</a></code><code class="code">)</code></pre>
+<pre><span id="MODULEOrderedB"><span class="keyword">module</span> <a href="Badiff.OrderedB.html">OrderedB</a></span> <code class="code">(</code><code class="code">Op</code><code class="code"> : </code><code class="type"><a href="Badiff.OrderedOpS.html">OrderedOpS</a></code><code class="code">) </code>: <code class="type"><a href="Badiff.OrderedBTypeName.html">OrderedBTypeName</a></code><code class="code">(</code><code class="type"><a href="Op.html">Op</a></code><code class="code">)</code></pre></body></html>
