@@ -11,7 +11,7 @@ config META:
 install: lib META
 	mkdir -p $(LIBDIR)
 	cp lib/* $(LIBDIR)
-	$(OCAMLFIND) install websocketml META || true
+	$(OCAMLFIND) install fadbadml META || true
 
 lib: config
 	$(MAKE) -C src all
