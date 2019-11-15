@@ -1,9 +1,29 @@
 open Fadbad_utils
 
 module type OpS = Op.S
+module type OrderedOp = Op.OrderedS
+
+module type S =
+sig
+  include OpS
+
+  val diff : t -> int -> int -> unit
+  val d : t -> int -> elt
+  val deriv : t -> int -> t
+end
+
+module type OrderedS =
+sig
+  include S
+  include OrderedOp with type t := t and type elt := elt
+end
 
 module FTypeName (Op : OpS) =
 struct
+
+  (** Type of a FAD node:
+      - [m_val] : value of the current node
+      - [m_diff] : derivatives of the current node wrt. each coordinates *)
 
   type t = {
     m_val : Op.t;
@@ -12,8 +32,10 @@ struct
 
   type elt = Op.elt
   type scalar = Op.scalar
+  (**/**)
   let string_of_scalar = Op.string_of_scalar
   let string_of_elt = Op.string_of_elt
+  (**/**)
 
   let to_string this =
     Printf.sprintf "{%s | [%s]}" (Op.to_string this.m_val)
@@ -25,6 +47,7 @@ struct
   }
 
   let get v = Op.get v.m_val
+  let ( !! ) = get
 
   let lift v = { (create ()) with m_val = v; }
 
@@ -487,4 +510,17 @@ struct
         res.m_diff;
     end;
     res
+end
+
+module OrderedFTypeName(Op : OrderedOp) =
+struct
+  include FTypeName(Op)
+
+  let ( < ) a b = Op.(value a < value b)
+  let ( <= ) a b = Op.(value a <= value b)
+  let ( > ) a b = Op.(value a > value b)
+  let ( >= ) a b = Op.(value a >= value b)
+
+  let min a b = if a < b then a else b
+  let max a b = if a > b then a else b
 end

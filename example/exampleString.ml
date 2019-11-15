@@ -8,6 +8,7 @@ module OpString =
     let make s = ref s
 
     let get s = !s
+    let ( !! ) = get
     let to_string s = !s
     let string_of_scalar f = string_of_float f
     let string_of_elt e = e

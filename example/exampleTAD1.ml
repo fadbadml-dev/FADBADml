@@ -1,5 +1,5 @@
 module OpFloat = Fadbad.OpFloat
-module T = Fadbad.T(OpFloat)
+module T : Fadbad.TS with type elt = float and type op_t = OpFloat.t = Fadbad.T(OpFloat)
 
 let f x y =
   let open T in
@@ -9,14 +9,14 @@ let f x y =
 let _ =
   let x = T.make 1. in (* Initialize variable x *)
   let y = T.make 2. in (* Initialize variable y *)
-  
+
   T.set x 1 (OpFloat.one ()); (* Taylor-expand wrt. x (dx/dx=1) *)
-  
+
   let res = f x y in (* Evaluate function and record DAG *)
 
   ignore (T.eval res 10); (* Taylor-expand f to degree 10 *)
   (* T.d res i now contains the i-th Taylor-coefficient *)
-  
+
   Printf.printf "f(x,y)=%f\n" (T.get res); (* Value of function *)
 
   for i = 0 to 10 do

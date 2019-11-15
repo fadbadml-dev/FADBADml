@@ -11,6 +11,7 @@ module OpFun =
     let make f = ref f
     let integer i = ref (fun _ -> float i)
     let get f = !f
+    let ( !! ) = get
 
     let to_string this =
       "<OpFun.t = (float -> float) ref>"

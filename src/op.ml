@@ -30,6 +30,8 @@ sig
 
   val get : t -> elt
   (** Unwrap a value *)
+  val ( !! ) : t -> elt
+  (** Alias for get *)
 
   val to_string : t -> string
   val string_of_scalar : scalar -> string
@@ -84,12 +86,21 @@ sig
   val ( <> ) : t -> t -> bool
 end
 
-module type OrderedS = sig
-  include S
+module type Order = sig
+  type t
+
   val ( < ) : t -> t -> bool
   val ( <= ) : t -> t -> bool
   val ( > ) : t -> t -> bool
   val ( >= ) : t -> t -> bool
+
+  val min : t -> t -> t
+  val max : t -> t -> t
+end
+
+module type OrderedS = sig
+  include S
+  include Order with type t := t
 end
 
 module OpFloat =
@@ -102,6 +113,7 @@ struct
 
   let make x = ref x
   let get f = !f
+  let ( !! ) = get
 
   let integer i = ref (float i)
 
@@ -159,5 +171,8 @@ struct
   let ( < ) x y = Stdlib.(!x < !y)
   let ( <= ) x y = Stdlib.(!x <= !y)
   let ( > ) x y = Stdlib.(!x > !y)
-  let ( <= ) x y = Stdlib.(!x >= !y)
+  let ( >= ) x y = Stdlib.(!x >= !y)
+
+  let max f1 f2 = ref (max !f1 !f2)
+  let min f1 f2 = ref (min !f1 !f2)
 end

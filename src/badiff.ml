@@ -1,6 +1,24 @@
 open Fadbad_utils
 
 module type OpS = Op.S
+module type OrderedOpS = Op.OrderedS
+
+module type S =
+sig
+  include OpS
+
+  val diff : t -> int -> int -> unit
+  val d : t -> int -> elt
+  val deriv : t -> int -> t
+  val compute : t -> unit
+  val compute_list : t list -> unit
+end
+
+module type OrderedS =
+sig
+  include S
+  include OrderedOpS with type t := t and type elt := elt
+end
 
 module Derivatives (Op : OpS) =
 struct
@@ -25,12 +43,12 @@ struct
        match t_l with
        | [] -> ()
        | x :: q -> Format.fprintf ff ";@,%s%a"
-        (Op.string_of_elt (Op.get x)) aux q
+                     Op.(string_of_elt !!x) aux q
      in
      match t_l with
      | [] -> ()
      | x :: q -> Format.printf "@[<2>%s%a@]"
-        (Op.string_of_elt (Op.get x)) aux q
+                   Op.(string_of_elt !!x) aux q
 
   let fprint ff this =
     Format.fprintf ff "@[<2>[%a]@]" fprint_t_list (Array.to_list !this)
@@ -106,7 +124,8 @@ struct
   type elt = Op.elt
   type scalar = Op.scalar
 
-  type op =
+  type op = ..
+  type op +=
     | CONST | SCALE of scalar | TRANS of scalar
     | ADD | SUB | MUL | DIV | POW
     | POS | NEG | INV | SQR | SQRT | EXP | LOG | SIN | COS | TAN
@@ -138,6 +157,7 @@ struct
     | POS -> "POS" | NEG -> "NEG" | INV -> "INV" | SQR -> "SQR" | SQRT -> "SQRT"
     | EXP -> "EXP" | LOG -> "LOG" | SIN -> "SIN" | COS -> "COS" | TAN -> "TAN"
     | ASIN -> "ASIN" | ACOS -> "ACOS" | ATAN -> "ATAN"
+    | _ -> failwith "Unknown operator"
 
   let to_short_string this = string_of_op this.operator
 
@@ -154,7 +174,7 @@ struct
   and fprint_t ff this =
     let fprint_value ff value =
       Format.fprintf ff "@[<2>value@ =@ %s@]"
-        (Op.string_of_elt (Op.get value))
+        Op.(string_of_elt !!value)
     in
     let fprint_operator ff op =
       Format.fprintf ff "@[<2>operator@ =@ %s@]" (string_of_op op)
@@ -247,6 +267,7 @@ struct
   let derivatives this = this.derivatives
 
   let get this = Op.get this.value
+  let ( !! ) = get
 
   let deriv this i = D.get this.derivatives i
   let d this i = Op.get (deriv this i)
@@ -336,6 +357,7 @@ struct
       let t = get_operands this 0 in
       let tmp = Op.(inv ((sqr (value t)) + (one ()))) in
       mac_der t tmp this
+    | _ -> failwith "Unknown operator"
 
   let rec propagateChildren this =
     Array.iter decRef this.operands;
@@ -429,3 +451,19 @@ struct
   let ( <> ) t1 t2 = Op.((value t1) <> (value t2))
 
 end
+
+module OrderedBTypeName (Op : OrderedOpS) =
+struct
+  include BTypeName(Op)
+
+  let ( < ) a b = Op.(value a < value b)
+  let ( <= ) a b = Op.(value a <= value b)
+  let ( > ) a b = Op.(value a > value b)
+  let ( >= ) a b = Op.(value a >= value b)
+
+  let min a b = if a < b then a else b
+  let max a b = if a > b then a else b
+end
+
+module B(Op : OpS) = BTypeName(Op)
+module OrderedB(Op : OrderedOpS) = OrderedBTypeName(Op)

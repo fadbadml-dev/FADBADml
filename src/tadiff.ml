@@ -1,6 +1,31 @@
 open Fadbad_utils
 
 module type OpS = Op.S
+module type OrderedOpS = Op.OrderedS
+
+module type S =
+sig
+  include OpS
+
+  type op_t
+
+  val get_tvalues : t -> elt array
+  val get_derivatives : t -> elt array
+
+  val set : t -> int -> op_t -> unit
+
+  val d : t -> int -> elt
+  val deriv : t -> int -> op_t
+  val eval : t -> int -> int
+  val reset : t -> unit
+
+end
+
+module type OrderedS =
+sig
+  include S
+  include OrderedOpS with type t := t and type elt := elt
+end
 
 module TValues(Op : OpS) =
 struct
@@ -93,7 +118,8 @@ struct
   type elt = Op.elt
   type scalar = Op.scalar
 
-  type op =
+  type op = ..
+  type op +=
     | CONST | SCALE of scalar | TRANS of scalar
     (* while computing the derivatives of SIN or COS, we also compute
        the derivatives of COS or SIN. the argument of the constructor is
@@ -102,6 +128,8 @@ struct
     | ADD | SUB | MUL | DIV | POW
     | POS | NEG | INV | SQR | SQRT | EXP | LOG | TAN
     | ASIN | ACOS | ATAN
+
+  type op_t = Op.t
 
   type t = {
     mutable operator : op;
@@ -112,8 +140,8 @@ struct
   let tvalues this = TValues.get_values this.tvalues
   let derivatives this = TValues.get_derivatives this.tvalues
 
-  let get_tvalues this = Array.map Op.get (tvalues this)
-  let get_derivatives this = Array.map Op.get (derivatives this)
+  let get_tvalues this = Array.map Op.(!!) (tvalues this)
+  let get_derivatives this = Array.map Op.(!!) (derivatives this)
 
   let string_of_op = function
     | CONST -> "CONST"
@@ -123,6 +151,7 @@ struct
     | POS -> "POS" | NEG -> "NEG" | INV -> "INV" | SQR -> "SQR" | SQRT -> "SQRT"
     | EXP -> "EXP" | LOG -> "LOG" | SIN _ -> "SIN" | COS _ -> "COS" | TAN -> "TAN"
     | ASIN -> "ASIN" | ACOS -> "ACOS" | ATAN -> "ATAN"
+    | _ -> failwith "Unknown operator"
   let to_short_string this = string_of_op this.operator
   let rec to_string this =
     (Printf.sprintf "{\n\toperator = %s\n\toperands =\n\t\t[%s]\n\t"
@@ -198,10 +227,11 @@ struct
     | _ -> TValues.reset this.tvalues; Array.iter reset this.operands
 
   let value this = TValues.get this.tvalues 0
-  let get this = Op.get (value this)
+  let get this = Op.(!!(value this))
+  let ( !! ) = get
 
   let deriv this i = TValues.get this.tvalues i
-  let d this i = Op.get (deriv this i)
+  let d this i = Op.(!!(deriv this i))
 
   let length this = TValues.length this.tvalues
 
@@ -510,6 +540,7 @@ struct
       aux (Op.zero ()) (length this) 1;
       TValues.set_length this.tvalues l;
       l
+    | _ -> failwith "Unknown operator"
 
   let un_op operator t = {
     operator;
@@ -577,5 +608,32 @@ struct
 
   let ( = ) t1 t2 = Op.((value t1) = (value t2))
   let ( <> ) t1 t2 = Op.((value t1) <> (value t2))
+
+end
+
+module OrderedTTypeName(Op : OrderedOpS) =
+struct
+  include TTypeName(Op)
+  type op += MIN | MAX
+
+  let string_of_op = function
+    | MIN -> "min"
+    | MAX -> "max"
+    | op -> string_of_op op
+
+  let eval this =
+    match this.operator with
+    | MIN -> failwith "not implemented"
+    | MAX -> failwith "not implemented"
+    | _ -> eval this
+
+
+  let ( < ) a b = Op.(value a < value b)
+  let ( <= ) a b = Op.(value a <= value b)
+  let ( > ) a b = Op.(value a > value b)
+  let ( >= ) a b = Op.(value a >= value b)
+
+  let min a b = bin_op MIN
+  let max a b = bin_op MAX
 
 end
