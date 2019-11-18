@@ -6,7 +6,7 @@ This library is an OCaml porting of [FADBAD++](www.fadbad.com), a software writt
 
 # Authors
 
-- François Bidet (francois.bidet@polytechnique.edu)
+- François Bidet (fbidet@lix.polytechnique.fr)
 - Ismail Bennani (ismail.lahkim.bennani@ens.fr)
 
 # Installation

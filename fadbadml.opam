@@ -3,11 +3,11 @@ name: "fadbadml"
 version: "~dev"
 synopsis: "FADBAD++ for OCaml"
 maintainer: [
-  "francois-bidet <francois.bidet@polytechnique.edu>"
+  "francois-bidet <fbidet@lix.polytechnique.fr>"
   "ismailbennani <ismail.lahkim.bennani@ens.fr>"
 ]
 authors: [
-  "francois-bidet <francois.bidet@polytechnique.edu>"
+  "francois-bidet <fbidet@lix.polytechnique.fr>"
   "ismailbennani <ismail.lahkim.bennani@ens.fr>"
 ]
 license: "CeCILL-C"
