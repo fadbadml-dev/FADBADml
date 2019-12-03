@@ -7,8 +7,8 @@ module OrderedFloat = Op.OrderedFloat
 
 module type FS = Fadiff.S
 module type OrderedFS = Fadiff.OrderedS
-module F (Operators : OpS) = Fadiff.FTypeName(Operators)
-module OrderedF (Operators : OrderedOpS) = Fadiff.OrderedFTypeName(Operators)
+module F (Operators : OpS) = Fadiff.F(Operators)
+module OrderedF (Operators : OrderedOpS) = Fadiff.OrderedF(Operators)
 
 module type BS = Badiff.S
 module type OrderedBS = Badiff.OrderedS

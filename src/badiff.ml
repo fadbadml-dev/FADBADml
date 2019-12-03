@@ -7,6 +7,8 @@ module type S =
 sig
   include OpS
 
+  type op_t
+
   val diff : t -> int -> int -> unit
   val d : t -> int -> elt
   val deriv : t -> int -> t
@@ -124,6 +126,8 @@ struct
   type elt = Op.elt
   type scalar = Op.scalar
 
+  type op_t = Op.t
+
   type op = ..
   type op +=
     | CONST | SCALE of scalar | TRANS of scalar
@@ -145,7 +149,7 @@ struct
     mutable operator : op;
     mutable operands : t array;
     mutable rc : int;
-    mutable value : Op.t;
+    mutable value : op_t;
     derivatives : D.t;
   }
 

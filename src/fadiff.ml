@@ -1,21 +1,23 @@
 open Fadbad_utils
 
 module type OpS = Op.S
-module type OrderedOp = Op.OrderedS
+module type OrderedOpS = Op.OrderedS
 
 module type S =
 sig
   include OpS
 
+  type op_t
+
   val diff : t -> int -> int -> unit
   val d : t -> int -> elt
-  val deriv : t -> int -> t
+  val deriv : t -> int -> op_t
 end
 
 module type OrderedS =
 sig
   include S
-  include OrderedOp with type t := t and type elt := elt
+  include OrderedOpS with type t := t and type elt := elt
 end
 
 module FTypeName (Op : OpS) =
@@ -25,9 +27,11 @@ struct
       - [m_val] : value of the current node
       - [m_diff] : derivatives of the current node wrt. each coordinates *)
 
+  type op_t = Op.t
+
   type t = {
-    m_val : Op.t;
-    mutable m_diff : Op.t array;
+    m_val : op_t;
+    mutable m_diff : op_t array;
   }
 
   type elt = Op.elt
@@ -512,7 +516,7 @@ struct
     res
 end
 
-module OrderedFTypeName(Op : OrderedOp) =
+module OrderedFTypeName(Op : OrderedOpS) =
 struct
   include FTypeName(Op)
 
@@ -524,3 +528,6 @@ struct
   let min a b = if a < b then a else b
   let max a b = if a > b then a else b
 end
+
+module F(Op : OpS) = FTypeName(Op)
+module OrderedF(Op : OrderedOpS) = OrderedFTypeName(Op)
