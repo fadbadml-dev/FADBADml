@@ -1,27 +1,45 @@
 <!DOCTYPE html>
+<html lang="en">
 <html>
+
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/all.min.css">
     <link rel="icon" href="img/logo/favicon.ico" />
     <title>FADBADml: Automatic Differentiation</title>
 </head>
-<body>
-    <img id="logo" src="img/logo/head_huge.png" />
-    <menu>
-        <menuitem>
-            <a href="https://github.com/fadbadml-dev/FADBADml">src</a>
-        </menuitem>
-        <menuitem>
-            <a href="doc/index.html">doc</a>
-        </menuitem>
-        <menuitem>
-            <a href="examples.html">examples</a>
-        </menuitem>
-    </menu>
 
-    <section id="auth">
-        <ul id="authors">
+<body>
+    <header>
+        <a href="#" id="title">
+            <img src="img/favicon.ico" id="logo" />
+            <span>
+                <span class="big">FADBADml</span><br/>
+                <span class="small">Automatic Differentiation</span>
+            </span>
+        </a>
+
+        <menu>
+            <menuitem>
+                <span class="external-link" exponent="github"><a href="https://github.com/fadbadml-dev/FADBADml">src</a></span>
+            </menuitem>
+            <menuitem>
+                <a href="doc/index.html">doc</a>
+            </menuitem>
+            <menuitem>
+                <a href="#authors">authors</a>
+            </menuitem>
+            <menuitem>
+                <a href="#examples">examples</a>
+            </menuitem>
+        </menu>
+    </header>
+
+    <section id="authors">
+        <h1>Authors</h1>
+        <ul>
             <li>
                 <span class="name">François Bidet</span>
                 <a href="https://github.com/francois-bidet" class="fab fa-github">
@@ -40,20 +58,29 @@
     </section>
 
     <section id="licence">
+        <h1>Licence</h1>
         This software is distributed under the <a href="https://cecill.info/licences/Licence_CeCILL-C_V1-en.html">CeCILL-C license</a>.
         <br />
         It is based on <a href="http://www.fadbad.com">FADBAD++</a>, a software written by Ole Stauning and Claus Bendtsen.
     </section>
 
-    <footer id="credits">
-        Font used in the logo:
-        <a href="https://fonts.google.com/specimen/Manuale">
-            manuale-medium
-        </a>
-        by
-        <a href="http://www.omnibus-type.com/">Omnibus Type</a>.
+    <section id="examples">
+        <h1>Examples</h1>
+        <div>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean porta viverra ipsum, et blandit ligula commodo quis. Mauris a nulla elementum, consequat purus vel, blandit dolor. Quisque nec ipsum vel tellus molestie sollicitudin. Curabitur posuere, tellus ut scelerisque ultrices, neque urna fermentum orci, non efficitur leo nibh eu dui. Quisque eget quam nibh. Mauris consequat orci sit amet felis posuere, sit amet congue sem tempus. Vestibulum facilisis, mi nec placerat tincidunt, sapien mauris venenatis lorem, ac lacinia nisi quam et mi. Integer ut dolor ac metus fermentum pretium ac ac sapien. Mauris egestas neque diam, sed lobortis odio malesuada ut. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas lobortis dolor ac volutpat interdum. Vivamus malesuada ex a tempor consequat. Nunc in pellentesque augue. Nullam eget lorem tellus. Proin sagittis consequat nunc, non pellentesque quam consectetur ac. Cras iaculis bibendum semper.
+            <br/>
+            Duis sit amet rutrum lorem, eu volutpat lectus. Mauris sollicitudin justo eu eros aliquam auctor. Donec ac urna a felis rhoncus semper. Nulla erat justo, luctus ut porttitor ut, tempor eu nulla. Curabitur suscipit sodales nisi, quis lobortis massa tristique vitae. Cras orci tellus, gravida vitae placerat vel, venenatis et turpis. Suspendisse at lectus diam. Aliquam condimentum ultrices urna, ut posuere est bibendum sed. Quisque nec ex sollicitudin, volutpat odio nec, blandit nisi. Proin nec sem in quam aliquam faucibus ac at dolor. Aliquam viverra erat sit amet lobortis tempus. Praesent cursus elit id elit semper, ac mattis magna euismod. Aenean leo leo, tincidunt feugiat finibus id, venenatis tristique metus.
+            <br/>
+            Nulla eros purus, rhoncus elementum ipsum nec, aliquam luctus lacus. Sed interdum, nulla ac bibendum porttitor, risus elit gravida sapien, vel efficitur lorem arcu vel ante. Sed vel turpis sit amet arcu efficitur interdum. Morbi pretium nunc lacinia ligula imperdiet, faucibus posuere urna consequat. Proin tincidunt, purus at sagittis molestie, libero nisi lacinia nisi, eu gravida augue elit sed dui. Nullam eu varius dui. Etiam placerat luctus ex sit amet rhoncus. In vel elit vestibulum, molestie orci in, malesuada neque.
+            <br/>
+            Nam consequat erat massa, sit amet vulputate mi hendrerit sed. Aenean rhoncus, ex eu sagittis pellentesque, arcu odio pharetra ex, ut placerat quam ex ac urna. Quisque ex tellus, accumsan ultrices egestas et, cursus a orci. Nam ac tortor lectus. Nulla nec facilisis odio. Sed eu consequat dolor. Sed eget massa a nulla tincidunt tincidunt a laoreet libero. Maecenas tincidunt tristique lectus, nec vehicula ipsum tristique eu. Interdum et malesuada fames ac ante ipsum primis in faucibus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur pharetra metus in justo elementum, ac iaculis ipsum facilisis. Mauris tincidunt pretium varius.
+            <br/>
+            Nam velit lacus, porta sit amet mi vulputate, iaculis gravida urna. Morbi nec dui purus. Vivamus vitae aliquam velit, id aliquam nisl. Sed sodales commodo nibh, a finibus nisi luctus id. Sed congue sed dui a feugiat. In ut euismod nisi. Vivamus mollis, ipsum non facilisis dapibus, quam dolor elementum lacus, ornare ullamcorper lorem augue posuere leo. Duis a volutpat odio. Maecenas sed ornare nunc. Curabitur et posuere elit. Aenean consequat ullamcorper fringilla. Aenean magna lorem, dignissim ac est quis, blandit interdum turpis. Fusce id diam tempor, posuere odio sit amet, mattis arcu. Phasellus finibus nisi finibus neque imperdiet, ut venenatis nulla finibus.
+        </div>
+    </section>
 
-        Icon designed by Julien Meysmans.
+    <footer>
+        Last update: Dec. 2019
     </footer>
 </body>
 </html>
