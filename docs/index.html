@@ -6,12 +6,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/all.min.css"> <!-- fontawesome -->
+    <link rel="stylesheet" href="css/fontawesome.min.css"> <!-- fontawesome -->
     <link rel="stylesheet" href="css/highlightjs.css"> <!-- highlightjs -->
 
     <link rel="icon" href="img/favicon.ico" />
 
+    <!-- https://github.com/showdownjs/showdown -->
     <script src="js/showdown.min.js"></script>
+    <!-- https://github.com/highlightjs/highlight.js -->
     <script src="js/highlight.pack.js"></script>
 
     <title>FADBADml: Automatic Differentiation</title>
@@ -71,6 +73,8 @@
                 var this_div = document.getElementById("content");
                 var client = new XMLHttpRequest();
                 client.onload = function() {
+                    // extension taken from
+                    // https://github.com/showdownjs/showdown/issues/577
                     showdown.extension('highlight', function () {
                         return [{
                             type: "output",
@@ -94,9 +98,6 @@
                     showdown.setFlavor('github');
                     var converter = new showdown.Converter({ extensions: ['highlight'] });
                     this_div.innerHTML = converter.makeHtml(client.responseText);
-                    // document.querySelectorAll('code').forEach((block) => {
-                    //   hljs.highlightBlock(block);
-                    // });
                 }
                 client.open('GET', 'examples.md');
                 client.send();
