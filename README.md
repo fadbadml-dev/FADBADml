@@ -27,4 +27,6 @@ This library is an OCaml porting of [FADBAD++](www.fadbad.com), a software writt
 
 # Usage
 
+see `examples` folder.
+
 see [Examples](https://fadbadml-dev.github.io/FADBADml/examples.html)
