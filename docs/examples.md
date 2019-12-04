@@ -1,5 +1,7 @@
-% FADBADml: examples
-% Ismail Bennani; François Bidet
+<!--
+FADBADml: examples
+Ismail Bennani; François Bidet
+-->
 
 [home]: ../../index.html
 [Fadbad.OpS]: ../../doc/Fadbad.OpS.html
@@ -8,16 +10,14 @@
 [Fadbad.B]: ../../doc/Fadbad.B.html
 [Fadbad.T]: ../../doc/Fadbad.T.html
 
-[Back to home][home]
-
 ## Module types instead of primitive types
 
 To use FADBADml, we need a module defining the type we want to use and implemented the interface [Fadbad.OpS].
-If we want to use the `type float`{.ocaml}, we can use the pre-defined module [Fadbad.OpFloat].
+If we want to use the `type float`, we can use the pre-defined module [Fadbad.OpFloat].
 
 Then we have to wrap our module in another using the desired functor:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.ocaml}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ocaml
 module MyF = Fadbad.F(MyModule) (* Fadiff: forward *)
 module MyB = Fadbad.B(MyModule) (* Badiff: backward *)
 module MyT = Fadbad.T(MyModule) (* Tadiff: Taylor *)
@@ -29,17 +29,24 @@ See [Fadbad.F]
 
 Forward automatic differentiation consists of propagating derivatives from input to output.
 
-There is no tree stored in memory. Every variable is a pair of the value and the derivatives $\left(v,\ \left[d_0,\ d_1, \dots,\ d_n\right]\right)$.
-If we want to derive an expression $z$ with respect to a variable $x$, then we have to set the derivative of $x$ to $1$ before computing $z$ :
+There is no tree stored in memory. Every variable is a record containing the value and the derivatives :
+~~~ocaml
+type 'a t = {
+    m_val : 'a;
+    m_diff : 'a array;
+}
+~~~
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.{.ocaml}
+If we want to derive an expression `z` with respect to a variable `x`, then we have to set the derivative of `x` to `1` before computing `z` :
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ocaml
 F.diff x i n
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-with `x` the input variable, `i` the index of the corresponding derivative, and `n` the total number of desired derivatives (with $0 \leq i < n$).
+with `x` the input variable, `i` the index of the corresponding derivative, and `n` the total number of desired derivatives (with `0 <= i < n`).
 
-In the following example, we compute the derivatives of $5 x + y^2$ with respect to $x$ and with respect to $y$. We so have $n = 2$ and we decide the index of the derivative with respect to $x$ will be $0$ and the index of the one with respect to $y$ will be $1$.
+In the following example, we compute the derivatives of `5x + y²` with respect to `x` and with respect to `y`. We so have `n = 2` and we decide the index of the derivative with respect to `x` will be `0` and the index of the one with respect to `y` will be `1`.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.ocaml}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ocaml
 module Op = Fadbad.OpFloat (* pre-defined module using the type float*)
 module F = Fadbad.F(Op)    (* forward module using floats number*)
 
