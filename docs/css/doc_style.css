@@ -1,5 +1,7 @@
 /* CSS file mostly copied from the official OCaml documentation */
 
+@import url("colors.css");
+
 /* fira-sans-regular - latin */
 @font-face {
   font-family: 'Fira Sans';
@@ -19,12 +21,12 @@ a:visited {color : #416DFF; text-decoration : none; }
 a:link {color : #416DFF; text-decoration : none; }
 a:hover {color : Black; text-decoration : underline; }
 a:active {color : Black; text-decoration : underline; }
-.keyword { font-weight : bold ; color : Red }
+.keyword { font-weight : bold ; color : var(--hue-3) }
 .keywordsign { color : #C04600 }
-.comment { color : Green }
-.constructor { color : Blue }
+.comment { color : var(--mono-2) }
+.constructor { color : var(--hue-6-2); font-weight: bold; }
 .type { color : #5C6585 }
-.string { color : Maroon }
+.string { color : var(--hue-6) }
 .warning { color : Red ; font-weight : bold }
 .info { margin-left : 3em; margin-right : 3em }
 .code { color : #465F91 ; }
@@ -40,6 +42,7 @@ h2, h3, h4, h5, h6, div.h7, div.h8, div.h9 {
   font-family: "Fira Sans", sans-serif;
   font-weight: normal;
 }
+
 h1 {
   font-family: "Fira Sans", sans-serif;
   padding: 10px;
@@ -55,10 +58,8 @@ div.h8 { background-color: #F0FFFF; }
 div.h9 { background-color: #FFFFFF; }
 
 .typetable { border-style : hidden }
-.indextable { border-style : hidden }
 .paramstable { border-style : hidden ; padding: 5pt 5pt}
 body {
-  background-color: rgb(241,226,236);
   font-size: 1rem;
   max-width: 800px;
   width: 85%;
@@ -78,6 +79,27 @@ div.sig_block {margin-left: 2em}
 ul.info-attributes { list-style: none; margin: 0; padding: 0; }
 div.info > p:first-child{ margin-top:0; }
 div.info-desc > p:first-child { margin-top:0; margin-bottom:0; }
+
+.indextable {
+  border-style : hidden;
+  width: 100%;
+}
+
+.indextable:before {
+  content:"Module list";
+  text-align: center;
+  font-weight: bold;
+  font-size:2rem;
+  display:block;
+  width:100%;
+}
+.indextable tr td:first-child:before {
+  content:"> ";
+}
+
+.indexlist {
+  padding:0;
+}
 
 .indexlist li {
   display: inline;
