@@ -2,13 +2,53 @@
 
 Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
 
+Modified by Ismail Bennani for FADBADml
+
 */
+
+:root {
+  /*
+
+  taken from one-light-syntax theme of Atom
+  https://github.com/atom/one-light-syntax/blob/master/styles/colors.less
+
+  */
+
+
+  /* Config ----------------------------------- */
+  --syntax-hue:          230;
+  --syntax-saturation:    1%;
+  --syntax-brightness:   95%;
+
+
+  /* Monochrome ----------------------------------- */
+  --mono-1: hsl(var(--syntax-hue), 8%, 24%);
+  --mono-2: hsl(var(--syntax-hue), 6%, 44%);
+  --mono-3: hsl(var(--syntax-hue), 4%, 64%);
+
+  /* Colors ----------------------------------- */
+  --hue-1:   hsl(198, 99%, 37%); /* <-cyan */
+  --hue-2:   hsl(221, 87%, 60%); /* <-blue */
+  --hue-3:   hsl(301, 63%, 40%); /* <-purple */
+  --hue-4:   hsl(119, 34%, 47%); /* <-green */
+
+  --hue-5:   hsl(  5, 74%, 59%); /* <-red 1 */
+  --hue-5-2: hsl(344, 84%, 43%); /* <-red 2 */
+
+  --hue-6:   hsl(41, 99%, 30%); /* <-orange 1 */
+  --hue-6-2: hsl(41, 99%, 38%); /* <-orange 2 */
+
+  /* Base colors ----------------------------------- */
+  --syntax-fg: var(--mono-1);
+  --syntax-bg: hsl(var(--syntax-hue), var(--syntax-saturation), var(--syntax-brightness));
+}
+
 
 .hljs {
   display: block;
   overflow-x: auto;
   padding: 0.5em;
-  background: #F0F0F0;
+  background: var(--syntax-bg);
 }
 
 
@@ -16,7 +56,7 @@ Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
 
 .hljs,
 .hljs-subst {
-  color: #444;
+  color: var(--syntax-fg);
 }
 
 .hljs-comment {
@@ -30,20 +70,27 @@ Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
 .hljs-doctag,
 .hljs-name {
   font-weight: bold;
+  color: var(--hue-3);
 }
 
+.hljs-type {
+  font-weight: bold;
+  color: var(--hue-6-2);
+}
 
 /* User color: hue: 0 */
 
-.hljs-type,
 .hljs-string,
-.hljs-number,
 .hljs-selector-id,
 .hljs-selector-class,
 .hljs-quote,
 .hljs-template-tag,
 .hljs-deletion {
-  color: #880000;
+  color: var(--hue-6);
+}
+
+.hljs-number {
+  color: var(--hue-5-2);  
 }
 
 .hljs-title,
@@ -66,7 +113,7 @@ Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
 /* Language color: hue: 90; */
 
 .hljs-literal {
-  color: #78A960;
+  color: var(--hue-6);
 }
 
 .hljs-built_in,
