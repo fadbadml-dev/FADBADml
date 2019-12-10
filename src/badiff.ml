@@ -465,6 +465,3 @@ struct
   let min a b = if a < b then a else b
   let max a b = if a > b then a else b
 end
-
-module B(Op : Op.S) = BTypeName(Op)
-module OrderedB(Op : Op.OrderedS) = OrderedBTypeName(Op)

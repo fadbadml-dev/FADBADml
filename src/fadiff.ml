@@ -525,6 +525,3 @@ struct
   let min a b = if a < b then a else b
   let max a b = if a > b then a else b
 end
-
-module F(Op : Op.S) = FTypeName(Op)
-module OrderedF(Op : Op.OrderedS) = OrderedFTypeName(Op)
