@@ -5,7 +5,7 @@
 
 See [Fadbad.F]
 
-In its forward mode, FADBADml does not compute the graph of the expressions explicitly. The type `F(Op).t` is the following record:
+In forward mode, FADBADml does not compute the graph of the expressions explicitly. The type `F(Op).t` is the following record:
 
 ~~~ocaml
 (* Op is the argument given to the functor F *)
@@ -58,8 +58,8 @@ We need to tell the library the variables that we want to use for the differenti
 
 ~~~ocaml
 ...
-let () = F.diff x 0 2 in
-let () = F.diff y 1 2 in
+F.diff x 0 2;
+F.diff y 1 2;
 ...
 ~~~
 
@@ -74,7 +74,7 @@ Then we can call `func` and retrieve the output value and derivatives:
 ...
 (* by applying `f`, we apply the operators in `F` hence we compute
    the value of the expression and its derivatives wrt. `x` and `y` *)
-let f  = func x y in
+let f = func x y in
 
 (* get the value of the result *)
 let f_val = F.get f in
@@ -86,5 +86,5 @@ let dfdy = F.d f 1 in
 ...
 ~~~
 
-Find the whole code [here](#quick-start).
+Find the whole code [here](https://github.com/fadbadml-dev/FADBADml/blob/master/example/exampleFAD.ml).
 For more information about FAD, please refer to [FADBAD++ website].
