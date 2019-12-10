@@ -17,37 +17,46 @@
     <script src="js/highlight.pack.js"></script>
 
     <script type="text/javascript">
+      // extension taken from
+      // https://github.com/showdownjs/showdown/issues/577
+      // it highlights the code in code blocks and reads the expected language
+      // in their class names
+      showdown.extension('highlight', function () {
+          return [{
+              type: "output",
+              filter: function (text, converter, options) {
+                  var left = "<pre><code\\b[^>]*>",
+                  right = "</code></pre>",
+                  flags = "g";
+                  var replacement = function (wholeMatch, match, left, right) {
+                      var lang = (left.match(/class=\"([^ \"]+)/) || [])[1];
+                      left = left.slice(0, 18) + 'hljs ' + left.slice(18);
+                      if (lang && hljs.getLanguage(lang)) {
+                          return left + hljs.highlight(lang, match).value + right;
+                      } else {
+                          return left + hljs.highlightAuto(match).value + right;
+                      }
+                  };
+                  return showdown.helper.replaceRecursiveRegExp(
+                    text,
+                    replacement, left, right, flags);
+              }
+          }];
+      });
+      showdown.setFlavor('github');
+
       function fill_with_md(md_path, elt_id) {
-        var this_div = document.getElementById(elt_id);
+        var elt = document.getElementById(elt_id);
         var client = new XMLHttpRequest();
         client.onload = function() {
-            // extension taken from
-            // https://github.com/showdownjs/showdown/issues/577
-            showdown.extension('highlight', function () {
-                return [{
-                    type: "output",
-                    filter: function (text, converter, options) {
-                        var left = "<pre><code\\b[^>]*>",
-                        right = "</code></pre>",
-                        flags = "g";
-                        var replacement = function (wholeMatch, match, left, right) {
-                            var lang = (left.match(/class=\"([^ \"]+)/) || [])[1];
-                            left = left.slice(0, 18) + 'hljs ' + left.slice(18);
-                            if (lang && hljs.getLanguage(lang)) {
-                                return left + hljs.highlight(lang, match).value + right;
-                            } else {
-                                return left + hljs.highlightAuto(match).value + right;
-                            }
-                        };
-                        return showdown.helper.replaceRecursiveRegExp(text, replacement, left, right, flags);
-                    }
-                }];
-            });
-            showdown.setFlavor('github');
             var converter = new showdown.Converter({ extensions: ['highlight'] });
             var colorized = converter.makeHtml(client.responseText);
-            colorized = colorized.replace(/&amp;/g, "&");
-            this_div.innerHTML = colorized;
+            // special chars are processed twice (by showdown and highlightjs)
+            // so chars like < become &gt; then &amp;gt;
+            // this is a quick and dirty fix
+            colorized = colorized.replace(/&amp;gt;/g, "&gt;");
+            colorized = colorized.replace(/&amp;lt;/g, "&lt;");
+            elt.innerHTML = colorized;
         }
         client.open('GET', md_path);
         client.send();
@@ -76,6 +85,8 @@
             </menuitem>
         </menu>
     </header>
+
+    <div id="top-button"><a href="#">go to top</a></div>
 
     <section id="authors">
         <h1>Authors</h1>
