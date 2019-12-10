@@ -1,11 +1,8 @@
 open Fadbad_utils
 
-module type OpS = Op.S
-module type OrderedOpS = Op.OrderedS
-
 module type S =
 sig
-  include OpS
+  include Op.S
 
   type op_t
 
@@ -17,10 +14,10 @@ end
 module type OrderedS =
 sig
   include S
-  include OrderedOpS with type t := t and type elt := elt
+  include Op.OrderedS with type t := t and type elt := elt
 end
 
-module FTypeName (Op : OpS) =
+module FTypeName (Op : Op.S) =
 struct
 
   (** Type of a FAD node:
@@ -516,7 +513,7 @@ struct
     res
 end
 
-module OrderedFTypeName(Op : OrderedOpS) =
+module OrderedFTypeName(Op : Op.OrderedS) =
 struct
   include FTypeName(Op)
 
@@ -528,6 +525,3 @@ struct
   let min a b = if a < b then a else b
   let max a b = if a > b then a else b
 end
-
-module F(Op : OpS) = FTypeName(Op)
-module OrderedF(Op : OrderedOpS) = OrderedFTypeName(Op)
