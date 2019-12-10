@@ -102,15 +102,10 @@ section h1 {
     text-align: center;
 }
 
-#authors {
-    margin-top: 2%;
-    text-align: center;
-}
-
-#licence {
+section {
     margin:auto;
-    margin-top: 2%;
-    margin-bottom: 5%;
+    margin-top: 10px;
+    margin-bottom: 10px;
     text-align: center;
 }
 
@@ -136,5 +131,5 @@ section h1 {
     width:60%;
     margin-left:auto;
     margin-right:auto;
-    text-align:justify
+    text-align:justify;
 }

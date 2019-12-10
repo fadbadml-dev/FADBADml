@@ -31,6 +31,8 @@ lib_opt: config
 doc: lib
 	mkdir -p docs/doc
 	ocamldoc -html -d docs/doc -css-style ../css/doc_style.css -short-functors \
+		-hide Stdlib,Fadiff,Badiff,Tadiff,Fadbad_utils \
+		-t FADBADml \
 		-I src src/*.ml
 
 example: lib_byte

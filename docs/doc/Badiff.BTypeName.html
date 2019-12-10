@@ -18,7 +18,7 @@
 <link title="Fadbad_utils" rel="Chapter" href="Fadbad_utils.html">
 <link title="Fadiff" rel="Chapter" href="Fadiff.html">
 <link title="Op" rel="Chapter" href="Op.html">
-<link title="Tadiff" rel="Chapter" href="Tadiff.html"><title>Badiff.BTypeName</title>
+<link title="Tadiff" rel="Chapter" href="Tadiff.html"><title>FADBADml : Badiff.BTypeName</title>
 </head>
 <body>
 <div class="navbar"><a class="pre" href="Badiff.Derivatives.html" title="Badiff.Derivatives">Previous</a>
@@ -43,11 +43,14 @@
 </table>
 <hr width="100%">
 
-<pre><span id="MODULED"><span class="keyword">module</span> <a href="Badiff.BTypeName.D.html">D</a></span>: <code class="type"><a href="Badiff.Derivatives.html">Badiff.Derivatives</a></code><code class="code">(</code><code class="type"><a href="Op.html">Op</a></code><code class="code">)</code></pre>
+<pre><span id="MODULED"><span class="keyword">module</span> <a href="Badiff.BTypeName.D.html">D</a></span>: <code class="type"><a href="Badiff.Derivatives.html">Derivatives</a></code><code class="code">(</code><code class="type"><a href="Op.html">Op</a></code><code class="code">)</code></pre>
 <pre><span id="TYPEelt"><span class="keyword">type</span> <code class="type"></code>elt</span> = <code class="type">Op.elt</code> </pre>
 
 
 <pre><span id="TYPEscalar"><span class="keyword">type</span> <code class="type"></code>scalar</span> = <code class="type">Op.scalar</code> </pre>
+
+
+<pre><span id="TYPEop_t"><span class="keyword">type</span> <code class="type"></code>op_t</span> = <code class="type">Op.t</code> </pre>
 
 
 <pre><span id="TYPEop"><span class="keyword">type</span> <code class="type"></code>op</span> = ..</pre>
@@ -229,7 +232,7 @@
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTt.value">value</span>&nbsp;: <code class="type">Op.t</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTt.value">value</span>&nbsp;: <code class="type"><a href="Badiff.BTypeName.html#TYPEop_t">op_t</a></code>;</code></td>
 
 </tr>
 <tr>
@@ -259,9 +262,9 @@
 
 <pre><span id="VALstring_of_op"><span class="keyword">val</span> string_of_op</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEop">op</a> -> string</code></pre>
 <pre><span id="VALto_short_string"><span class="keyword">val</span> to_short_string</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEt">t</a> -> string</code></pre>
-<pre><span id="VALfprint_t_list"><span class="keyword">val</span> fprint_t_list</span> : <code class="type">Stdlib.Format.formatter -> <a href="Badiff.BTypeName.html#TYPEt">t</a> list -> unit</code></pre>
-<pre><span id="VALfprint_t"><span class="keyword">val</span> fprint_t</span> : <code class="type">Stdlib.Format.formatter -> <a href="Badiff.BTypeName.html#TYPEt">t</a> -> unit</code></pre>
-<pre><span id="VALfprint"><span class="keyword">val</span> fprint</span> : <code class="type">Stdlib.Format.formatter -> <a href="Badiff.BTypeName.html#TYPEt">t</a> -> unit</code></pre>
+<pre><span id="VALfprint_t_list"><span class="keyword">val</span> fprint_t_list</span> : <code class="type">Format.formatter -> <a href="Badiff.BTypeName.html#TYPEt">t</a> list -> unit</code></pre>
+<pre><span id="VALfprint_t"><span class="keyword">val</span> fprint_t</span> : <code class="type">Format.formatter -> <a href="Badiff.BTypeName.html#TYPEt">t</a> -> unit</code></pre>
+<pre><span id="VALfprint"><span class="keyword">val</span> fprint</span> : <code class="type">Format.formatter -> <a href="Badiff.BTypeName.html#TYPEt">t</a> -> unit</code></pre>
 <pre><span id="VALto_string"><span class="keyword">val</span> to_string</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEt">t</a> -> string</code></pre>
 <pre><span id="VALstring_of_scalar"><span class="keyword">val</span> string_of_scalar</span> : <code class="type">Op.scalar -> string</code></pre>
 <pre><span id="VALstring_of_elt"><span class="keyword">val</span> string_of_elt</span> : <code class="type">Op.elt -> string</code></pre>
@@ -271,7 +274,7 @@
 <pre><span id="VALsmac_der"><span class="keyword">val</span> smac_der</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEt">t</a> -> Op.t -> <a href="Badiff.BTypeName.html#TYPEt">t</a> -> unit</code></pre>
 <pre><span id="VALget_operands"><span class="keyword">val</span> get_operands</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEt">t</a> -> int -> <a href="Badiff.BTypeName.html#TYPEt">t</a></code></pre>
 <pre><span id="VALcreate"><span class="keyword">val</span> create</span> : <code class="type">unit -> <a href="Badiff.BTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALlift"><span class="keyword">val</span> lift</span> : <code class="type">Op.t -> <a href="Badiff.BTypeName.html#TYPEt">t</a></code></pre>
+<pre><span id="VALlift"><span class="keyword">val</span> lift</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEop_t">op_t</a> -> <a href="Badiff.BTypeName.html#TYPEt">t</a></code></pre>
 <pre><span id="VALinteger"><span class="keyword">val</span> integer</span> : <code class="type">int -> <a href="Badiff.BTypeName.html#TYPEt">t</a></code></pre>
 <pre><span id="VALmake"><span class="keyword">val</span> make</span> : <code class="type">Op.elt -> <a href="Badiff.BTypeName.html#TYPEt">t</a></code></pre>
 <pre><span id="VALzero"><span class="keyword">val</span> zero</span> : <code class="type">unit -> <a href="Badiff.BTypeName.html#TYPEt">t</a></code></pre>
@@ -279,7 +282,7 @@
 <pre><span id="VALtwo"><span class="keyword">val</span> two</span> : <code class="type">unit -> <a href="Badiff.BTypeName.html#TYPEt">t</a></code></pre>
 <pre><span id="VALcopy"><span class="keyword">val</span> copy</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEt">t</a> -> <a href="Badiff.BTypeName.html#TYPEt">t</a></code></pre>
 <pre><span id="VALdeepcopy"><span class="keyword">val</span> deepcopy</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEt">t</a> -> <a href="Badiff.BTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALvalue"><span class="keyword">val</span> value</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEt">t</a> -> Op.t</code></pre>
+<pre><span id="VALvalue"><span class="keyword">val</span> value</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEt">t</a> -> <a href="Badiff.BTypeName.html#TYPEop_t">op_t</a></code></pre>
 <pre><span id="VALderivatives"><span class="keyword">val</span> derivatives</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEt">t</a> -> D.t</code></pre>
 <pre><span id="VALget"><span class="keyword">val</span> get</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEt">t</a> -> Op.elt</code></pre>
 <pre><span id="VAL(!!)"><span class="keyword">val</span> (!!)</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEt">t</a> -> Op.elt</code></pre>
@@ -293,9 +296,9 @@
 <pre><span id="VALcompute_list"><span class="keyword">val</span> compute_list</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEt">t</a> list -> unit</code></pre>
 <pre><span id="VALcompute"><span class="keyword">val</span> compute</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEt">t</a> -> unit</code></pre>
 <pre><span id="VALdiff"><span class="keyword">val</span> diff</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEt">t</a> -> int -> int -> unit</code></pre>
-<pre><span id="VALun_op"><span class="keyword">val</span> un_op</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEop">op</a> -><br>       (Op.t -> Op.t) -> <a href="Badiff.BTypeName.html#TYPEt">t</a> -> <a href="Badiff.BTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALbin_op"><span class="keyword">val</span> bin_op</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEop">op</a> -><br>       (Op.t -> Op.t -> Op.t) -><br>       <a href="Badiff.BTypeName.html#TYPEt">t</a> -> <a href="Badiff.BTypeName.html#TYPEt">t</a> -> <a href="Badiff.BTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALbin_cOp"><span class="keyword">val</span> bin_cOp</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEop">op</a> -><br>       (Op.t -> Op.t -> Op.t) -><br>       <a href="Badiff.BTypeName.html#TYPEt">t</a> -> <a href="Badiff.BTypeName.html#TYPEt">t</a> -> <a href="Badiff.BTypeName.html#TYPEt">t</a></code></pre>
+<pre><span id="VALun_op"><span class="keyword">val</span> un_op</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEop">op</a> -><br>       (<a href="Badiff.BTypeName.html#TYPEop_t">op_t</a> -> <a href="Badiff.BTypeName.html#TYPEop_t">op_t</a>) -><br>       <a href="Badiff.BTypeName.html#TYPEt">t</a> -> <a href="Badiff.BTypeName.html#TYPEt">t</a></code></pre>
+<pre><span id="VALbin_op"><span class="keyword">val</span> bin_op</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEop">op</a> -><br>       (<a href="Badiff.BTypeName.html#TYPEop_t">op_t</a> -> <a href="Badiff.BTypeName.html#TYPEop_t">op_t</a> -> <a href="Badiff.BTypeName.html#TYPEop_t">op_t</a>) -><br>       <a href="Badiff.BTypeName.html#TYPEt">t</a> -> <a href="Badiff.BTypeName.html#TYPEt">t</a> -> <a href="Badiff.BTypeName.html#TYPEt">t</a></code></pre>
+<pre><span id="VALbin_cOp"><span class="keyword">val</span> bin_cOp</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEop">op</a> -><br>       (<a href="Badiff.BTypeName.html#TYPEop_t">op_t</a> -> <a href="Badiff.BTypeName.html#TYPEop_t">op_t</a> -> <a href="Badiff.BTypeName.html#TYPEop_t">op_t</a>) -><br>       <a href="Badiff.BTypeName.html#TYPEt">t</a> -> <a href="Badiff.BTypeName.html#TYPEt">t</a> -> <a href="Badiff.BTypeName.html#TYPEt">t</a></code></pre>
 <pre><span id="VALscale"><span class="keyword">val</span> scale</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEt">t</a> -> <a href="Badiff.BTypeName.html#TYPEscalar">scalar</a> -> <a href="Badiff.BTypeName.html#TYPEt">t</a></code></pre>
 <pre><span id="VALtranslate"><span class="keyword">val</span> translate</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEt">t</a> -> <a href="Badiff.BTypeName.html#TYPEscalar">scalar</a> -> <a href="Badiff.BTypeName.html#TYPEt">t</a></code></pre>
 <pre><span id="VAL(~+)"><span class="keyword">val</span> (~+)</span> : <code class="type"><a href="Badiff.BTypeName.html#TYPEt">t</a> -> <a href="Badiff.BTypeName.html#TYPEt">t</a></code></pre>

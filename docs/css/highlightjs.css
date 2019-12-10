@@ -2,13 +2,17 @@
 
 Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
 
+Modified by Ismail Bennani for FADBADml
+
 */
+
+@import url("colors.css");
 
 .hljs {
   display: block;
   overflow-x: auto;
   padding: 0.5em;
-  background: #F0F0F0;
+  background: var(--syntax-bg);
 }
 
 
@@ -16,11 +20,11 @@ Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
 
 .hljs,
 .hljs-subst {
-  color: #444;
+  color: var(--syntax-fg);
 }
 
 .hljs-comment {
-  color: #888888;
+  color: var(--mono-2);
 }
 
 .hljs-keyword,
@@ -30,20 +34,27 @@ Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
 .hljs-doctag,
 .hljs-name {
   font-weight: bold;
+  color: var(--hue-3);
 }
 
+.hljs-type {
+  font-weight: bold;
+  color: var(--hue-6-2);
+}
 
 /* User color: hue: 0 */
 
-.hljs-type,
 .hljs-string,
-.hljs-number,
 .hljs-selector-id,
 .hljs-selector-class,
 .hljs-quote,
 .hljs-template-tag,
 .hljs-deletion {
-  color: #880000;
+  color: var(--hue-6);
+}
+
+.hljs-number {
+  color: var(--hue-5-2);
 }
 
 .hljs-title,
@@ -66,7 +77,7 @@ Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
 /* Language color: hue: 90; */
 
 .hljs-literal {
-  color: #78A960;
+  color: var(--hue-6);
 }
 
 .hljs-built_in,

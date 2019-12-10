@@ -17,7 +17,7 @@
 <link title="Fadbad_utils" rel="Chapter" href="Fadbad_utils.html">
 <link title="Fadiff" rel="Chapter" href="Fadiff.html">
 <link title="Op" rel="Chapter" href="Op.html">
-<link title="Tadiff" rel="Chapter" href="Tadiff.html"><title>Fadiff.FTypeName</title>
+<link title="Tadiff" rel="Chapter" href="Tadiff.html"><title>FADBADml : Fadiff.FTypeName</title>
 </head>
 <body>
 <div class="navbar">&nbsp;<a class="up" href="Fadiff.html" title="Fadiff">Up</a>
@@ -46,19 +46,22 @@
 <li><code class="code">m_diff</code> : derivatives of the current node wrt. each coordinates</li>
 </ul>
 
+<pre><span id="TYPEop_t"><span class="keyword">type</span> <code class="type"></code>op_t</span> = <code class="type">Op.t</code> </pre>
+
+
 <pre><code><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> = {</code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTt.m_val">m_val</span>&nbsp;: <code class="type">Op.t</code>;</code></td>
+<code><span id="TYPEELTt.m_val">m_val</span>&nbsp;: <code class="type"><a href="Fadiff.FTypeName.html#TYPEop_t">op_t</a></code>;</code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTt.m_diff">m_diff</span>&nbsp;: <code class="type">Op.t array</code>;</code></td>
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTt.m_diff">m_diff</span>&nbsp;: <code class="type"><a href="Fadiff.FTypeName.html#TYPEop_t">op_t</a> array</code>;</code></td>
 
 </tr></table>
 }
@@ -75,7 +78,7 @@
 <pre><span id="VALcreate"><span class="keyword">val</span> create</span> : <code class="type">unit -> <a href="Fadiff.FTypeName.html#TYPEt">t</a></code></pre>
 <pre><span id="VALget"><span class="keyword">val</span> get</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEt">t</a> -> Op.elt</code></pre>
 <pre><span id="VAL(!!)"><span class="keyword">val</span> (!!)</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEt">t</a> -> Op.elt</code></pre>
-<pre><span id="VALlift"><span class="keyword">val</span> lift</span> : <code class="type">Op.t -> <a href="Fadiff.FTypeName.html#TYPEt">t</a></code></pre>
+<pre><span id="VALlift"><span class="keyword">val</span> lift</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEop_t">op_t</a> -> <a href="Fadiff.FTypeName.html#TYPEt">t</a></code></pre>
 <pre><span id="VALmake"><span class="keyword">val</span> make</span> : <code class="type">Op.elt -> <a href="Fadiff.FTypeName.html#TYPEt">t</a></code></pre>
 <pre><span id="VALinteger"><span class="keyword">val</span> integer</span> : <code class="type">int -> <a href="Fadiff.FTypeName.html#TYPEt">t</a></code></pre>
 <pre><span id="VALzero"><span class="keyword">val</span> zero</span> : <code class="type">unit -> <a href="Fadiff.FTypeName.html#TYPEt">t</a></code></pre>
@@ -86,8 +89,8 @@
 <pre><span id="VALcopy"><span class="keyword">val</span> copy</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEt">t</a> -> <a href="Fadiff.FTypeName.html#TYPEt">t</a></code></pre>
 <pre><span id="VALdeepcopy"><span class="keyword">val</span> deepcopy</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEt">t</a> -> <a href="Fadiff.FTypeName.html#TYPEt">t</a></code></pre>
 <pre><span id="VALlength"><span class="keyword">val</span> length</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEt">t</a> -> int</code></pre>
-<pre><span id="VALvalue"><span class="keyword">val</span> value</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEt">t</a> -> Op.t</code></pre>
-<pre><span id="VALderiv"><span class="keyword">val</span> deriv</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEt">t</a> -> int -> Op.t</code></pre><div class="info ">
+<pre><span id="VALvalue"><span class="keyword">val</span> value</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEt">t</a> -> <a href="Fadiff.FTypeName.html#TYPEop_t">op_t</a></code></pre>
+<pre><span id="VALderiv"><span class="keyword">val</span> deriv</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEt">t</a> -> int -> <a href="Fadiff.FTypeName.html#TYPEop_t">op_t</a></code></pre><div class="info ">
 <div class="info-desc">
 <p><code class="code">deriv f i</code> retrieves the derivative of variable of index <code class="code">i</code> in
       computation <code class="code">f</code></p>

@@ -13,7 +13,7 @@
 <link title="Fadbad_utils" rel="Chapter" href="Fadbad_utils.html">
 <link title="Fadiff" rel="Chapter" href="Fadiff.html">
 <link title="Op" rel="Chapter" href="Op.html">
-<link title="Tadiff" rel="Chapter" href="Tadiff.html"><title>Badiff.BTypeName</title>
+<link title="Tadiff" rel="Chapter" href="Tadiff.html"><title>FADBADml : Badiff.BTypeName</title>
 </head>
 <body>
 <code class="code"><span class="keyword">functor</span>&nbsp;(<span class="constructor">Op</span>&nbsp;:&nbsp;<span class="constructor">OpS</span>)&nbsp;<span class="keywordsign">-&gt;</span><br>
@@ -45,6 +45,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">end</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;elt&nbsp;=&nbsp;<span class="constructor">Op</span>.elt<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;scalar&nbsp;=&nbsp;<span class="constructor">Op</span>.scalar<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;op_t&nbsp;=&nbsp;<span class="constructor">Op</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;op&nbsp;=&nbsp;..<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;op&nbsp;+=<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">CONST</span><br>
@@ -72,7 +73,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">mutable</span>&nbsp;operator&nbsp;:&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.op;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">mutable</span>&nbsp;operands&nbsp;:&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t&nbsp;array;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">mutable</span>&nbsp;rc&nbsp;:&nbsp;int;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">mutable</span>&nbsp;value&nbsp;:&nbsp;<span class="constructor">Op</span>.t;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">mutable</span>&nbsp;value&nbsp;:&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.op_t;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;derivatives&nbsp;:&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.<span class="constructor">D</span>.t;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;string_of_op&nbsp;:&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.op&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
@@ -90,7 +91,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;smac_der&nbsp;:&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Op</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_operands&nbsp;:&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;create&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;lift&nbsp;:&nbsp;<span class="constructor">Op</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;lift&nbsp;:&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.op_t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;integer&nbsp;:&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;make&nbsp;:&nbsp;<span class="constructor">Op</span>.elt&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;zero&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t<br>
@@ -98,7 +99,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;two&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;copy&nbsp;:&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;deepcopy&nbsp;:&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;value&nbsp;:&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Op</span>.t<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;value&nbsp;:&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.op_t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;derivatives&nbsp;:&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.<span class="constructor">D</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get&nbsp;:&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Op</span>.elt<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;(&nbsp;!!&nbsp;)&nbsp;:&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Op</span>.elt<br>
@@ -114,14 +115,17 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;diff&nbsp;:&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;un_op&nbsp;:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.op&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">Op</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Op</span>.t)&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.op_t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.op_t)&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;bin_op&nbsp;:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.op&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">Op</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Op</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Op</span>.t)&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.op_t&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.op_t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.op_t)&nbsp;<span class="keywordsign">-&gt;</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;bin_cOp&nbsp;:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.op&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">Op</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Op</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Op</span>.t)&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.op_t&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.op_t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.op_t)&nbsp;<span class="keywordsign">-&gt;</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;scale&nbsp;:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.scalar&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Badiff</span>.<span class="constructor">BTypeName</span>.t<br>

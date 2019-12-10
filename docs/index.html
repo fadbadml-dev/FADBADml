@@ -34,7 +34,7 @@
                 <span class="external-link" exponent="github"><a href="https://github.com/fadbadml-dev/FADBADml">src</a></span>
             </menuitem>
             <menuitem>
-                <a href="doc/index.html">doc</a>
+                <a href="doc/Fadbad.html">doc</a>
             </menuitem>
         </menu>
     </header>
@@ -65,6 +65,15 @@
         <br />
         It is based on <a href="http://www.fadbad.com">FADBAD++</a>, a software written by <strong>Ole Stauning</strong> and <strong>Claus Bendtsen</strong>.
     </section>
+
+    <section id="download">
+      <h1>Download</h1>
+      The sources are available on our <span class="external-link" exponent=""><a href="https://github.com/fadbadml-dev/FADBADml">github page</a></span>.
+      <br />
+      This software has been tested with OCaml 4.08.
+    </section>
+
+    <code>&gt;</code>
 
     <section id="examples">
         <h1>Examples</h1>
@@ -97,7 +106,9 @@
                     });
                     showdown.setFlavor('github');
                     var converter = new showdown.Converter({ extensions: ['highlight'] });
-                    this_div.innerHTML = converter.makeHtml(client.responseText);
+                    var colorized = converter.makeHtml(client.responseText);
+                    colorized = colorized.replace(/&amp;/g, "&");
+                    this_div.innerHTML = colorized;
                 }
                 client.open('GET', 'examples.md');
                 client.send();
