@@ -32,6 +32,21 @@ header {
     padding: 20px 10px 0px 10px;
 }
 
+#top-button {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  color: black;
+}
+
+#top-button a, #top-button a:visited {
+  color: black;
+}
+
+#top-button a:hover {
+  color: blue;
+}
+
 #title {
     float:left;
     font-family: 'Manuale';
@@ -56,6 +71,10 @@ header {
     padding: 0px 10px 0px 0px ;
 }
 
+strong {
+  text-decoration: underline;
+}
+
 menu {
     float:right;
 }
@@ -65,8 +84,12 @@ menuitem {
     margin-right: 20px;
 }
 
-menuitem a {
+menuitem a, menuitem a:visited {
     color: black;
+}
+
+menuitem a:hover {
+    color: blue;
 }
 
 #last-elt {
@@ -98,11 +121,16 @@ footer {
     vertical-align:top
 }
 
+.centered {
+  text-align: center;
+}
+
 section h1 {
     text-align: center;
 }
 
 section {
+    width:60%;
     margin:auto;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -127,8 +155,26 @@ section {
     color: gray;
 }
 
-#examples div {
-    width:60%;
+#download {
+  margin-bottom: 50px;
+}
+
+#summary a, #summary a:visited {
+  color: black;
+}
+#summary a:hover {
+  color: blue;
+}
+
+#examples {
+  margin-top: 50px;
+}
+
+#examples h2 {
+    text-align: center;
+}
+
+#examples > div {
     margin-left:auto;
     margin-right:auto;
     text-align:justify;

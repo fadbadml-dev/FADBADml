@@ -16,6 +16,62 @@
     <!-- https://github.com/highlightjs/highlight.js -->
     <script src="js/highlight.pack.js"></script>
 
+    <script type="text/javascript">
+      // extension taken from
+      // https://github.com/showdownjs/showdown/issues/577
+      // it highlights the code in code blocks and reads the expected language
+      // in their class names
+      showdown.extension('highlight', function () {
+          return [{
+              type: "output",
+              filter: function (text, converter, options) {
+                  var left = "<pre><code\\b[^>]*>",
+                  right = "</code></pre>",
+                  flags = "g";
+                  var replacement = function (wholeMatch, match, left, right) {
+                      var lang = (left.match(/class=\"([^ \"]+)/) || [])[1];
+                      left = left.slice(0, 18) + 'hljs ' + left.slice(18);
+                      if (lang && hljs.getLanguage(lang)) {
+                          return left +
+                                 hljs.highlight(lang, match).value +
+                                 right;
+                      } else {
+                          return left +
+                                 hljs.highlightAuto(match).value +
+                                 right;
+                      }
+                  };
+                  return showdown.helper.replaceRecursiveRegExp(
+                    text, replacement, left, right, flags
+                  );
+              }
+          }];
+      });
+      showdown.setFlavor('github');
+
+      function fill_with_md(md_path, elt_id) {
+        var elt = document.getElementById(elt_id);
+        var client = new XMLHttpRequest();
+        client.onload = function() {
+            var converter = new showdown.Converter(
+              { extensions: ['highlight'] }
+            );
+            // remove "value" from keywords since it's not a keyword in OCaml
+            delete hljs.getLanguage("ocaml").k.value;
+            var colorized = converter.makeHtml(client.responseText);
+            // special chars are processed twice (by showdown and highlightjs)
+            // so chars like < become &gt; then &amp;gt;
+            // this is a quick and dirty fix
+            colorized = colorized.replace(/&amp;gt;/g, "&gt;");
+            colorized = colorized.replace(/&amp;lt;/g, "&lt;");
+            colorized = colorized.replace(/&amp;nbsp;/g, "&nbsp;");
+            elt.innerHTML = colorized;
+        }
+        client.open('GET', md_path);
+        client.send();
+      }
+    </script>
+
     <title>FADBADml: Automatic Differentiation</title>
 </head>
 
@@ -31,13 +87,17 @@
 
         <menu>
             <menuitem>
-                <span class="external-link" exponent="github"><a href="https://github.com/fadbadml-dev/FADBADml">src</a></span>
+                <span class="external-link" exponent="github">
+                  <a href="https://github.com/fadbadml-dev/FADBADml">src</a>
+                </span>
             </menuitem>
             <menuitem>
                 <a href="doc/Fadbad.html">doc</a>
             </menuitem>
         </menu>
     </header>
+
+    <div id="top-button"><a href="#">go to top</a></div>
 
     <section id="authors">
         <h1>Authors</h1>
@@ -59,61 +119,41 @@
         </ul>
     </section>
 
-    <section id="licence">
-        <h1>Licence and Acknowledgements</h1>
-        This software is distributed under the <a href="https://cecill.info/licences/Licence_CeCILL-C_V1-en.html">CeCILL-C license</a>.
+    <section id="license">
+        <h1>License and Acknowledgements</h1>
+        This software is distributed under the
+        <a href="https://cecill.info/licences/Licence_CeCILL-C_V1-en.html">
+          CeCILL-C license
+        </a>.
         <br />
-        It is based on <a href="http://www.fadbad.com">FADBAD++</a>, a software written by <strong>Ole Stauning</strong> and <strong>Claus Bendtsen</strong>.
+        It is based on <a href="http://www.fadbad.com">FADBAD++</a>,
+        a software written by <strong>Ole Stauning</strong> and
+        <strong>Claus Bendtsen</strong>.
     </section>
 
     <section id="download">
       <h1>Download</h1>
-      The sources are available on our <span class="external-link" exponent=""><a href="https://github.com/fadbadml-dev/FADBADml">github page</a></span>.
+      The sources are available on our
+      <span class="external-link" exponent="">
+        <a href="https://github.com/fadbadml-dev/FADBADml">github page</a>
+      </span>.
       <br />
       This software has been tested with OCaml 4.08.
     </section>
 
-    <code>&gt;</code>
+    <hr>
 
     <section id="examples">
-        <h1>Examples</h1>
-        <div id="content">
-            <script type="text/javascript">
-                var this_div = document.getElementById("content");
-                var client = new XMLHttpRequest();
-                client.onload = function() {
-                    // extension taken from
-                    // https://github.com/showdownjs/showdown/issues/577
-                    showdown.extension('highlight', function () {
-                        return [{
-                            type: "output",
-                            filter: function (text, converter, options) {
-                                var left = "<pre><code\\b[^>]*>",
-                                right = "</code></pre>",
-                                flags = "g";
-                                var replacement = function (wholeMatch, match, left, right) {
-                                    var lang = (left.match(/class=\"([^ \"]+)/) || [])[1];
-                                    left = left.slice(0, 18) + 'hljs ' + left.slice(18);
-                                    if (lang && hljs.getLanguage(lang)) {
-                                        return left + hljs.highlight(lang, match).value + right;
-                                    } else {
-                                        return left + hljs.highlightAuto(match).value + right;
-                                    }
-                                };
-                                return showdown.helper.replaceRecursiveRegExp(text, replacement, left, right, flags);
-                            }
-                        }];
-                    });
-                    showdown.setFlavor('github');
-                    var converter = new showdown.Converter({ extensions: ['highlight'] });
-                    var colorized = converter.makeHtml(client.responseText);
-                    colorized = colorized.replace(/&amp;/g, "&");
-                    this_div.innerHTML = colorized;
-                }
-                client.open('GET', 'examples.md');
-                client.send();
-            </script>
-        </div>
+        <div id="intro"></div>
+        <div id="FAD"></div>
+        <div id="BAD"></div>
+        <div id="TAD"></div>
+        <script type="text/javascript">
+          fill_with_md("intro.md", "intro");
+          fill_with_md("fad.md", "FAD");
+          fill_with_md("bad.md", "BAD");
+          fill_with_md("tad.md", "TAD");
+        </script>
     </section>
 
     <div id="last-elt"></div>
