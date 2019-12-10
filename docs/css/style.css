@@ -32,19 +32,21 @@ header {
     padding: 20px 10px 0px 10px;
 }
 
-#top-button {
-  position: fixed;
-  top: 100px;
-  right: 50px;
+#top-button a, .top_btn a, #summary a {
+  color: var(--hue-2);
+}
+
+menuitem a {
   color: black;
 }
 
-#top-button a, #top-button a:visited {
-  color: black;
+#top-button a:hover, .top_btn a:hover, menuitem a:hover, #summary a:hover {
+  color: var(--hue-5);
 }
 
-#top-button a:hover {
-  color: blue;
+.top_btn a {
+  display: block;
+  text-align: right;
 }
 
 #title {
@@ -84,14 +86,6 @@ menuitem {
     margin-right: 20px;
 }
 
-menuitem a, menuitem a:visited {
-    color: black;
-}
-
-menuitem a:hover {
-    color: blue;
-}
-
 #last-elt {
     height:1px;
     margin-bottom:50px;
@@ -109,16 +103,6 @@ footer {
   overflow: hidden;
   color:grey;
   font-size: 12px;
-}
-
-.external-link[exponent]::after {
-    content: attr(exponent);
-    font-style: normal;
-    font-weight: normal;
-    margin:0px 0px 0px 0px;
-    text-decoration:none;
-    font-size: 10px;
-    vertical-align:top
 }
 
 .centered {
@@ -157,13 +141,6 @@ section {
 
 #download {
   margin-bottom: 50px;
-}
-
-#summary a, #summary a:visited {
-  color: black;
-}
-#summary a:hover {
-  color: blue;
 }
 
 #examples {
