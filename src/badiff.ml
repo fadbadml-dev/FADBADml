@@ -1,11 +1,8 @@
 open Fadbad_utils
 
-module type OpS = Op.S
-module type OrderedOpS = Op.OrderedS
-
 module type S =
 sig
-  include OpS
+  include Op.S
 
   type op_t
 
@@ -19,10 +16,10 @@ end
 module type OrderedS =
 sig
   include S
-  include OrderedOpS with type t := t and type elt := elt
+  include Op.OrderedS with type t := t and type elt := elt
 end
 
-module Derivatives (Op : OpS) =
+module Derivatives (Op : Op.S) =
 struct
   type t = Op.t array ref
 
@@ -119,7 +116,7 @@ struct
 
 end
 
-module BTypeName (Op : OpS) =
+module BTypeName (Op : Op.S) =
 struct
   module D = Derivatives(Op)
 
@@ -456,7 +453,7 @@ struct
 
 end
 
-module OrderedBTypeName (Op : OrderedOpS) =
+module OrderedBTypeName (Op : Op.OrderedS) =
 struct
   include BTypeName(Op)
 
@@ -469,5 +466,5 @@ struct
   let max a b = if a > b then a else b
 end
 
-module B(Op : OpS) = BTypeName(Op)
-module OrderedB(Op : OrderedOpS) = OrderedBTypeName(Op)
+module B(Op : Op.S) = BTypeName(Op)
+module OrderedB(Op : Op.OrderedS) = OrderedBTypeName(Op)

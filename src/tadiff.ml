@@ -1,11 +1,8 @@
 open Fadbad_utils
 
-module type OpS = Op.S
-module type OrderedOpS = Op.OrderedS
-
 module type S =
 sig
-  include OpS
+  include Op.S
 
   type op_t
 
@@ -24,10 +21,10 @@ end
 module type OrderedS =
 sig
   include S
-  include OrderedOpS with type t := t and type elt := elt
+  include Op.OrderedS with type t := t and type elt := elt
 end
 
-module TValues(Op : OpS) =
+module TValues(Op : Op.S) =
 struct
   type t = {
     mutable n : int;
@@ -111,7 +108,7 @@ struct
     this.values.(i) <- v
 end
 
-module TTypeName(Op : OpS) =
+module TTypeName(Op : Op.S) =
 struct
   module TValues = TValues(Op)
 
@@ -611,7 +608,7 @@ struct
 
 end
 
-module OrderedTTypeName(Op : OrderedOpS) =
+module OrderedTTypeName(Op : Op.OrderedS) =
 struct
   include TTypeName(Op)
   type op += MIN | MAX
