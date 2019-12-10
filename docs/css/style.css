@@ -39,8 +39,12 @@ header {
   color: black;
 }
 
-#top-button a:hover, #top-button a:visited {
+#top-button a, #top-button a:visited {
   color: black;
+}
+
+#top-button a:hover {
+  color: blue;
 }
 
 #title {
@@ -67,6 +71,10 @@ header {
     padding: 0px 10px 0px 0px ;
 }
 
+strong {
+  text-decoration: underline;
+}
+
 menu {
     float:right;
 }
@@ -76,8 +84,12 @@ menuitem {
     margin-right: 20px;
 }
 
-menuitem a {
+menuitem a, menuitem a:visited {
     color: black;
+}
+
+menuitem a:hover {
+    color: blue;
 }
 
 #last-elt {
@@ -107,6 +119,10 @@ footer {
     text-decoration:none;
     font-size: 10px;
     vertical-align:top
+}
+
+.centered {
+  text-align: center;
 }
 
 section h1 {
@@ -143,6 +159,13 @@ section {
   margin-bottom: 50px;
 }
 
+#summary a, #summary a:visited {
+  color: black;
+}
+#summary a:hover {
+  color: blue;
+}
+
 #examples {
   margin-top: 50px;
 }
@@ -151,7 +174,7 @@ section {
     text-align: center;
 }
 
-#examples div {
+#examples > div {
     margin-left:auto;
     margin-right:auto;
     text-align:justify;
