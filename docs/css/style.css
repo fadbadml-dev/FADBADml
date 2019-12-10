@@ -114,6 +114,7 @@ section h1 {
 }
 
 section {
+    width:60%;
     margin:auto;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -138,8 +139,19 @@ section {
     color: gray;
 }
 
+#download {
+  margin-bottom: 50px;
+}
+
+#examples {
+  margin-top: 50px;
+}
+
+#examples h2 {
+    text-align: center;
+}
+
 #examples div {
-    width:60%;
     margin-left:auto;
     margin-right:auto;
     text-align:justify;
