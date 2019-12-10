@@ -11,13 +11,15 @@ authors: [
   "ismailbennani <ismail.lahkim.bennani@ens.fr>"
 ]
 license: "CeCILL-C"
-homepage: "https://github.com/ismailbennani/FADBADml"
-bug-reports: "https://github.com/ismailbennani/FADBADml/issues"
-depends: [ "ocaml" { >= "4.08" } "ocamlfind" ]
+homepage: "https://github.com/fadbadml-dev/FADBADml"
+bug-reports: "https://github.com/fadbadml-dev/FADBADml/issues"
+depends: [
+  "ocaml" { >= "4.08" }
+  "ocamlfind" {build}
+]
 build: [
   ["./configure" "--prefix=%{prefix}%"]
-  [make "byte"] { !ocaml-native }
-  [make "opt"] { ocaml-native }
+  [make "lib"]
 ]
 install: [make "install"]
-dev-repo: "git+https://github.com/ismailbennani/FADBADml"
+dev-repo: "git+https://github.com/fadbadml-dev/FADBADml"
