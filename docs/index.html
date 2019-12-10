@@ -32,14 +32,18 @@
                       var lang = (left.match(/class=\"([^ \"]+)/) || [])[1];
                       left = left.slice(0, 18) + 'hljs ' + left.slice(18);
                       if (lang && hljs.getLanguage(lang)) {
-                          return left + hljs.highlight(lang, match).value + right;
+                          return left +
+                                 hljs.highlight(lang, match).value +
+                                 right;
                       } else {
-                          return left + hljs.highlightAuto(match).value + right;
+                          return left +
+                                 hljs.highlightAuto(match).value +
+                                 right;
                       }
                   };
                   return showdown.helper.replaceRecursiveRegExp(
-                    text,
-                    replacement, left, right, flags);
+                    text, replacement, left, right, flags
+                  );
               }
           }];
       });
@@ -83,7 +87,9 @@
 
         <menu>
             <menuitem>
-                <span class="external-link" exponent="github"><a href="https://github.com/fadbadml-dev/FADBADml">src</a></span>
+                <span class="external-link" exponent="github">
+                  <a href="https://github.com/fadbadml-dev/FADBADml">src</a>
+                </span>
             </menuitem>
             <menuitem>
                 <a href="doc/Fadbad.html">doc</a>
@@ -115,14 +121,22 @@
 
     <section id="license">
         <h1>License and Acknowledgements</h1>
-        This software is distributed under the <a href="https://cecill.info/licences/Licence_CeCILL-C_V1-en.html">CeCILL-C license</a>.
+        This software is distributed under the
+        <a href="https://cecill.info/licences/Licence_CeCILL-C_V1-en.html">
+          CeCILL-C license
+        </a>.
         <br />
-        It is based on <a href="http://www.fadbad.com">FADBAD++</a>, a software written by <strong>Ole Stauning</strong> and <strong>Claus Bendtsen</strong>.
+        It is based on <a href="http://www.fadbad.com">FADBAD++</a>,
+        a software written by <strong>Ole Stauning</strong> and
+        <strong>Claus Bendtsen</strong>.
     </section>
 
     <section id="download">
       <h1>Download</h1>
-      The sources are available on our <span class="external-link" exponent=""><a href="https://github.com/fadbadml-dev/FADBADml">github page</a></span>.
+      The sources are available on our
+      <span class="external-link" exponent="">
+        <a href="https://github.com/fadbadml-dev/FADBADml">github page</a>
+      </span>.
       <br />
       This software has been tested with OCaml 4.08.
     </section>
