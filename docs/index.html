@@ -56,6 +56,7 @@
             // this is a quick and dirty fix
             colorized = colorized.replace(/&amp;gt;/g, "&gt;");
             colorized = colorized.replace(/&amp;lt;/g, "&lt;");
+            colorized = colorized.replace(/&amp;nbsp;/g, "&nbsp;");
             elt.innerHTML = colorized;
         }
         client.open('GET', md_path);
