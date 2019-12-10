@@ -49,7 +49,11 @@
         var elt = document.getElementById(elt_id);
         var client = new XMLHttpRequest();
         client.onload = function() {
-            var converter = new showdown.Converter({ extensions: ['highlight'] });
+            var converter = new showdown.Converter(
+              { extensions: ['highlight'] }
+            );
+            // remove "value" from keywords since it's not a keyword in OCaml
+            delete hljs.getLanguage("ocaml").k.value;
             var colorized = converter.makeHtml(client.responseText);
             // special chars are processed twice (by showdown and highlightjs)
             // so chars like < become &gt; then &amp;gt;
