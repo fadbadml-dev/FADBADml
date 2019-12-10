@@ -3,12 +3,12 @@ FADBADml: examples
 Ismail Bennani; François Bidet
 -->
 
-[home]: ../../index.html
-[Fadbad.OpS]: ../../doc/Fadbad.OpS.html
-[Fadbad.OpFloat]: ../../doc/Fadbad.OpFloat.html
-[Fadbad.F]: ../../doc/Fadbad.F.html
-[Fadbad.B]: ../../doc/Fadbad.B.html
-[Fadbad.T]: ../../doc/Fadbad.T.html
+[home]: index.html
+[Fadbad.OpS]: doc/Fadbad.OpS.html
+[Fadbad.OpFloat]: doc/Fadbad.OpFloat.html
+[Fadbad.F]: doc/Fadbad.F.html
+[Fadbad.B]: doc/Fadbad.B.html
+[Fadbad.T]: doc/Fadbad.T.html
 
 ## Overloading and templates (C++) vs. Modules and Functors (OCaml)
 
