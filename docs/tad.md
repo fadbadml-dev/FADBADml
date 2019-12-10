@@ -1,5 +1,5 @@
 [Fadbad.T]: doc/Fadbad.T.html
 
-## Automatic Taylor expansion
+## Automatic Taylor expansion (TAD)
 
 See [Fadbad.T]
