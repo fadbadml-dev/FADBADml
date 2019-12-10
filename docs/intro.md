@@ -1,3 +1,5 @@
+[git]: https://github.com/fadbadml-dev/FADBADml
+
 ## Overloading and templates (C++) vs. Modules and Functors (OCaml)
 
 FADBAD++ relies on operator overloading in C++ to compute the derivatives of an expression along with its value. In OCaml there is no such thing, we define instead modules that re-implement the classic arithmetic functions (+, *, sin, ...).
@@ -6,7 +8,7 @@ For example, the FADBAD++ type `F<float>` would be `Fadbad.F(Fadbad.OpFloat).t` 
 
 ## Quick-start
 
-File `exampleFAD.ml` (this can be found in subfolder `examples` in our repo):
+File `exampleFAD.ml` (this can be found in subfolder `examples` in our [git]):
 
 ~~~ocaml
 module Op = Fadbad.OpFloat (* elementary floating point arithmetic *)
