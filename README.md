@@ -2,7 +2,7 @@
 
 This library is an OCaml porting of [FADBAD++](www.fadbad.com), a software written by Ole Stauning and Claus Bendtsen.
 
-[website](https://fadbadml-dev.github.io/FADBADml/)
+[our website](https://fadbadml-dev.github.io/FADBADml/)
 
 # Authors
 
@@ -11,22 +11,21 @@ This library is an OCaml porting of [FADBAD++](www.fadbad.com), a software writt
 
 # Installation
 
-## OPAM
-
+After cloning, you can:
+- build and install **with** opam:
 ```
-    opam pin add fadbadml .
-    opam install fadbadml
+  cd path/to/repo
+  opam install .
 ```
 
-## From sources
-
+- build and install **without** opam:
 ```
-    make cleanall; make
-    sudo make install
+  cd path/to/repo
+  ./configure
+  make
+  sudo make install
 ```
 
 # Usage
 
-see `examples` folder.
-
-see [Examples](https://fadbadml-dev.github.io/FADBADml/examples.html)
+see `examples` folder and/or see [our guide](https://fadbadml-dev.github.io/FADBADml/#summary)
