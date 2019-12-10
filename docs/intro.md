@@ -1,5 +1,14 @@
 [git]: https://github.com/fadbadml-dev/FADBADml
 
+## Summary
+
+<div id="summary" class="centered" markdown="1">
+[Quick-start](#quick-start)
+[Forward automatic differentiation (FAD)](#FAD)
+[Backward automatic differentiation (BAD)](#BAD)
+[Automatic Taylor expansion (TAD)](#TAD)
+</div>
+
 ## Overloading and templates (C++) vs. Modules and Functors (OCaml)
 
 FADBAD++ relies on operator overloading in C++ to compute the derivatives of an expression along with its value. In OCaml there is no such thing, we define instead modules that re-implement the classic arithmetic functions (+, *, sin, ...).
