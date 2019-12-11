@@ -1,0 +1,38 @@
+#!/bin/bash
+
+echo
+echo \#\#\#\# Switching to master
+
+git checkout master
+
+echo
+echo \#\#\#\# Building documentation
+
+make cleanall
+make
+make doc
+
+echo
+echo \#\#\#\# Saving doc in tmp
+
+cp -rf doc /tmp/__doc_fadbad
+
+echo
+echo \#\#\#\# Switching back to gh-pages
+git checkout gh-pages
+
+echo
+echo \#\#\#\# Removing previous version of doc
+
+mv doc doc.old
+
+echo
+echo \#\#\#\# Copying new doc
+
+cp -rf /tmp/__doc_fadbad doc
+
+echo
+echo \#\#\#\# Cleaning
+
+rm -rf /tmp/__doc_fadbad
+rm -rf doc.old
