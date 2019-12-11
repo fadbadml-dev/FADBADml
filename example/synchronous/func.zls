@@ -1,8 +1,0 @@
-let node f x = y where
-    rec init x0 = x
-    and y = (MyOp.make 2.) -> (MyOp.( * ) x0 (pre y))
-
-let node aut x =
-    automaton
-    | I -> let rec t = 0. fby t +. 1. in do f x until (t > MyOp.get x) then F
-    | F -> do f x done
