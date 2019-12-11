@@ -1,6 +1,0 @@
-S src/
-S example/**
-S test/
-S test/unit/
-
-B src/
