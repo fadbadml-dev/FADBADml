@@ -27,3 +27,7 @@ config
 META
 
 *.hidden
+
+##
+
+doc
