@@ -1,6 +1,6 @@
 # FADBADml
 
-This library is an OCaml porting of [FADBAD++](www.fadbad.com), a software written by Ole Stauning and Claus Bendtsen.
+This library is an OCaml porting of [FADBAD++](http://www.fadbad.com), a software written by Ole Stauning and Claus Bendtsen.
 
 [our website](https://fadbadml-dev.github.io/FADBADml/)
 
