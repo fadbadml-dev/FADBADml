@@ -1,3 +1,16 @@
+(**************************************************************************)
+(*                                                                        *)
+(* FADBADml                                                               *)
+(*                                                                        *)
+(*           OCaml port by François Bidet and Ismail Bennani              *)
+(*     Based on FADBAD++, written by Ole Stauning and Claus Bendtsen      *)
+(*                                                                        *)
+(*   Copyright 2019                                                       *)
+(*                                                                        *)
+(*   This file is distributed under the terms of the CeCILL-C license.    *)
+(*                                                                        *)
+(**************************************************************************)
+
 type scalar = float
 type elt =
   {
@@ -33,6 +46,7 @@ let get (i : t) : elt =
     min = i.min;
     max = i.max;
   }
+let ( !! ) = get
 
 let get_min i = i.min
 let get_max i = i.max
