@@ -19,6 +19,9 @@ sig
 
   type op_t
 
+  val value : t -> op_t
+  val lift : op_t -> t
+
   val diff : t -> int -> int -> unit
   val d : t -> int -> elt
   val deriv : t -> int -> op_t
@@ -30,7 +33,9 @@ sig
   include Op.OrderedS with type t := t and type elt := elt
 end
 
-module FTypeName (Op : Op.S) =
+module FTypeName (Op : Op.S) : S with type op_t = Op.t
+                               and type elt = Op.elt
+                               and type scalar = Op.scalar =
 struct
 
   (** Type of a FAD node:
@@ -526,7 +531,9 @@ struct
     res
 end
 
-module OrderedFTypeName(Op : Op.OrderedS) =
+module OrderedFTypeName(Op : Op.OrderedS) : OrderedS with type op_t = Op.t
+                                            and type elt = Op.elt
+                                            and type scalar = Op.scalar =
 struct
   include FTypeName(Op)
 
