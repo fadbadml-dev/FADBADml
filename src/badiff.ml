@@ -11,8 +11,12 @@
 (*                                                                        *)
 (**************************************************************************)
 
+(** Backward Automatic Differentiation (BAD) *)
+
 open Fadbad_utils
 
+(** Extends {!Op.S} with functions to compute and retrieve derivatives
+    This describes the interface of BAD-like modules*)
 module type S =
 sig
   include Op.S
@@ -29,6 +33,7 @@ sig
   val compute_list : t list -> unit
 end
 
+(** Extends {!OrderedOp.S} with functions to compute and retrieve derivatives *)
 module type OrderedS =
 sig
   include S

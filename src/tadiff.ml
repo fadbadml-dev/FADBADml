@@ -11,18 +11,24 @@
 (*                                                                        *)
 (**************************************************************************)
 
+(** Automatic Taylor Expansion *)
+
 open Fadbad_utils
 
+(** Extends {!Op.S} with functions to compute and retrieve taylor coefficients
+    This describes the interface of TAD-like modules *)
 module type S =
 sig
   include Op.S
 
   type op = ..
+  (** Type of defined operators *)
 
   val string_of_op : op -> string
   val operator : t -> op
 
   type op_t
+  (** Type of underlying values *)
 
   val value : t -> op_t
   val lift : op_t -> t
@@ -44,6 +50,7 @@ sig
 
 end
 
+(** Extends {!OrderedOp.S} with functions to compute and retrieve derivatives *)
 module type OrderedS =
 sig
   include S

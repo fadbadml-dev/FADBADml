@@ -11,32 +11,27 @@
 (*                                                                        *)
 (**************************************************************************)
 
+(** Most basic operators over floats *)
+
+(** Module of operators, it defines the usual arithmetic operations. *)
 module type S =
 sig
-(** NAMING CONVENTIONS :
-    - the operators on values of type t have the same name as the normal
-      operators (ie + for add, - for sub, etc...)
-    - the binary operators on values of type t and values of type scalar have
-      an & in their name (ie t + scalar is called +& and scalar + t is called &+)
-    - the operators on values of type scalar have two & in their name
-      (ie scalar - scalar is called &-&)
-    - some terms have the prefix scalar_ : they are functions on scalars
-      (ie scalar_log) or scalar values (scalar_one)
-*)
 
   type t
   type elt
-  (** Type of values *)
+  (** Type of values: this is the type that the user should use with [make]
+      and that will be returned by [get] *)
 
   type scalar
   (** Type of scalars *)
-  (* (t, +, .) should be a commutative S-module where S is the set of scalars *)
+  (* (t, +, .) should be a commutative S-module where S is the set of scalars
+     where + : t -> t -> t and . : t -> scalar -> t. *)
 
   val create : unit -> t
   (* Create an arbitrary value from nothing *)
 
   val make : elt -> t
-  (** Wrap a value *)
+  (** Wrap a user-provided value *)
 
   val integer : int -> t
   (** Wrap an integer *)
@@ -44,7 +39,7 @@ sig
   val get : t -> elt
   (** Unwrap a value *)
   val ( !! ) : t -> elt
-  (** Alias for get *)
+  (** Alias for [get] *)
 
   val to_string : t -> string
   val string_of_scalar : scalar -> string
@@ -61,7 +56,9 @@ sig
   (** Construct a fresh value corresponding to 2 *)
 
   val scale : t -> scalar -> t
+  (** Multiplication between a value and a scalar *)
   val translate : t -> scalar -> t
+  (** Addition between a value and a scalar *)
 
   val ( ~+ ) : t -> t
   (** unary plus (with copy) *)
@@ -99,6 +96,7 @@ sig
   val ( <> ) : t -> t -> bool
 end
 
+(** Module of comparison operators *)
 module type Order = sig
   type t
 
@@ -111,6 +109,7 @@ module type Order = sig
   val max : t -> t -> t
 end
 
+(** Extension of {!S} with comparison operators *)
 module type OrderedS = sig
   include S
   include Order with type t := t
@@ -121,6 +120,8 @@ end
 module OpFloat : S with type elt = float and type scalar = float =
 struct
   type t = float ref
+  (** We use [float ref] to allow cumulative operators like [+=] *)
+
   type elt = float
   type scalar = float
 
@@ -129,6 +130,7 @@ struct
   let make x = ref x
   let get f = !f
   let ( !! ) = get
+  (** Alias for [get] *)
 
   let integer i = ref (float i)
 

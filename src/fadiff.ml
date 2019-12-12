@@ -11,8 +11,12 @@
 (*                                                                        *)
 (**************************************************************************)
 
+(** Forward Automatic Differentiation (FAD) *)
+
 open Fadbad_utils
 
+(** Extends {!Op.S} with functions to compute and retrieve derivatives
+    This describes the interface of FAD-like modules *)
 module type S =
 sig
   include Op.S
@@ -27,6 +31,7 @@ sig
   val deriv : t -> int -> op_t
 end
 
+(** Extends {!OrderedOp.S} with functions to compute and retrieve derivatives *)
 module type OrderedS =
 sig
   include S
