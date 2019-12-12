@@ -19,6 +19,9 @@ sig
 
   type op_t
 
+  val value : t -> op_t
+  val lift : op_t -> t
+
   val diff : t -> int -> int -> unit
   val d : t -> int -> elt
   val deriv : t -> int -> op_t
@@ -129,7 +132,9 @@ struct
 
 end
 
-module BTypeName (Op : Op.S) =
+module BTypeName (Op : Op.S) : S with type op_t = Op.t
+                               and type elt = Op.elt
+                               and type scalar = Op.scalar =
 struct
   module D = Derivatives(Op)
 
@@ -466,7 +471,9 @@ struct
 
 end
 
-module OrderedBTypeName (Op : Op.OrderedS) =
+module OrderedBTypeName (Op : Op.OrderedS) : OrderedS with type op_t = Op.t
+                                            and type elt = Op.elt
+                                            and type scalar = Op.scalar =
 struct
   include BTypeName(Op)
 
