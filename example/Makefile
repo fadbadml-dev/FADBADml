@@ -35,7 +35,6 @@ $(FADBAD):
 clean:
 	rm -rf *.cm[ixo] *.byte .depend
 	rm -rf *.tmp *.png
-	$(MAKE) -C synchronous clean
 	$(MAKE) -C reachability clean
 
 cleanall: clean
