@@ -17,12 +17,25 @@ module type S =
 sig
   include Op.S
 
+  type op = ..
+
+  val string_of_op : op -> string
+  val operator : t -> op
+
   type op_t
+
+  val value : t -> op_t
+  val lift : op_t -> t
+
+  val length : t -> int
 
   val get_tvalues : t -> elt array
   val get_derivatives : t -> elt array
 
   val set : t -> int -> op_t -> unit
+
+  val un_op : op -> t -> t
+  val bin_op : op -> t -> t -> t
 
   val d : t -> int -> elt
   val deriv : t -> int -> op_t
@@ -121,7 +134,9 @@ struct
     this.values.(i) <- v
 end
 
-module TTypeName(Op : Op.S) =
+module TTypeName(Op : Op.S) : S with type op_t = Op.t
+                               and type elt = Op.elt
+                               and type scalar = Op.scalar =
 struct
   module OpTValues = TValues(Op)
 
@@ -623,8 +638,12 @@ struct
 
 end
 
-module OrderedTTypeName(Op : Op.OrderedS) =
+module OrderedTTypeName(Op : Op.OrderedS) : OrderedS with type op_t = Op.t
+                                            and type elt = Op.elt
+                                            and type scalar = Op.scalar =
 struct
+  module OpTValues = TValues(Op)
+
   include TTypeName(Op)
   type op += MIN | MAX
 
@@ -634,7 +653,7 @@ struct
     | op -> string_of_op op
 
   let eval this =
-    match this.operator with
+    match operator this with
     | MIN -> failwith "not implemented"
     | MAX -> failwith "not implemented"
     | _ -> eval this
@@ -645,7 +664,7 @@ struct
   let ( > ) a b = Op.(value a > value b)
   let ( >= ) a b = Op.(value a >= value b)
 
-  let min a b = bin_op MIN
-  let max a b = bin_op MAX
+  let min = bin_op MIN
+  let max = bin_op MAX
 
 end
