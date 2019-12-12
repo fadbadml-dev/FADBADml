@@ -32,8 +32,9 @@ doc: lib
 	mkdir -p doc
 	ocamldoc -html -d doc -css-style ../css/doc_style.css -short-functors \
 		-hide Stdlib,Fadiff,Badiff,Tadiff,Fadbad_utils \
-		-t FADBADml \
-		-I src src/*.ml
+		-t FADBADml -show-missed-crossref -charset utf8 \
+		-verbose \
+		-I src $(shell find src -name "*.ml" -a ! -name 'fadbad_utils.ml')
 
 example: lib_byte
 	$(MAKE) -C example
