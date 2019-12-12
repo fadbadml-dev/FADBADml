@@ -1,3 +1,16 @@
+(**************************************************************************)
+(*                                                                        *)
+(*                                FADBADml                                *)
+(*                                                                        *)
+(*           OCaml port by François Bidet and Ismail Bennani              *)
+(*     Based on FADBAD++, written by Ole Stauning and Claus Bendtsen      *)
+(*                                                                        *)
+(*                             Copyright 2019                             *)
+(*                                                                        *)
+(*   This file is distributed under the terms of the CeCILL-C license.    *)
+(*                                                                        *)
+(**************************************************************************)
+
 module type S =
 sig
 (** NAMING CONVENTIONS :
@@ -103,7 +116,9 @@ module type OrderedS = sig
   include Order with type t := t
 end
 
-module OpFloat =
+(** [float] operators. All the operators are aliases for the ones found in
+    [Pervasives]. *)
+module OpFloat : S with type elt = float and type scalar = float =
 struct
   type t = float ref
   type elt = float
@@ -165,14 +180,16 @@ struct
   let ( <> ) x y = Stdlib.(!x <> !y)
 end
 
-module OrderedFloat =
+(** [float] operators with comparison. Extends {!OpFloat}.
+    This implements signature {!OrderedS}. *)
+module OrderedFloat : OrderedS with type elt = float and type scalar = float =
 struct
   include OpFloat
-  let ( < ) x y = Stdlib.(!x < !y)
-  let ( <= ) x y = Stdlib.(!x <= !y)
-  let ( > ) x y = Stdlib.(!x > !y)
-  let ( >= ) x y = Stdlib.(!x >= !y)
+  let ( < ) x y = Stdlib.(get x < get y)
+  let ( <= ) x y = Stdlib.(get x <= get y)
+  let ( > ) x y = Stdlib.(get x > get y)
+  let ( >= ) x y = Stdlib.(get x >= get y)
 
-  let max f1 f2 = ref (max !f1 !f2)
-  let min f1 f2 = ref (min !f1 !f2)
+  let max f1 f2 = make (max (get f1) (get f2))
+  let min f1 f2 = make (min (get f1) (get f2))
 end
