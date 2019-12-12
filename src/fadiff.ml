@@ -96,13 +96,13 @@ struct
     m_diff = Array.map Op.deepcopy v.m_diff;
   }
 
-  let length v = Array.length v.m_diff
+  let dim v = Array.length v.m_diff
   let value v = v.m_val
 
   (** [deriv f i] retrieves the derivative of variable of index [i] in
       computation [f] *)
   let deriv v i =
-    if i < (length v) then v.m_diff.(i)
+    if i < (dim v) then v.m_diff.(i)
     else Op.zero ()
 
   (** [d f i] retrieves the derivative of variable of index [i] in
@@ -115,38 +115,38 @@ struct
       ("Index " ^ (string_of_int idx) ^
        " out of bounds [0," ^ (string_of_int n) ^ "]");
 
-    if (length v) = 0 then begin
+    if (dim v) = 0 then begin
       v.m_diff <- Array.init n (fun _ -> Op.zero ());
     end else
-      user_assert ((length v) = n) "derivative vectors not of same length";
+      user_assert ((dim v) = n) "derivative vectors not of same dim";
 
-    Array.fill v.m_diff 0 (length v) (Op.zero ());
+    Array.fill v.m_diff 0 (dim v) (Op.zero ());
     v.m_diff.(idx) <- Op.one ()
 
   (**/**)
-  let depend v = (length v) <> 0
+  let depend v = (dim v) <> 0
 
   let setDepend v v' =
-    internal_assert ((length v') > 0) "input is not a dependent variable";
-    if ((length v) = 0) then begin
-      v.m_diff <- Array.init (length v') (fun _ -> Op.zero ());
+    internal_assert ((dim v') > 0) "input is not a dependent variable";
+    if ((dim v) = 0) then begin
+      v.m_diff <- Array.init (dim v') (fun _ -> Op.zero ());
     end else
-      user_assert ((length v) = (length v'))
-        ("derivative vectors not of the same length "
-         ^ (string_of_int (length v)) ^ "," ^ (string_of_int (length v')))
+      user_assert ((dim v) = (dim v'))
+        ("derivative vectors not of the same dim "
+         ^ (string_of_int (dim v)) ^ "," ^ (string_of_int (dim v')))
 
   let setDepend2 v v1 v2 =
-    internal_assert ((length v1) = (length v2))
-      ("derivative vectors not of same length "
-       ^ (string_of_int (length v1)) ^ "," ^ (string_of_int (length v2)));
-    internal_assert ((length v1) > 0) "lhs-input is not a dependent variable";
-    internal_assert ((length v2) > 0) "rhs-input is not a dependent variable";
-    if ((length v) = 0) then begin
-      v.m_diff <- Array.init (length v1) (fun _ -> Op.zero ());
+    internal_assert ((dim v1) = (dim v2))
+      ("derivative vectors not of same dim "
+       ^ (string_of_int (dim v1)) ^ "," ^ (string_of_int (dim v2)));
+    internal_assert ((dim v1) > 0) "lhs-input is not a dependent variable";
+    internal_assert ((dim v2) > 0) "rhs-input is not a dependent variable";
+    if ((dim v) = 0) then begin
+      v.m_diff <- Array.init (dim v1) (fun _ -> Op.zero ());
     end else
-      user_assert ((length v) = (length v1))
-        ("derivative vectors not of the same length "
-         ^ (string_of_int (length v)) ^ "," ^ (string_of_int (length v1)))
+      user_assert ((dim v) = (dim v1))
+        ("derivative vectors not of the same dim "
+         ^ (string_of_int (dim v)) ^ "," ^ (string_of_int (dim v1)))
   (**/**)
 
   (* ------------------------------ *)
@@ -166,13 +166,13 @@ struct
   let addV (v : t) (v' : Op.t) : t =
     let res = lift Op.(v.m_val + v') in
     setDepend res v;
-    Array.blit v.m_diff 0 res.m_diff 0 (length v);
+    Array.blit v.m_diff 0 res.m_diff 0 (dim v);
     res
 
   let vAdd v v' =
     let res = lift Op.(v + v'.m_val) in
     setDepend res v';
-    Array.blit v'.m_diff 0 res.m_diff 0 (length v');
+    Array.blit v'.m_diff 0 res.m_diff 0 (dim v');
     res
 
   let add v v' =
@@ -199,7 +199,7 @@ struct
         Array.iteri (fun i vi -> ignore Op.(vi += v'.m_diff.(i))) v.m_diff
       else begin
         setDepend v v';
-        Array.blit v'.m_diff 0 v.m_diff 0 (length v)
+        Array.blit v'.m_diff 0 v.m_diff 0 (dim v)
       end;
       v
     end
@@ -210,7 +210,7 @@ struct
   let subV v v' =
     let res = lift Op.(v.m_val - v') in
     setDepend res v;
-    Array.blit v.m_diff 0 res.m_diff 0 (length v);
+    Array.blit v.m_diff 0 res.m_diff 0 (dim v);
     res
 
   let vSub v v' =
