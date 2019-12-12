@@ -21,7 +21,7 @@ sig
 
   val diff : t -> int -> int -> unit
   val d : t -> int -> elt
-  val deriv : t -> int -> t
+  val deriv : t -> int -> op_t
   val compute : t -> unit
   val compute_list : t list -> unit
 end
