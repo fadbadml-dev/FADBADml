@@ -15,32 +15,10 @@
 
 open Fadbad_utils
 
-(** Extends {!Op.S} with functions to compute and retrieve derivatives
-    This describes the interface of FAD-like modules *)
-module type S =
-sig
-  include Op.S
-
-  type op_t
-
-  val value : t -> op_t
-  val lift : op_t -> t
-
-  val diff : t -> int -> int -> unit
-  val d : t -> int -> elt
-  val deriv : t -> int -> op_t
-end
-
-(** Extends {!OrderedOp.S} with functions to compute and retrieve derivatives *)
-module type OrderedS =
-sig
-  include S
-  include Op.OrderedS with type t := t and type elt := elt
-end
-
-module FTypeName (Op : Op.S) : S with type op_t = Op.t
-                               and type elt = Op.elt
-                               and type scalar = Op.scalar =
+(** Re-define usual operators to compute values and derivatives for elements of
+    type Op.t in forward mode.
+    This implements signature {!Types.FTypeS}. *)
+module FTypeName (Op : Types.OpS) =
 struct
 
   (** Type of a FAD node:
@@ -536,11 +514,12 @@ struct
     res
 end
 
-module OrderedFTypeName(Op : Op.OrderedS) : OrderedS with type op_t = Op.t
-                                            and type elt = Op.elt
-                                            and type scalar = Op.scalar =
+(** Extends {!FTypeName} with comparison operators.
+    This implements signature {!Types.OrderedFTypeS}. *)
+module OrderedFTypeName(Op : Types.OrderedOpS) =
 struct
-  include FTypeName(Op)
+  module OpFTypeName = FTypeName(Op)
+  include OpFTypeName
 
   let ( < ) a b = Op.(value a < value b)
   let ( <= ) a b = Op.(value a <= value b)

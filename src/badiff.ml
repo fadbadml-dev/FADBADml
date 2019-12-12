@@ -15,32 +15,8 @@
 
 open Fadbad_utils
 
-(** Extends {!Op.S} with functions to compute and retrieve derivatives
-    This describes the interface of BAD-like modules*)
-module type S =
-sig
-  include Op.S
-
-  type op_t
-
-  val value : t -> op_t
-  val lift : op_t -> t
-
-  val diff : t -> int -> int -> unit
-  val d : t -> int -> elt
-  val deriv : t -> int -> op_t
-  val compute : t -> unit
-  val compute_list : t list -> unit
-end
-
-(** Extends {!OrderedOp.S} with functions to compute and retrieve derivatives *)
-module type OrderedS =
-sig
-  include S
-  include Op.OrderedS with type t := t and type elt := elt
-end
-
-module Derivatives (Op : Op.S) =
+(** Implement an array of derivatives and some useful operators on arrays. *)
+module Derivatives (Op : Types.OpS) =
 struct
   type t = Op.t array ref
 
@@ -137,9 +113,10 @@ struct
 
 end
 
-module BTypeName (Op : Op.S) : S with type op_t = Op.t
-                               and type elt = Op.elt
-                               and type scalar = Op.scalar =
+(** Re-define usual operators to compute values and derivatives for elements of
+    type Op.t in backward mode.
+    This implements signature {!Types.BTypeS}. *)
+module BTypeName (Op : Types.OpS) =
 struct
   module D = Derivatives(Op)
 
@@ -476,11 +453,12 @@ struct
 
 end
 
-module OrderedBTypeName (Op : Op.OrderedS) : OrderedS with type op_t = Op.t
-                                            and type elt = Op.elt
-                                            and type scalar = Op.scalar =
+(** Extends {!BTypeName} with comparison operators.
+    This implements signature {!Types.OrderedBTypeS}. *)
+module OrderedBTypeName (Op : Types.OrderedOpS) =
 struct
-  include BTypeName(Op)
+  module OpBTypeName = BTypeName(Op)
+  include OpBTypeName
 
   let ( < ) a b = Op.(value a < value b)
   let ( <= ) a b = Op.(value a <= value b)

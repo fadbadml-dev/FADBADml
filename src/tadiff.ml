@@ -15,49 +15,9 @@
 
 open Fadbad_utils
 
-(** Extends {!Op.S} with functions to compute and retrieve taylor coefficients
-    This describes the interface of TAD-like modules *)
-module type S =
-sig
-  include Op.S
-
-  type op = ..
-  (** Type of defined operators *)
-
-  val string_of_op : op -> string
-  val operator : t -> op
-
-  type op_t
-  (** Type of underlying values *)
-
-  val value : t -> op_t
-  val lift : op_t -> t
-
-  val length : t -> int
-
-  val get_tvalues : t -> elt array
-  val get_derivatives : t -> elt array
-
-  val set : t -> int -> op_t -> unit
-
-  val un_op : op -> t -> t
-  val bin_op : op -> t -> t -> t
-
-  val d : t -> int -> elt
-  val deriv : t -> int -> op_t
-  val eval : t -> int -> int
-  val reset : t -> unit
-
-end
-
-(** Extends {!OrderedOp.S} with functions to compute and retrieve derivatives *)
-module type OrderedS =
-sig
-  include S
-  include Op.OrderedS with type t := t and type elt := elt
-end
-
-module TValues(Op : Op.S) =
+(** Implement an array of taylor coefficients and some useful functions on
+    these arrays. *)
+module TValues(Op : Types.OpS) =
 struct
   type t = {
     mutable n : int;
@@ -141,9 +101,10 @@ struct
     this.values.(i) <- v
 end
 
-module TTypeName(Op : Op.S) : S with type op_t = Op.t
-                               and type elt = Op.elt
-                               and type scalar = Op.scalar =
+(** Re-define usual operators to compute values and taylor coefficients
+    for elements of type Op.t.
+    This implements signature {!Types.TTypeS}. *)
+module TTypeName(Op : Types.OpS) =
 struct
   module OpTValues = TValues(Op)
 
@@ -645,13 +606,12 @@ struct
 
 end
 
-module OrderedTTypeName(Op : Op.OrderedS) : OrderedS with type op_t = Op.t
-                                            and type elt = Op.elt
-                                            and type scalar = Op.scalar =
+(** Extends {!TTypeName} with comparison operators.
+    This implements signature {!Types.OrderedTTypeS}. *)
+module OrderedTTypeName(Op : Types.OrderedOpS) =
 struct
-  module OpTValues = TValues(Op)
-
-  include TTypeName(Op)
+  module OpTTypeName = TTypeName(Op)
+  include OpTTypeName
   type op += MIN | MAX
 
   let string_of_op = function

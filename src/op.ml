@@ -11,113 +11,12 @@
 (*                                                                        *)
 (**************************************************************************)
 
-(** Most basic operators over floats *)
+(** Predefined operator modules *)
 
-(** Module of operators, it defines the usual arithmetic operations. *)
-module type S =
-sig
-
-  type t
-  type elt
-  (** Type of values: this is the type that the user should use with [make]
-      and that will be returned by [get] *)
-
-  type scalar
-  (** Type of scalars *)
-  (* (t, +, .) should be a commutative S-module where S is the set of scalars
-     where + : t -> t -> t and . : t -> scalar -> t. *)
-
-  val create : unit -> t
-  (* Create an arbitrary value from nothing *)
-
-  val make : elt -> t
-  (** Wrap a user-provided value *)
-
-  val integer : int -> t
-  (** Wrap an integer *)
-
-  val get : t -> elt
-  (** Unwrap a value *)
-  val ( !! ) : t -> elt
-  (** Alias for [get] *)
-
-  val to_string : t -> string
-  val string_of_scalar : scalar -> string
-  val string_of_elt : elt -> string
-
-  val copy : t -> t
-  val deepcopy : t -> t
-
-  val zero : unit -> t
-  (** Construct a fresh value corresponding to 0 *)
-  val one : unit -> t
-  (** Construct a fresh value corresponding to 1 *)
-  val two : unit -> t
-  (** Construct a fresh value corresponding to 2 *)
-
-  val scale : t -> scalar -> t
-  (** Multiplication between a value and a scalar *)
-  val translate : t -> scalar -> t
-  (** Addition between a value and a scalar *)
-
-  val ( ~+ ) : t -> t
-  (** unary plus (with copy) *)
-  val ( ~- ) : t -> t
-  (** unary minus (with copy) *)
-
-  val ( + ) : t -> t -> t
-  val ( += ) : t -> t -> t
-
-  val ( - ) : t -> t -> t
-  val ( -= ) : t -> t -> t
-
-  val ( * ) : t -> t -> t
-  val ( *= ) : t -> t -> t
-
-  val ( / ) : t -> t -> t
-  val ( /= ) : t -> t -> t
-
-  val ( ** ) : t -> t -> t
-
-  val inv : t -> t
-  val sqr : t -> t
-
-  val sqrt : t -> t
-  val log : t -> t
-  val exp : t -> t
-  val sin : t -> t
-  val cos : t -> t
-  val tan : t -> t
-  val asin : t -> t
-  val acos : t -> t
-  val atan : t -> t
-
-  val ( = ) : t -> t -> bool
-  val ( <> ) : t -> t -> bool
-end
-
-(** Module of comparison operators *)
-module type Order = sig
-  type t
-
-  val ( < ) : t -> t -> bool
-  val ( <= ) : t -> t -> bool
-  val ( > ) : t -> t -> bool
-  val ( >= ) : t -> t -> bool
-
-  val min : t -> t -> t
-  val max : t -> t -> t
-end
-
-(** Extension of {!S} with comparison operators *)
-module type OrderedS = sig
-  include S
-  include Order with type t := t
-end
-
-(** [float] operators. All the operators are aliases for the ones found in
-    [Pervasives]. *)
-module OpFloat : S with type elt = float and type scalar = float =
+(** [float] operators
+    All the operators are aliases for the ones found in [Pervasives]
+    This implements signature {!Types.OpS}.  *)
+module Float =
 struct
   type t = float ref
   (** We use [float ref] to allow cumulative operators like [+=] *)
@@ -182,11 +81,11 @@ struct
   let ( <> ) x y = Stdlib.(!x <> !y)
 end
 
-(** [float] operators with comparison. Extends {!OpFloat}.
-    This implements signature {!OrderedS}. *)
-module OrderedFloat : OrderedS with type elt = float and type scalar = float =
+(** [float] operators with comparison. Extends {!Op.Float}
+    This implements signature {!Types.OrderedOpS}. *)
+module OrderedFloat =
 struct
-  include OpFloat
+  include Float
   let ( < ) x y = Stdlib.(get x < get y)
   let ( <= ) x y = Stdlib.(get x <= get y)
   let ( > ) x y = Stdlib.(get x > get y)
