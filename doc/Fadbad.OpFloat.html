@@ -17,8 +17,11 @@
 <link title="Op" rel="Chapter" href="Op.html">
 <link title="Tadiff" rel="Chapter" href="Tadiff.html">
 <link title="Types" rel="Chapter" href="Types.html">
-<link title="Fadbad" rel="Chapter" href="Fadbad.html"><link title="Arithmetic operators" rel="Section" href="#0_Arithmeticoperators">
-<link title="Comparison operators" rel="Subsection" href="#1_Comparisonoperators">
+<link title="Fadbad" rel="Chapter" href="Fadbad.html"><link title="Constructors" rel="Section" href="#1_Constructors">
+<link title="Destructors" rel="Section" href="#1_Destructors">
+<link title="Arithmetic operators" rel="Section" href="#1_Arithmeticoperators">
+<link title="Scalar operators" rel="Section" href="#1_Scalaroperators">
+<link title="Comparison operators" rel="Section" href="#1_Comparisonoperators">
 <title>FADBADml : Fadbad.OpFloat</title>
 </head>
 <body>
@@ -54,6 +57,8 @@
 </div>
 
 
+<pre><span id="VALcopy"><span class="keyword">val</span> copy</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> <a href="Types.OpS.html#TYPEt">t</a></code></pre>
+<pre><span id="VALdeepcopy"><span class="keyword">val</span> deepcopy</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> <a href="Types.OpS.html#TYPEt">t</a></code></pre><h2 id="1_Constructors">Constructors</h2>
 <pre><span id="VALcreate"><span class="keyword">val</span> create</span> : <code class="type">unit -> <a href="Types.OpS.html#TYPEt">t</a></code></pre>
 <pre><span id="VALmake"><span class="keyword">val</span> make</span> : <code class="type"><a href="Types.OpS.html#TYPEelt">elt</a> -> <a href="Types.OpS.html#TYPEt">t</a></code></pre><div class="info ">
 <div class="info-desc">
@@ -67,23 +72,6 @@
 </div>
 </div>
 
-<pre><span id="VALget"><span class="keyword">val</span> get</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> <a href="Types.OpS.html#TYPEelt">elt</a></code></pre><div class="info ">
-<div class="info-desc">
-<p>Unwrap a value</p>
-</div>
-</div>
-
-<pre><span id="VAL(!!)"><span class="keyword">val</span> (!!)</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> <a href="Types.OpS.html#TYPEelt">elt</a></code></pre><div class="info ">
-<div class="info-desc">
-<p>Alias for <code class="code">get</code></p>
-</div>
-</div>
-
-<pre><span id="VALto_string"><span class="keyword">val</span> to_string</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> string</code></pre>
-<pre><span id="VALstring_of_scalar"><span class="keyword">val</span> string_of_scalar</span> : <code class="type"><a href="Types.OpS.html#TYPEscalar">scalar</a> -> string</code></pre>
-<pre><span id="VALstring_of_elt"><span class="keyword">val</span> string_of_elt</span> : <code class="type"><a href="Types.OpS.html#TYPEelt">elt</a> -> string</code></pre>
-<pre><span id="VALcopy"><span class="keyword">val</span> copy</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> <a href="Types.OpS.html#TYPEt">t</a></code></pre>
-<pre><span id="VALdeepcopy"><span class="keyword">val</span> deepcopy</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> <a href="Types.OpS.html#TYPEt">t</a></code></pre>
 <pre><span id="VALzero"><span class="keyword">val</span> zero</span> : <code class="type">unit -> <a href="Types.OpS.html#TYPEt">t</a></code></pre><div class="info ">
 <div class="info-desc">
 <p>Construct a fresh value corresponding to 0</p>
@@ -101,19 +89,22 @@
 <p>Construct a fresh value corresponding to 2</p>
 </div>
 </div>
-
-<pre><span id="VALscale"><span class="keyword">val</span> scale</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> <a href="Types.OpS.html#TYPEscalar">scalar</a> -> <a href="Types.OpS.html#TYPEt">t</a></code></pre><div class="info ">
+<h2 id="1_Destructors">Destructors</h2>
+<pre><span id="VALget"><span class="keyword">val</span> get</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> <a href="Types.OpS.html#TYPEelt">elt</a></code></pre><div class="info ">
 <div class="info-desc">
-<p>Multiplication between a value and a scalar</p>
+<p>Unwrap a value</p>
 </div>
 </div>
 
-<pre><span id="VALtranslate"><span class="keyword">val</span> translate</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> <a href="Types.OpS.html#TYPEscalar">scalar</a> -> <a href="Types.OpS.html#TYPEt">t</a></code></pre><div class="info ">
+<pre><span id="VAL(!!)"><span class="keyword">val</span> (!!)</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> <a href="Types.OpS.html#TYPEelt">elt</a></code></pre><div class="info ">
 <div class="info-desc">
-<p>Addition between a value and a scalar</p>
+<p>Alias for <code class="code">get</code></p>
 </div>
 </div>
-<h1 id="0_Arithmeticoperators">Arithmetic operators</h1>
+
+<pre><span id="VALto_string"><span class="keyword">val</span> to_string</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> string</code></pre>
+<pre><span id="VALstring_of_scalar"><span class="keyword">val</span> string_of_scalar</span> : <code class="type"><a href="Types.OpS.html#TYPEscalar">scalar</a> -> string</code></pre>
+<pre><span id="VALstring_of_elt"><span class="keyword">val</span> string_of_elt</span> : <code class="type"><a href="Types.OpS.html#TYPEelt">elt</a> -> string</code></pre><h2 id="1_Arithmeticoperators">Arithmetic operators</h2>
 <pre><span id="VAL(~+)"><span class="keyword">val</span> (~+)</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> <a href="Types.OpS.html#TYPEt">t</a></code></pre><div class="info ">
 <div class="info-desc">
 <p>unary plus (with copy)</p>
@@ -145,6 +136,18 @@
 <pre><span id="VALtan"><span class="keyword">val</span> tan</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> <a href="Types.OpS.html#TYPEt">t</a></code></pre>
 <pre><span id="VALasin"><span class="keyword">val</span> asin</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> <a href="Types.OpS.html#TYPEt">t</a></code></pre>
 <pre><span id="VALacos"><span class="keyword">val</span> acos</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> <a href="Types.OpS.html#TYPEt">t</a></code></pre>
-<pre><span id="VALatan"><span class="keyword">val</span> atan</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> <a href="Types.OpS.html#TYPEt">t</a></code></pre><h2 id="1_Comparisonoperators">Comparison operators</h2>
+<pre><span id="VALatan"><span class="keyword">val</span> atan</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> <a href="Types.OpS.html#TYPEt">t</a></code></pre><h2 id="1_Scalaroperators">Scalar operators</h2>
+<pre><span id="VALscale"><span class="keyword">val</span> scale</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> <a href="Types.OpS.html#TYPEscalar">scalar</a> -> <a href="Types.OpS.html#TYPEt">t</a></code></pre><div class="info ">
+<div class="info-desc">
+<p>Multiplication between a value and a scalar</p>
+</div>
+</div>
+
+<pre><span id="VALtranslate"><span class="keyword">val</span> translate</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> <a href="Types.OpS.html#TYPEscalar">scalar</a> -> <a href="Types.OpS.html#TYPEt">t</a></code></pre><div class="info ">
+<div class="info-desc">
+<p>Addition between a value and a scalar</p>
+</div>
+</div>
+<h2 id="1_Comparisonoperators">Comparison operators</h2>
 <pre><span id="VAL(=)"><span class="keyword">val</span> (=)</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> <a href="Types.OpS.html#TYPEt">t</a> -> bool</code></pre>
 <pre><span id="VAL(<>)"><span class="keyword">val</span> (&lt;&gt;)</span> : <code class="type"><a href="Types.OpS.html#TYPEt">t</a> -> <a href="Types.OpS.html#TYPEt">t</a> -> bool</code></pre></body></html>

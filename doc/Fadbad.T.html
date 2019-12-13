@@ -17,7 +17,12 @@
 <link title="Op" rel="Chapter" href="Op.html">
 <link title="Tadiff" rel="Chapter" href="Tadiff.html">
 <link title="Types" rel="Chapter" href="Types.html">
-<link title="Fadbad" rel="Chapter" href="Fadbad.html"><title>FADBADml : Fadbad.T</title>
+<link title="Fadbad" rel="Chapter" href="Fadbad.html"><link title="Operators" rel="Section" href="#1_Operators">
+<link title="Additionnal constructors" rel="Section" href="#1_Additionnalconstructors">
+<link title="Accessors" rel="Section" href="#1_Accessors">
+<link title=" Constructors" rel="Section" href="#1_Constructors">
+<link title=" Automatic Taylor Expansion" rel="Section" href="#1_AutomaticTaylorExpansion">
+<title>FADBADml : Fadbad.T</title>
 </head>
 <body>
 <div class="navbar"><a class="pre" href="Fadbad.OrderedB.html" title="Fadbad.OrderedB">Previous</a>
@@ -25,7 +30,7 @@
 &nbsp;</div>
 <h1>Functor <a href="type_Fadbad.T.html">Fadbad.T</a></h1>
 
-<pre><span id="MODULET"><span class="keyword">module</span> T</span> <code class="code">(</code><code class="code">Op</code><code class="code"> : </code><code class="type"><a href="Fadbad.OpS.html">OpS</a></code><code class="code">) </code>: <code class="type"><a href="Tadiff.TTypeName.html">TTypeName</a></code><code class="code">(</code><code class="type"><a href="Op.html">Op</a></code><code class="code">)</code></pre><div class="info module top">
+<pre><span id="MODULET"><span class="keyword">module</span> T</span> <code class="code">(</code><code class="code">T</code><code class="code"> : </code><code class="type"><a href="Fadbad.OpS.html">OpS</a></code><code class="code">) </code>: <code class="type"><a href="Tadiff.TTypeName.html">TTypeName</a></code><code class="code">(</code><code class="type">T</code><code class="code">)</code></pre><div class="info module top">
 <div class="info-desc">
 <p>Construct a TAD-like module from a module of operators</p>
 </div>
@@ -37,7 +42,7 @@
 <table class="paramstable">
 <tr>
 <td align="center" valign="top" width="15%">
-<code>Op</code></td>
+<code>T</code></td>
 <td align="center" valign="top">:</td>
 <td><code class="type"><a href="Fadbad.OpS.html">OpS</a></code>
 </table>
@@ -47,15 +52,7 @@
 <hr width="100%">
 
 <pre><span class="keyword">include</span> <a href="Types.OpS.html">Types.OpS</a></pre>
-
-<pre><span id="TYPEop_t"><span class="keyword">type</span> <code class="type"></code>op_t</span> = <code class="type">Ty.t</code> </pre>
-<div class="info ">
-<div class="info-desc">
-<p>Underlying type</p>
-</div>
-</div>
-
-
+<h2 id="1_Operators">Operators</h2>
 <pre><span id="TYPEop"><span class="keyword">type</span> <code class="type"></code>op</span> = ..</pre>
 
 <pre><code><span class="keyword">type</span> <code class="type"></code><a href="Tadiff.TTypeName.html#TYPEop">TTypeName.op</a> += </code></pre><table class="typetable">
@@ -84,14 +81,14 @@
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span id="EXTENSIONSIN">SIN</span> <span class="keyword">of</span> <code class="type">Ty.t array</code></code></td>
+<code><span id="EXTENSIONSIN">SIN</span> <span class="keyword">of</span> <code class="type">T.t array</code></code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span id="EXTENSIONCOS">COS</span> <span class="keyword">of</span> <code class="type">Ty.t array</code></code></td>
+<code><span id="EXTENSIONCOS">COS</span> <span class="keyword">of</span> <code class="type">T.t array</code></code></td>
 
 </tr>
 <tr>
@@ -207,24 +204,90 @@
 
 </tr></table>
 
-<div class="info ">
+
+
+<pre><span id="VALstring_of_op"><span class="keyword">val</span> string_of_op</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEop">op</a> -> string</code></pre><h2 id="1_Additionnalconstructors">Additionnal constructors</h2>
+<pre><span id="VALlift"><span class="keyword">val</span> lift</span> : <code class="type">T.t -> t</code></pre><h2 id="1_Accessors">Accessors</h2>
+<pre><span id="VALvalue"><span class="keyword">val</span> value</span> : <code class="type">t -> T.t</code></pre><div class="info ">
 <div class="info-desc">
-<p>Defined operators. This type can be extended to define custom operators</p>
+<p>Same as <code class="code">get</code> but returns an <code class="code">T.t</code> instead of an <code class="code">elt</code></p>
 </div>
 </div>
 
+<pre><span id="VALoperator"><span class="keyword">val</span> operator</span> : <code class="type">t -> <a href="Tadiff.TTypeName.html#TYPEop">op</a></code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">operator f</code> retrieves the operator represented by <code class="code">f</code></p>
+</div>
+</div>
 
-<pre><span id="VALstring_of_op"><span class="keyword">val</span> string_of_op</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEop">op</a> -> string</code></pre>
-<pre><span id="VALoperator"><span class="keyword">val</span> operator</span> : <code class="type">t -> <a href="Tadiff.TTypeName.html#TYPEop">op</a></code></pre>
-<pre><span id="VALvalue"><span class="keyword">val</span> value</span> : <code class="type">t -> <a href="Tadiff.TTypeName.html#TYPEop_t">op_t</a></code></pre>
-<pre><span id="VALlift"><span class="keyword">val</span> lift</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEop_t">op_t</a> -> t</code></pre>
-<pre><span id="VALorder"><span class="keyword">val</span> order</span> : <code class="type">t -> int</code></pre>
-<pre><span id="VALget_tvalues"><span class="keyword">val</span> get_tvalues</span> : <code class="type">t -> elt array</code></pre>
-<pre><span id="VALget_derivatives"><span class="keyword">val</span> get_derivatives</span> : <code class="type">t -> elt array</code></pre>
-<pre><span id="VALset"><span class="keyword">val</span> set</span> : <code class="type">t -> int -> <a href="Tadiff.TTypeName.html#TYPEop_t">op_t</a> -> unit</code></pre>
-<pre><span id="VALun_op"><span class="keyword">val</span> un_op</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEop">op</a> -> t -> t</code></pre>
-<pre><span id="VALbin_op"><span class="keyword">val</span> bin_op</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEop">op</a> -> t -> t -> t</code></pre>
-<pre><span id="VALd"><span class="keyword">val</span> d</span> : <code class="type">t -> int -> elt</code></pre>
-<pre><span id="VALderiv"><span class="keyword">val</span> deriv</span> : <code class="type">t -> int -> <a href="Tadiff.TTypeName.html#TYPEop_t">op_t</a></code></pre>
-<pre><span id="VALeval"><span class="keyword">val</span> eval</span> : <code class="type">t -> int -> int</code></pre>
-<pre><span id="VALreset"><span class="keyword">val</span> reset</span> : <code class="type">t -> unit</code></pre></body></html>
+<pre><span id="VALorder"><span class="keyword">val</span> order</span> : <code class="type">t -> int</code></pre><div class="info ">
+<div class="info-desc">
+<p>Current number of coefficients that have been computed</p>
+</div>
+</div>
+<h2 id="1_Constructors"> Constructors</h2>
+<pre><span id="VALun_op"><span class="keyword">val</span> un_op</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEop">op</a> -> t -> t</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">un_op op f</code> builds a node that represents the expression <code class="code">op(f)</code> where
+      <code class="code">op</code> is a unary operator. This is useful to write custom operators</p>
+</div>
+</div>
+
+<pre><span id="VALbin_op"><span class="keyword">val</span> bin_op</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEop">op</a> -> t -> t -> t</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">bin_op op f1 f2</code> builds a node that represents the expression <code class="code">op(f1,f2)</code>
+      where <code class="code">op</code> is a binary operator. This is useful to write custom operators</p>
+</div>
+</div>
+<h2 id="1_AutomaticTaylorExpansion"> Automatic Taylor Expansion</h2>
+<pre><span id="VALset"><span class="keyword">val</span> set</span> : <code class="type">t -> int -> T.t -> unit</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">set f i v</code> sets the <code class="code">i</code>-th coefficient of <code class="code">f</code> to <code class="code">v</code>, this is used to
+      set the direction of the expansion. For example, to expand wrt. a variable
+      x, one would call <code class="code">set x 1 1.</code>.
+      This can also be used to change the value of a variable: eg. <code class="code">set x 0 5.</code>.</p>
+</div>
+</div>
+
+<pre><span id="VALd"><span class="keyword">val</span> d</span> : <code class="type">t -> int -> elt</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">d f i</code> retrieves the coefficient of order <code class="code">i</code> in
+      computation <code class="code">f</code> as an <code class="code">elt</code>. Must be called after <code class="code">eval</code>.</p>
+</div>
+</div>
+
+<pre><span id="VALderiv"><span class="keyword">val</span> deriv</span> : <code class="type">t -> int -> T.t</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">deriv f i</code> retrieves the coefficient of order <code class="code">i</code> in
+      computation <code class="code">f</code>. Must be called after <code class="code">eval</code>.</p>
+</div>
+</div>
+
+<pre><span id="VALget_tvalues"><span class="keyword">val</span> get_tvalues</span> : <code class="type">t -> elt array</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">get_tvalues f</code> retrieves the array of taylor coefficients of <code class="code">f</code>.
+      Must be called after <code class="code">eval</code>.</p>
+</div>
+</div>
+
+<pre><span id="VALget_derivatives"><span class="keyword">val</span> get_derivatives</span> : <code class="type">t -> elt array</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">get_derivatives f</code> retrieves the array of derivatives of <code class="code">f</code>.
+      Must be called after <code class="code">eval</code>.</p>
+</div>
+</div>
+
+<pre><span id="VALeval"><span class="keyword">val</span> eval</span> : <code class="type">t -> int -> int</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">eval f i</code> propagates the first <code class="code">i</code> taylor coefficients of f.
+      The direction of the expansion should have been set using <code class="code">set</code>.</p>
+</div>
+</div>
+
+<pre><span id="VALreset"><span class="keyword">val</span> reset</span> : <code class="type">t -> unit</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">reset f</code> resets all the arrays of coefficients. It is used to compute
+      a new expansion on the same expression without building a new graph.</p>
+</div>
+</div>
+</body></html>

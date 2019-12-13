@@ -18,7 +18,10 @@
 <link title="Op" rel="Chapter" href="Op.html">
 <link title="Tadiff" rel="Chapter" href="Tadiff.html">
 <link title="Types" rel="Chapter" href="Types.html">
-<link title="Fadbad" rel="Chapter" href="Fadbad.html"><title>FADBADml : Fadbad.F</title>
+<link title="Fadbad" rel="Chapter" href="Fadbad.html"><link title="Additionnal constructors" rel="Section" href="#1_Additionnalconstructors">
+<link title="Accessors" rel="Section" href="#1_Accessors">
+<link title=" Automatic Differentiation" rel="Section" href="#1_AutomaticDifferentiation">
+<title>FADBADml : Fadbad.F</title>
 </head>
 <body>
 <div class="navbar"><a class="pre" href="Fadbad.OrderedFloat.html" title="Fadbad.OrderedFloat">Previous</a>
@@ -27,7 +30,7 @@
 </div>
 <h1>Functor <a href="type_Fadbad.F.html">Fadbad.F</a></h1>
 
-<pre><span id="MODULEF"><span class="keyword">module</span> F</span> <code class="code">(</code><code class="code">Op</code><code class="code"> : </code><code class="type"><a href="Fadbad.OpS.html">OpS</a></code><code class="code">) </code>: <code class="type"><a href="Fadiff.FTypeName.html">FTypeName</a></code><code class="code">(</code><code class="type"><a href="Op.html">Op</a></code><code class="code">)</code></pre><div class="info module top">
+<pre><span id="MODULEF"><span class="keyword">module</span> F</span> <code class="code">(</code><code class="code">T</code><code class="code"> : </code><code class="type"><a href="Fadbad.OpS.html">OpS</a></code><code class="code">) </code>: <code class="type"><a href="Fadiff.FTypeName.html">FTypeName</a></code><code class="code">(</code><code class="type">T</code><code class="code">)</code></pre><div class="info module top">
 <div class="info-desc">
 <p>Construct a FAD-like module from a module of operators</p>
 </div>
@@ -39,7 +42,7 @@
 <table class="paramstable">
 <tr>
 <td align="center" valign="top" width="15%">
-<code>Op</code></td>
+<code>T</code></td>
 <td align="center" valign="top">:</td>
 <td><code class="type"><a href="Fadbad.OpS.html">OpS</a></code>
 </table>
@@ -49,12 +52,14 @@
 <hr width="100%">
 
 <pre><span class="keyword">include</span> <a href="Types.OpS.html">Types.OpS</a></pre>
-
-<pre><span id="TYPEop_t"><span class="keyword">type</span> <code class="type"></code>op_t</span> = <code class="type">Ty.t</code> </pre>
-
-
-<pre><span id="VALvalue"><span class="keyword">val</span> value</span> : <code class="type">t -> <a href="Fadiff.FTypeName.html#TYPEop_t">op_t</a></code></pre>
-<pre><span id="VALlift"><span class="keyword">val</span> lift</span> : <code class="type"><a href="Fadiff.FTypeName.html#TYPEop_t">op_t</a> -> t</code></pre>
+<h2 id="1_Additionnalconstructors">Additionnal constructors</h2>
+<pre><span id="VALlift"><span class="keyword">val</span> lift</span> : <code class="type">T.t -> t</code></pre><h2 id="1_Accessors">Accessors</h2>
+<pre><span id="VALvalue"><span class="keyword">val</span> value</span> : <code class="type">t -> T.t</code></pre><div class="info ">
+<div class="info-desc">
+<p>Same as <code class="code">get</code> but returns an <code class="code">T.t</code> instead of an <code class="code">elt</code></p>
+</div>
+</div>
+<h2 id="1_AutomaticDifferentiation"> Automatic Differentiation</h2>
 <pre><span id="VALdiff"><span class="keyword">val</span> diff</span> : <code class="type">t -> int -> int -> unit</code></pre><div class="info ">
 <div class="info-desc">
 <p><code class="code">diff x i n</code> assigns <code class="code">i</code> as index of variable <code class="code">x</code> out of <code class="code">n</code></p>
@@ -68,7 +73,7 @@
 </div>
 </div>
 
-<pre><span id="VALderiv"><span class="keyword">val</span> deriv</span> : <code class="type">t -> int -> <a href="Fadiff.FTypeName.html#TYPEop_t">op_t</a></code></pre><div class="info ">
+<pre><span id="VALderiv"><span class="keyword">val</span> deriv</span> : <code class="type">t -> int -> T.t</code></pre><div class="info ">
 <div class="info-desc">
 <p><code class="code">deriv f i</code> retrieves the derivative of variable of index <code class="code">i</code> in
       computation <code class="code">f</code></p>

@@ -17,11 +17,11 @@
 <link title="Op" rel="Chapter" href="Op.html">
 <link title="Tadiff" rel="Chapter" href="Tadiff.html">
 <link title="Types" rel="Chapter" href="Types.html">
-<link title="Fadbad" rel="Chapter" href="Fadbad.html"><link title="Basic types" rel="Section" href="#0_Basictypes">
-<link title="Basic operators" rel="Section" href="#0_Basicoperators">
-<link title="Forward Automatic Differentiation (FAD)" rel="Section" href="#0_ForwardAutomaticDifferentiationFAD">
-<link title="Backward Automatic Differentiation (BAD)" rel="Section" href="#0_BackwardAutomaticDifferentiationBAD">
-<link title="Automatic Taylor Expansion (TAD)" rel="Section" href="#0_AutomaticTaylorExpansionTAD">
+<link title="Fadbad" rel="Chapter" href="Fadbad.html"><link title="Basic types" rel="Section" href="#1_Basictypes">
+<link title="Basic operators" rel="Section" href="#1_Basicoperators">
+<link title="Forward Automatic Differentiation (FAD)" rel="Section" href="#1_ForwardAutomaticDifferentiationFAD">
+<link title="Backward Automatic Differentiation (BAD)" rel="Section" href="#1_BackwardAutomaticDifferentiationBAD">
+<link title="Automatic Taylor Expansion (TAD)" rel="Section" href="#1_AutomaticTaylorExpansionTAD">
 <title>FADBADml : Fadbad</title>
 </head>
 <body>
@@ -36,7 +36,7 @@
 </div>
 </div>
 <hr width="100%">
-<h1 id="0_Basictypes">Basic types</h1>
+<h2 id="1_Basictypes">Basic types</h2>
 <pre><span id="MODULETYPEOpS"><span class="keyword">module type</span> <a href="Fadbad.OpS.html">OpS</a></span> = <code class="type"><a href="Types.OpS.html">Types.OpS</a></code></pre><div class="info">
 <p>Type of a module of operators</p>
 
@@ -46,7 +46,7 @@
 <p>Type of a module of operators over ordered elements</p>
 
 </div>
-<h1 id="0_Basicoperators">Basic operators</h1>
+<h2 id="1_Basicoperators">Basic operators</h2>
 <pre><span id="MODULEOpFloat"><span class="keyword">module</span> <a href="Fadbad.OpFloat.html">OpFloat</a></span>: <code class="type"><a href="Op.Float.html">Op.Float</a></code></pre><div class="info">
 <p>Operators over float elements</p>
 
@@ -56,30 +56,30 @@
 <p>Operators over float elements, including comparison operators</p>
 
 </div>
-<h1 id="0_ForwardAutomaticDifferentiationFAD">Forward Automatic Differentiation (FAD)</h1>
-<pre><span id="MODULEF"><span class="keyword">module</span> <a href="Fadbad.F.html">F</a></span> <code class="code">(</code><code class="code">Op</code><code class="code"> : </code><code class="type"><a href="Fadbad.OpS.html">OpS</a></code><code class="code">) </code>: <code class="type"><a href="Fadiff.FTypeName.html">FTypeName</a></code><code class="code">(</code><code class="type"><a href="Op.html">Op</a></code><code class="code">)</code></pre><div class="info">
+<h2 id="1_ForwardAutomaticDifferentiationFAD">Forward Automatic Differentiation (FAD)</h2>
+<pre><span id="MODULEF"><span class="keyword">module</span> <a href="Fadbad.F.html">F</a></span> <code class="code">(</code><code class="code">T</code><code class="code"> : </code><code class="type"><a href="Fadbad.OpS.html">OpS</a></code><code class="code">) </code>: <code class="type"><a href="Fadiff.FTypeName.html">FTypeName</a></code><code class="code">(</code><code class="type">T</code><code class="code">)</code></pre><div class="info">
 <p>Construct a FAD-like module from a module of operators</p>
 
 </div>
 
-<pre><span id="MODULEOrderedF"><span class="keyword">module</span> <a href="Fadbad.OrderedF.html">OrderedF</a></span> <code class="code">(</code><code class="code">Op</code><code class="code"> : </code><code class="type"><a href="Fadbad.OrderedOpS.html">OrderedOpS</a></code><code class="code">) </code>: <code class="type"><a href="Fadiff.OrderedFTypeName.html">OrderedFTypeName</a></code><code class="code">(</code><code class="type"><a href="Op.html">Op</a></code><code class="code">)</code></pre><div class="info">
+<pre><span id="MODULEOrderedF"><span class="keyword">module</span> <a href="Fadbad.OrderedF.html">OrderedF</a></span> <code class="code">(</code><code class="code">T</code><code class="code"> : </code><code class="type"><a href="Fadbad.OrderedOpS.html">OrderedOpS</a></code><code class="code">) </code>: <code class="type"><a href="Fadiff.OrderedFTypeName.html">OrderedFTypeName</a></code><code class="code">(</code><code class="type">T</code><code class="code">)</code></pre><div class="info">
 <p>Construct a FAD-like module from a module of operators over ordered
     elements</p>
 
 </div>
-<h1 id="0_BackwardAutomaticDifferentiationBAD">Backward Automatic Differentiation (BAD)</h1>
-<pre><span id="MODULEB"><span class="keyword">module</span> <a href="Fadbad.B.html">B</a></span> <code class="code">(</code><code class="code">Op</code><code class="code"> : </code><code class="type"><a href="Fadbad.OpS.html">OpS</a></code><code class="code">) </code>: <code class="type"><a href="Badiff.BTypeName.html">BTypeName</a></code><code class="code">(</code><code class="type"><a href="Op.html">Op</a></code><code class="code">)</code></pre><div class="info">
+<h2 id="1_BackwardAutomaticDifferentiationBAD">Backward Automatic Differentiation (BAD)</h2>
+<pre><span id="MODULEB"><span class="keyword">module</span> <a href="Fadbad.B.html">B</a></span> <code class="code">(</code><code class="code">T</code><code class="code"> : </code><code class="type"><a href="Fadbad.OpS.html">OpS</a></code><code class="code">) </code>: <code class="type"><a href="Badiff.BTypeName.html">BTypeName</a></code><code class="code">(</code><code class="type">T</code><code class="code">)</code></pre><div class="info">
 <p>Construct a BAD-like module from a module of operators</p>
 
 </div>
 
-<pre><span id="MODULEOrderedB"><span class="keyword">module</span> <a href="Fadbad.OrderedB.html">OrderedB</a></span> <code class="code">(</code><code class="code">Op</code><code class="code"> : </code><code class="type"><a href="Fadbad.OrderedOpS.html">OrderedOpS</a></code><code class="code">) </code>: <code class="type"><a href="Badiff.OrderedBTypeName.html">OrderedBTypeName</a></code><code class="code">(</code><code class="type"><a href="Op.html">Op</a></code><code class="code">)</code></pre><div class="info">
+<pre><span id="MODULEOrderedB"><span class="keyword">module</span> <a href="Fadbad.OrderedB.html">OrderedB</a></span> <code class="code">(</code><code class="code">T</code><code class="code"> : </code><code class="type"><a href="Fadbad.OrderedOpS.html">OrderedOpS</a></code><code class="code">) </code>: <code class="type"><a href="Badiff.OrderedBTypeName.html">OrderedBTypeName</a></code><code class="code">(</code><code class="type">T</code><code class="code">)</code></pre><div class="info">
 <p>Construct a BAD-like module from a module of operators over ordered
     elements</p>
 
 </div>
-<h1 id="0_AutomaticTaylorExpansionTAD">Automatic Taylor Expansion (TAD)</h1>
-<pre><span id="MODULET"><span class="keyword">module</span> <a href="Fadbad.T.html">T</a></span> <code class="code">(</code><code class="code">Op</code><code class="code"> : </code><code class="type"><a href="Fadbad.OpS.html">OpS</a></code><code class="code">) </code>: <code class="type"><a href="Tadiff.TTypeName.html">TTypeName</a></code><code class="code">(</code><code class="type"><a href="Op.html">Op</a></code><code class="code">)</code></pre><div class="info">
+<h2 id="1_AutomaticTaylorExpansionTAD">Automatic Taylor Expansion (TAD)</h2>
+<pre><span id="MODULET"><span class="keyword">module</span> <a href="Fadbad.T.html">T</a></span> <code class="code">(</code><code class="code">T</code><code class="code"> : </code><code class="type"><a href="Fadbad.OpS.html">OpS</a></code><code class="code">) </code>: <code class="type"><a href="Tadiff.TTypeName.html">TTypeName</a></code><code class="code">(</code><code class="type">T</code><code class="code">)</code></pre><div class="info">
 <p>Construct a TAD-like module from a module of operators</p>
 
 </div>

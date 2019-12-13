@@ -17,7 +17,11 @@
 <link title="Op" rel="Chapter" href="Op.html">
 <link title="Tadiff" rel="Chapter" href="Tadiff.html">
 <link title="Types" rel="Chapter" href="Types.html">
-<link title="Fadbad" rel="Chapter" href="Fadbad.html"><title>FADBADml : Badiff.OrderedBTypeName</title>
+<link title="Fadbad" rel="Chapter" href="Fadbad.html"><link title="Operators" rel="Section" href="#1_Operators">
+<link title="Additionnal constructors" rel="Section" href="#1_Additionnalconstructors">
+<link title="Accessors" rel="Section" href="#1_Accessors">
+<link title=" Automatic Differentiation" rel="Section" href="#1_AutomaticDifferentiation">
+<title>FADBADml : Badiff.OrderedBTypeName</title>
 </head>
 <body>
 <div class="navbar"><a class="pre" href="Badiff.BTypeName.html" title="Badiff.BTypeName">Previous</a>
@@ -25,7 +29,7 @@
 &nbsp;</div>
 <h1>Functor <a href="type_Badiff.OrderedBTypeName.html">Badiff.OrderedBTypeName</a></h1>
 
-<pre><span id="MODULEOrderedBTypeName"><span class="keyword">module</span> OrderedBTypeName</span> <code class="code">(</code><code class="code">Ty</code><code class="code"> : </code><code class="type"><a href="Types.OrderedOpS.html">Types.OrderedOpS</a></code><code class="code">) </code>: <code class="code">sig</code> <a href="Badiff.OrderedBTypeName.html">..</a> <code class="code">end</code></pre><div class="info module top">
+<pre><span id="MODULEOrderedBTypeName"><span class="keyword">module</span> OrderedBTypeName</span> <code class="code">(</code><code class="code">T</code><code class="code"> : </code><code class="type"><a href="Types.OrderedOpS.html">Types.OrderedOpS</a></code><code class="code">) </code>: <code class="code">sig</code> <a href="Badiff.OrderedBTypeName.html">..</a> <code class="code">end</code></pre><div class="info module top">
 <div class="info-desc">
 <p>Extends <a href="Badiff.BTypeName.html"><code class="code">BTypeName</code></a> with comparison operators.</p>
 </div>
@@ -37,7 +41,7 @@
 <table class="paramstable">
 <tr>
 <td align="center" valign="top" width="15%">
-<code>Ty</code></td>
+<code>T</code></td>
 <td align="center" valign="top">:</td>
 <td><code class="type"><a href="Types.OrderedOpS.html">Types.OrderedOpS</a></code>
 <div class="parameter-desc" >module of operators over the underlying type on which we perform
@@ -52,15 +56,7 @@
 <hr width="100%">
 
 <pre><span class="keyword">include</span> <a href="Types.OrderedOpS.html">Types.OrderedOpS</a></pre>
-
-<pre><span id="TYPEop_t"><span class="keyword">type</span> <code class="type"></code>op_t</span> = <code class="type">Ty.t</code> </pre>
-<div class="info ">
-<div class="info-desc">
-<p>Underlying type</p>
-</div>
-</div>
-
-
+<h2 id="1_Operators">Operators</h2>
 <pre><span id="TYPEop"><span class="keyword">type</span> <code class="type"></code>op</span> = ..</pre>
 
 <pre><code><span class="keyword">type</span> <code class="type"></code><a href="Badiff.OrderedBTypeName.html#TYPEop">op</a> += </code></pre><table class="typetable">
@@ -212,17 +208,45 @@
 
 </tr></table>
 
-<div class="info ">
+
+<h2 id="1_Additionnalconstructors">Additionnal constructors</h2>
+<pre><span id="VALlift"><span class="keyword">val</span> lift</span> : <code class="type">T.t -> t</code></pre><h2 id="1_Accessors">Accessors</h2>
+<pre><span id="VALvalue"><span class="keyword">val</span> value</span> : <code class="type">t -> T.t</code></pre><div class="info ">
 <div class="info-desc">
-<p>Defined operators. This type can be extended to define custom operators</p>
+<p>Same as <code class="code">get</code> but returns an <code class="code">T.t</code> instead of an <code class="code">elt</code></p>
+</div>
+</div>
+<h2 id="1_AutomaticDifferentiation"> Automatic Differentiation</h2>
+<pre><span id="VALdiff"><span class="keyword">val</span> diff</span> : <code class="type">t -> int -> int -> unit</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">diff x i n</code> assigns <code class="code">i</code> as index of variable <code class="code">x</code> out of <code class="code">n</code></p>
 </div>
 </div>
 
+<pre><span id="VALd"><span class="keyword">val</span> d</span> : <code class="type">t -> int -> elt</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">d f i</code> retrieves the derivative of variable of index <code class="code">i</code> in
+      computation <code class="code">f</code> as an <code class="code">elt</code>. Must be called after <code class="code">diff</code> and <code class="code">compute</code>.</p>
+</div>
+</div>
 
-<pre><span id="VALvalue"><span class="keyword">val</span> value</span> : <code class="type">t -> <a href="Badiff.OrderedBTypeName.html#TYPEop_t">op_t</a></code></pre>
-<pre><span id="VALlift"><span class="keyword">val</span> lift</span> : <code class="type"><a href="Badiff.OrderedBTypeName.html#TYPEop_t">op_t</a> -> t</code></pre>
-<pre><span id="VALdiff"><span class="keyword">val</span> diff</span> : <code class="type">t -> int -> int -> unit</code></pre>
-<pre><span id="VALd"><span class="keyword">val</span> d</span> : <code class="type">t -> int -> elt</code></pre>
-<pre><span id="VALderiv"><span class="keyword">val</span> deriv</span> : <code class="type">t -> int -> <a href="Badiff.OrderedBTypeName.html#TYPEop_t">op_t</a></code></pre>
-<pre><span id="VALcompute"><span class="keyword">val</span> compute</span> : <code class="type">t -> unit</code></pre>
-<pre><span id="VALcompute_list"><span class="keyword">val</span> compute_list</span> : <code class="type">t list -> unit</code></pre></body></html>
+<pre><span id="VALderiv"><span class="keyword">val</span> deriv</span> : <code class="type">t -> int -> T.t</code></pre><div class="info ">
+<div class="info-desc">
+<p>Same as <code class="code">d</code> but returns an <code class="code">T.t</code> instead of an <code class="code">elt</code></p>
+</div>
+</div>
+
+<pre><span id="VALcompute"><span class="keyword">val</span> compute</span> : <code class="type">t -> unit</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">compute f</code> updates the reference counter of the nodes in the sub-graph
+      starting from f so that they are propagated at the right moment. Must
+      be called before <code class="code">d</code> or <code class="code">deriv</code>.</p>
+</div>
+</div>
+
+<pre><span id="VALcompute_list"><span class="keyword">val</span> compute_list</span> : <code class="type">t list -> unit</code></pre><div class="info ">
+<div class="info-desc">
+<p>Same as running <code class="code">compute</code> on each element of the input list.</p>
+</div>
+</div>
+</body></html>
