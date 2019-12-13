@@ -1,3 +1,16 @@
+(**************************************************************************)
+(*                                                                        *)
+(*                                FADBADml                                *)
+(*                                                                        *)
+(*           OCaml port by François Bidet and Ismail Bennani              *)
+(*     Based on FADBAD++, written by Ole Stauning and Claus Bendtsen      *)
+(*                                                                        *)
+(*                             Copyright 2019                             *)
+(*                                                                        *)
+(*   This file is distributed under the terms of the CeCILL-C license.    *)
+(*                                                                        *)
+(**************************************************************************)
+
 (** Module of comparison operators *)
 module type Order =
 sig
@@ -102,94 +115,5 @@ end
 (** Extends {!OpS} with comparison operators *)
 module type OrderedOpS = sig
   include OpS
-  include Order with type t := t
-end
-
-(** Extends {!OpS} with functions to compute and retrieve derivatives
-    This describes the interface of FAD-like modules *)
-module type FTypeS =
-sig
-  include OpS
-
-  type op_t
-
-  val value : t -> op_t
-  val lift : op_t -> t
-
-  val diff : t -> int -> int -> unit
-  val d : t -> int -> elt
-  val deriv : t -> int -> op_t
-end
-
-(** Extends {!FTypeS} with comparison operators *)
-module type OrderedFTypeS =
-sig
-  include FTypeS
-  include Order with type t := t
-end
-
-(** Extends {!OpS} with functions to compute and retrieve derivatives
-    This describes the interface of BAD-like modules*)
-module type BTypeS =
-sig
-  include OpS
-
-  type op_t
-
-  val value : t -> op_t
-  val lift : op_t -> t
-
-  val diff : t -> int -> int -> unit
-  val d : t -> int -> elt
-  val deriv : t -> int -> op_t
-  val compute : t -> unit
-  val compute_list : t list -> unit
-end
-
-(** Extends {!BTypeS} with comparison operators *)
-module type OrderedBTypeS =
-sig
-  include BTypeS
-  include Order with type t := t
-end
-
-(** Extends {!OpS} with functions to compute and retrieve taylor coefficients
-    This describes the interface of TAD-like modules *)
-module type TTypeS =
-sig
-  include OpS
-
-  type op = ..
-  (** Type of defined operators *)
-
-  val string_of_op : op -> string
-  val operator : t -> op
-
-  type op_t
-  (** Type of underlying values *)
-
-  val value : t -> op_t
-  val lift : op_t -> t
-
-  val order : t -> int
-
-  val get_tvalues : t -> elt array
-  val get_derivatives : t -> elt array
-
-  val set : t -> int -> op_t -> unit
-
-  val un_op : op -> t -> t
-  val bin_op : op -> t -> t -> t
-
-  val d : t -> int -> elt
-  val deriv : t -> int -> op_t
-  val eval : t -> int -> int
-  val reset : t -> unit
-end
-
-(** Extends {!TTypeS} with comparison operators *)
-module type OrderedTTypeS =
-sig
-  include TTypeS
   include Order with type t := t
 end

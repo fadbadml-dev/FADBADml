@@ -15,15 +15,8 @@
 
 open Fadbad_utils
 
-(** Re-define usual operators to compute values and derivatives for elements of
-    type Op.t in forward mode.
-    This implements signature {!Types.FTypeS}. *)
 module FTypeName (Op : Types.OpS) =
 struct
-
-  (** Type of a FAD node:
-      - [m_val] : value of the current node
-      - [m_diff] : derivatives of the current node wrt. each coordinates *)
 
   type op_t = Op.t
 
@@ -34,10 +27,9 @@ struct
 
   type elt = Op.elt
   type scalar = Op.scalar
-  (**/**)
-  let string_of_scalar = Op.string_of_scalar
+
+let string_of_scalar = Op.string_of_scalar
   let string_of_elt = Op.string_of_elt
-  (**/**)
 
   let to_string this =
     Printf.sprintf "{%s | [%s]}" (Op.to_string this.m_val)
@@ -514,12 +506,9 @@ struct
     res
 end
 
-(** Extends {!FTypeName} with comparison operators.
-    This implements signature {!Types.OrderedFTypeS}. *)
 module OrderedFTypeName(Op : Types.OrderedOpS) =
 struct
-  module OpFTypeName = FTypeName(Op)
-  include OpFTypeName
+  include FTypeName(Op)
 
   let ( < ) a b = Op.(value a < value b)
   let ( <= ) a b = Op.(value a <= value b)

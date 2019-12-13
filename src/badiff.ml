@@ -11,11 +11,8 @@
 (*                                                                        *)
 (**************************************************************************)
 
-(** Backward Automatic Differentiation (BAD) *)
-
 open Fadbad_utils
 
-(** Implement an array of derivatives and some useful operators on arrays. *)
 module Derivatives (Op : Types.OpS) =
 struct
   type t = Op.t array ref
@@ -113,9 +110,6 @@ struct
 
 end
 
-(** Re-define usual operators to compute values and derivatives for elements of
-    type Op.t in backward mode.
-    This implements signature {!Types.BTypeS}. *)
 module BTypeName (Op : Types.OpS) =
 struct
   module D = Derivatives(Op)
@@ -132,16 +126,6 @@ struct
     | POS | NEG | INV | SQR | SQRT | EXP | LOG | SIN | COS | TAN
     | ASIN | ACOS | ATAN
 
-  (**
-     Type of elements
-     - [operator] : the operation described by this node
-     - [operands] : the arguments of the operator
-     - [rc] : the reference counter; it is always equal to the number of nodes
-             that points to this sub-expression plus one
-     - [value] : the current value of the sub-expression
-     - [derivatives] : the derivative of the root expression with respect to
-                      this sub-expression
-  *)
   type t = {
     mutable operator : op;
     mutable operands : t array;
@@ -453,12 +437,9 @@ struct
 
 end
 
-(** Extends {!BTypeName} with comparison operators.
-    This implements signature {!Types.OrderedBTypeS}. *)
 module OrderedBTypeName (Op : Types.OrderedOpS) =
 struct
-  module OpBTypeName = BTypeName(Op)
-  include OpBTypeName
+  include BTypeName(Op)
 
   let ( < ) a b = Op.(value a < value b)
   let ( <= ) a b = Op.(value a <= value b)

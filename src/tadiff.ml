@@ -11,12 +11,8 @@
 (*                                                                        *)
 (**************************************************************************)
 
-(** Automatic Taylor Expansion *)
-
 open Fadbad_utils
 
-(** Implement an array of taylor coefficients and some useful functions on
-    these arrays. *)
 module TValues(Op : Types.OpS) =
 struct
   type t = {
@@ -101,9 +97,6 @@ struct
     this.values.(i) <- v
 end
 
-(** Re-define usual operators to compute values and taylor coefficients
-    for elements of type Op.t.
-    This implements signature {!Types.TTypeS}. *)
 module TTypeName(Op : Types.OpS) =
 struct
   module OpTValues = TValues(Op)
@@ -606,8 +599,6 @@ struct
 
 end
 
-(** Extends {!TTypeName} with comparison operators.
-    This implements signature {!Types.OrderedTTypeS}. *)
 module OrderedTTypeName(Op : Types.OrderedOpS) =
 struct
   module OpTTypeName = TTypeName(Op)

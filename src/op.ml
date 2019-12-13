@@ -11,15 +11,9 @@
 (*                                                                        *)
 (**************************************************************************)
 
-(** Predefined operator modules *)
-
-(** [float] operators
-    All the operators are aliases for the ones found in [Pervasives]
-    This implements signature {!Types.OpS}.  *)
 module Float =
 struct
   type t = float ref
-  (** We use [float ref] to allow cumulative operators like [+=] *)
 
   type elt = float
   type scalar = float
@@ -29,7 +23,6 @@ struct
   let make x = ref x
   let get f = !f
   let ( !! ) = get
-  (** Alias for [get] *)
 
   let integer i = ref (float i)
 
@@ -81,8 +74,6 @@ struct
   let ( <> ) x y = Stdlib.(!x <> !y)
 end
 
-(** [float] operators with comparison. Extends {!Op.Float}
-    This implements signature {!Types.OrderedOpS}. *)
 module OrderedFloat =
 struct
   include Float
