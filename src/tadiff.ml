@@ -13,11 +13,11 @@
 
 open Fadbad_utils
 
-module TValues(Op : Types.OpS) =
+module TValues(T : Types.OpS) =
 struct
   type t = {
     mutable n : int;
-    values : Op.t array;
+    values : T.t array;
   }
 
   let max_length = 40
@@ -30,7 +30,7 @@ struct
       else if i = 0 then mult_by_fact 1 1 arr
       else begin
         let new_fact = last_fact * i in
-        arr.(i) <- Op.((integer new_fact) * arr.(i));
+        arr.(i) <- T.((integer new_fact) * arr.(i));
         mult_by_fact new_fact (i+1) arr
       end
     in mult_by_fact 1 0 (Array.copy values)
@@ -39,7 +39,7 @@ struct
 
   let string_of_arr arr =
     Printf.sprintf "[%s]" (String.concat ", " (Array.to_list
-      (Array.map Op.to_string arr)))
+      (Array.map T.to_string arr)))
   let string_of_values this = string_of_arr (get_values this)
   let string_of_derivatives this = string_of_arr (get_derivatives this)
   let to_string = string_of_values
@@ -47,17 +47,17 @@ struct
 
   let copy this = {
     n = this.n;
-    values = Array.map Op.copy this.values
+    values = Array.map T.copy this.values
   }
 
   let deepcopy this = {
     n = this.n;
-    values = Array.map Op.deepcopy this.values
+    values = Array.map T.deepcopy this.values
   }
 
   let create length = {
     n = 0;
-    values = Array.init length (fun _ -> Op.zero ());
+    values = Array.init length (fun _ -> T.zero ());
   }
 
   let lift f =
@@ -72,7 +72,7 @@ struct
     res.values.(0) <- f;
     res
 
-  let make_sized f length = lift_sized (Op.make f) length
+  let make_sized f length = lift_sized (T.make f) length
   let make f = make_sized f max_length
 
   let check_bounds this i =
@@ -97,12 +97,12 @@ struct
     this.values.(i) <- v
 end
 
-module TTypeName(Op : Types.OpS) =
+module TTypeName(T : Types.OpS) =
 struct
-  module OpTValues = TValues(Op)
+  module OpTValues = TValues(T)
 
-  type elt = Op.elt
-  type scalar = Op.scalar
+  type elt = T.elt
+  type scalar = T.scalar
 
   type op = ..
   type op +=
@@ -110,12 +110,10 @@ struct
     (* while computing the derivatives of SIN or COS, we also compute
        the derivatives of COS or SIN. the argument of the constructor is
        used to store those values (to avoid computing at each call of eval) *)
-    | SIN of Op.t array | COS of Op.t array
+    | SIN of T.t array | COS of T.t array
     | ADD | SUB | MUL | DIV | POW
     | POS | NEG | INV | SQR | SQRT | EXP | LOG | TAN
     | ASIN | ACOS | ATAN
-
-  type op_t = Op.t
 
   type t = {
     mutable operator : op;
@@ -129,13 +127,13 @@ struct
   let tvalues this = OpTValues.get_values this.tvalues
   let derivatives this = OpTValues.get_derivatives this.tvalues
 
-  let get_tvalues this = Array.map Op.(!!) (tvalues this)
-  let get_derivatives this = Array.map Op.(!!) (derivatives this)
+  let get_tvalues this = Array.map T.(!!) (tvalues this)
+  let get_derivatives this = Array.map T.(!!) (derivatives this)
 
   let string_of_op = function
     | CONST -> "CONST"
-    | SCALE f -> Printf.sprintf "SCALE %s" (Op.string_of_scalar f)
-    | TRANS f -> Printf.sprintf "TRANS %s" (Op.string_of_scalar f)
+    | SCALE f -> Printf.sprintf "SCALE %s" (T.string_of_scalar f)
+    | TRANS f -> Printf.sprintf "TRANS %s" (T.string_of_scalar f)
     | ADD -> "ADD" | SUB -> "SUB" | MUL -> "MUL" | DIV -> "DIV" | POW -> "POW"
     | POS -> "POS" | NEG -> "NEG" | INV -> "INV" | SQR -> "SQR" | SQRT -> "SQRT"
     | EXP -> "EXP" | LOG -> "LOG" | SIN _ -> "SIN" | COS _ -> "COS" | TAN -> "TAN"
@@ -151,8 +149,8 @@ struct
     (Printf.sprintf "tvalues = %s\n\tderivatives = %s\n}"
       (OpTValues.string_of_values this.tvalues)
       (OpTValues.string_of_derivatives this.tvalues))
-  let string_of_scalar = Op.string_of_scalar
-  let string_of_elt = Op.string_of_elt
+  let string_of_scalar = T.string_of_scalar
+  let string_of_elt = T.string_of_elt
 
   let get_operands this i =
     user_assert (i < Array.length this.operands && i >= 0)
@@ -191,10 +189,10 @@ struct
     tvalues = OpTValues.make_sized f size
   }
 
-  let integer i = lift (Op.integer i)
-  let zero () = lift (Op.zero ())
-  let one () = lift (Op.one ())
-  let two () = lift (Op.two ())
+  let integer i = lift (T.integer i)
+  let zero () = lift (T.zero ())
+  let one () = lift (T.one ())
+  let two () = lift (T.two ())
 
   let copy this = {
     operator = this.operator;
@@ -212,15 +210,15 @@ struct
     match this.operator with
     | CONST ->
       OpTValues.set_length this.tvalues 1;
-      OpTValues.fill_from this.tvalues 1 (Op.zero ())
+      OpTValues.fill_from this.tvalues 1 (T.zero ())
     | _ -> OpTValues.reset this.tvalues; Array.iter reset this.operands
 
   let value this = OpTValues.get this.tvalues 0
-  let get this = Op.(!!(value this))
+  let get this = T.(!!(value this))
   let ( !! ) = get
 
   let deriv this i = OpTValues.get this.tvalues i
-  let d this i = Op.(!!(deriv this i))
+  let d this i = T.(!!(deriv this i))
 
   let length this = OpTValues.length this.tvalues
 
@@ -235,14 +233,14 @@ struct
       let t = get_operands this 0 in
       let l = eval t k in
       for i = order this to l-1 do
-        OpTValues.set this.tvalues i Op.(scale (deriv t i) f)
+        OpTValues.set this.tvalues i T.(scale (deriv t i) f)
       done;
       OpTValues.set_length this.tvalues l;
       l
     | TRANS f ->
       let t = get_operands this 0 in
       let l = eval t k in
-      if (order this) = 0 then set this 0 Op.(translate (value t) f);
+      if (order this) = 0 then set this 0 T.(translate (value t) f);
       for i = order this to l-1 do
         OpTValues.set this.tvalues i (deriv t i)
       done;
@@ -253,7 +251,7 @@ struct
       let t2 = get_operands this 1 in
       let l = min (eval t1 k) (eval t2 k) in
       for i = order this to l-1 do
-        OpTValues.set this.tvalues i Op.((deriv t1 i) + (deriv t2 i))
+        OpTValues.set this.tvalues i T.((deriv t1 i) + (deriv t2 i))
       done;
       OpTValues.set_length this.tvalues l;
       l
@@ -262,7 +260,7 @@ struct
       let t2 = get_operands this 1 in
       let l = min (eval t1 k) (eval t2 k) in
       for i = order this to l-1 do
-        OpTValues.set this.tvalues i Op.((deriv t1 i) - (deriv t2 i))
+        OpTValues.set this.tvalues i T.((deriv t1 i) - (deriv t2 i))
       done;
       OpTValues.set_length this.tvalues l;
       l
@@ -274,10 +272,10 @@ struct
         if i >= l then ()
         else if j > i then begin
           OpTValues.set this.tvalues i acc;
-          aux (Op.zero ()) (i+1) 0
-        end else aux Op.(acc + (deriv t1 j) * (deriv t2 Stdlib.(i-j))) i (j+1)
+          aux (T.zero ()) (i+1) 0
+        end else aux T.(acc + (deriv t1 j) * (deriv t2 Stdlib.(i-j))) i (j+1)
       in
-      aux (Op.zero ()) (order this) 0;
+      aux (T.zero ()) (order this) 0;
       OpTValues.set_length this.tvalues l;
       l
     | DIV ->
@@ -287,9 +285,9 @@ struct
       let rec aux acc i j =
         if i >= l then ()
         else if j > i then begin
-          OpTValues.set this.tvalues i Op.(acc / (value t2));
+          OpTValues.set this.tvalues i T.(acc / (value t2));
           aux (deriv t1 (i+1)) (i+1) 1
-        end else aux Op.(acc - (deriv t2 j) * (deriv this Stdlib.(i-j))) i (j+1)
+        end else aux T.(acc - (deriv t2 j) * (deriv this Stdlib.(i-j))) i (j+1)
       in
       aux (deriv t1 (order this)) (order this) 1;
       OpTValues.set_length this.tvalues l;
@@ -299,7 +297,7 @@ struct
       let t = get_operands this 0 in
       let l = eval t k in
       for i = order this to l-1 do
-        OpTValues.set this.tvalues i Op.(+ (deriv t i))
+        OpTValues.set this.tvalues i T.(+ (deriv t i))
       done;
       OpTValues.set_length this.tvalues l;
       l
@@ -307,7 +305,7 @@ struct
       let t = get_operands this 0 in
       let l = eval t k in
       for i = order this to l-1 do
-        OpTValues.set this.tvalues i Op.(- (deriv t i))
+        OpTValues.set this.tvalues i T.(- (deriv t i))
       done;
       OpTValues.set_length this.tvalues l;
       l
@@ -317,12 +315,12 @@ struct
       let rec aux acc i j =
         if i >= l then ()
         else if j > i then begin
-          OpTValues.set this.tvalues i Op.(acc / (value t));
-          aux (Op.zero ()) (i+1) 1
-        end else aux Op.(acc - (deriv t j) * (deriv this Stdlib.(i-j))) i (j+1)
+          OpTValues.set this.tvalues i T.(acc / (value t));
+          aux (T.zero ()) (i+1) 1
+        end else aux T.(acc - (deriv t j) * (deriv this Stdlib.(i-j))) i (j+1)
       in
-      if (order this) = 0 then set this 0 Op.(inv (value t));
-      aux (Op.zero ()) (order this) 1;
+      if (order this) = 0 then set this 0 T.(inv (value t));
+      aux (T.zero ()) (order this) 1;
       OpTValues.set_length this.tvalues l;
       l
     | SQR ->
@@ -332,16 +330,16 @@ struct
         let m = (i + 1) / 2 in
         if i >= l then ()
         else if j >= m then begin
-          let new_val = Op.((two ()) * acc) in
+          let new_val = T.((two ()) * acc) in
           let new_val =
-            if i mod 2 = 0 then Op.(new_val + (sqr (deriv t m))) else new_val
+            if i mod 2 = 0 then T.(new_val + (sqr (deriv t m))) else new_val
           in
           OpTValues.set this.tvalues i new_val;
-          aux (Op.zero ()) (i+1) 0
-        end else aux Op.(acc + (deriv t j) * (deriv t Stdlib.(i-j))) i (j+1)
+          aux (T.zero ()) (i+1) 0
+        end else aux T.(acc + (deriv t j) * (deriv t Stdlib.(i-j))) i (j+1)
       in
-      if (order this) = 0 then set this 0 Op.(sqr (value t));
-      aux (Op.zero ()) (order this) 0;
+      if (order this) = 0 then set this 0 T.(sqr (value t));
+      aux (T.zero ()) (order this) 0;
       OpTValues.set_length this.tvalues l;
       l
     | SQRT ->
@@ -351,19 +349,19 @@ struct
         let m = (i + 1) / 2 in
         if i >= l then ()
         else if j >= m then begin
-          let new_val = Op.((two ()) * acc) in
+          let new_val = T.((two ()) * acc) in
           let new_val =
-            if i mod 2 = 0 then Op.(new_val + (sqr (deriv this m))) else new_val
+            if i mod 2 = 0 then T.(new_val + (sqr (deriv this m))) else new_val
           in
           let new_val =
-            Op.(((deriv t i) - new_val) / ((two ()) * (value this)))
+            T.(((deriv t i) - new_val) / ((two ()) * (value this)))
           in
           OpTValues.set this.tvalues i new_val;
-          aux (Op.zero ()) (i+1) 1
-        end else aux Op.(acc + (deriv this j) * (deriv this Stdlib.(i-j))) i (j+1)
+          aux (T.zero ()) (i+1) 1
+        end else aux T.(acc + (deriv this j) * (deriv this Stdlib.(i-j))) i (j+1)
       in
-      if (order this) = 0 then set this 0 Op.(sqrt (value t));
-      aux (Op.zero ()) (order this) 1;
+      if (order this) = 0 then set this 0 T.(sqrt (value t));
+      aux (T.zero ()) (order this) 1;
       OpTValues.set_length this.tvalues l;
       l
     | EXP ->
@@ -373,18 +371,18 @@ struct
         if i >= l then ()
         else if j >= i then begin
           OpTValues.set this.tvalues i acc;
-          aux (Op.zero ()) (i+1) 0
+          aux (T.zero ()) (i+1) 0
         end else
           aux
-            Op.(acc +
+            T.(acc +
               (((one ()) -
                ((integer j) / (integer i))) *
                (deriv t Stdlib.(i-j)) *
                (deriv this j)))
             i (j+1)
       in
-      if (order this) = 0 then set this 0 Op.(exp (value t));
-      aux (Op.zero ()) (order this) 0;
+      if (order this) = 0 then set this 0 T.(exp (value t));
+      aux (T.zero ()) (order this) 0;
       OpTValues.set_length this.tvalues l;
       l
     | LOG ->
@@ -393,18 +391,18 @@ struct
       let rec aux acc i j =
         if i >= l then ()
         else if j >= i then begin
-          OpTValues.set this.tvalues i Op.(acc / (value t));
+          OpTValues.set this.tvalues i T.(acc / (value t));
           aux (deriv t (i+1)) (i+1) 1
         end else
           aux
-            Op.(acc -
+            T.(acc -
               (((one ()) -
                ((integer j) / (integer i))) *
                (deriv t j) *
                (deriv this Stdlib.(i-j))))
             i (j+1)
       in
-      if (order this) = 0 then set this 0 Op.(log (value t));
+      if (order this) = 0 then set this 0 T.(log (value t));
       let i = order this in aux (deriv t i) i 1;
       OpTValues.set_length this.tvalues l;
       l
@@ -414,22 +412,22 @@ struct
       let rec aux acc_this acc_cos i j =
         if i >= l then ()
         else if j >= i then begin
-          OpTValues.set this.tvalues i Op.(acc_this / (integer i));
-          tcoeff_cos.(i) <- Op.(acc_cos / (integer i));
-          aux (Op.zero ()) (Op.zero ()) (i+1) 0
+          OpTValues.set this.tvalues i T.(acc_this / (integer i));
+          tcoeff_cos.(i) <- T.(acc_cos / (integer i));
+          aux (T.zero ()) (T.zero ()) (i+1) 0
         end else
           aux
-            Op.(acc_this + (integer Stdlib.(j+1)) * tcoeff_cos.(Stdlib.(i-1-j))
+            T.(acc_this + (integer Stdlib.(j+1)) * tcoeff_cos.(Stdlib.(i-1-j))
                   * (deriv t Stdlib.(j+1)))
-            Op.(acc_cos - (integer Stdlib.(j+1)) * (deriv this Stdlib.(i-1-j))
+            T.(acc_cos - (integer Stdlib.(j+1)) * (deriv this Stdlib.(i-1-j))
                   * (deriv t Stdlib.(j+1)))
             i (j+1)
       in
       if (order this) = 0 then begin
-        set this 0 Op.(sin (value t));
-        tcoeff_cos.(0) <- Op.(cos (value t));
+        set this 0 T.(sin (value t));
+        tcoeff_cos.(0) <- T.(cos (value t));
       end;
-      aux (Op.zero ()) (Op.zero ()) (order this) 0;
+      aux (T.zero ()) (T.zero ()) (order this) 0;
       OpTValues.set_length this.tvalues l;
       l
     | COS tcoeff_sin ->
@@ -438,22 +436,22 @@ struct
       let rec aux acc_this acc_sin i j =
         if i >= l then ()
         else if j >= i then begin
-          OpTValues.set this.tvalues i Op.(acc_this / (integer i));
-          tcoeff_sin.(i) <- Op.(acc_sin / (integer i));
-          aux (Op.zero ()) (Op.zero ()) (i+1) 0
+          OpTValues.set this.tvalues i T.(acc_this / (integer i));
+          tcoeff_sin.(i) <- T.(acc_sin / (integer i));
+          aux (T.zero ()) (T.zero ()) (i+1) 0
         end else
           aux
-            Op.(acc_this - (integer Stdlib.(j+1)) * tcoeff_sin.(Stdlib.(i-1-j))
+            T.(acc_this - (integer Stdlib.(j+1)) * tcoeff_sin.(Stdlib.(i-1-j))
                   * (deriv t Stdlib.(j+1)))
-            Op.(acc_sin + (integer Stdlib.(j+1)) * (deriv this Stdlib.(i-1-j))
+            T.(acc_sin + (integer Stdlib.(j+1)) * (deriv this Stdlib.(i-1-j))
                   * (deriv t Stdlib.(j+1)))
             i (j+1)
       in
       if (order this) = 0 then begin
-        set this 0 Op.(cos (value t));
-        tcoeff_sin.(0) <- Op.(sin (value t));
+        set this 0 T.(cos (value t));
+        tcoeff_sin.(0) <- T.(sin (value t));
       end;
-      aux (Op.zero ()) (Op.zero ()) (order this) 0;
+      aux (T.zero ()) (T.zero ()) (order this) 0;
       OpTValues.set_length this.tvalues l;
       l
     | TAN ->
@@ -464,14 +462,14 @@ struct
         if i >= l then ()
         else if j >= i then begin
           OpTValues.set this.tvalues i
-            Op.(((deriv t1 i) - acc / (integer i)) / (value t2));
-          aux (Op.zero ()) (i+1) 1
+            T.(((deriv t1 i) - acc / (integer i)) / (value t2));
+          aux (T.zero ()) (i+1) 1
         end else
-          aux Op.(acc + (integer j) * (deriv this j)
+          aux T.(acc + (integer j) * (deriv this j)
             * (deriv t2 Stdlib.(i-j))) i (j+1)
       in
-      if (order this) = 0 then set this 0 Op.(tan (value t1));
-      aux (Op.zero ()) (order this) 1;
+      if (order this) = 0 then set this 0 T.(tan (value t1));
+      aux (T.zero ()) (order this) 1;
       OpTValues.set_length this.tvalues l;
       l
     | ASIN ->
@@ -482,14 +480,14 @@ struct
         if i >= l then ()
         else if j >= i then begin
           OpTValues.set this.tvalues i
-            Op.(((deriv t1 i) - acc / (integer i)) / (value t2));
-          aux (Op.zero ()) (i+1) 1
+            T.(((deriv t1 i) - acc / (integer i)) / (value t2));
+          aux (T.zero ()) (i+1) 1
         end else
-          aux Op.(acc + (integer j) * (deriv this j)
+          aux T.(acc + (integer j) * (deriv this j)
             * (deriv t2 Stdlib.(i-j))) i (j+1)
       in
-      if (order this) = 0 then set this 0 Op.(asin (value t1));
-      aux (Op.zero ()) (order this) 1;
+      if (order this) = 0 then set this 0 T.(asin (value t1));
+      aux (T.zero ()) (order this) 1;
       OpTValues.set_length this.tvalues l;
       l
     | ACOS ->
@@ -500,14 +498,14 @@ struct
         if i >= l then ()
         else if j >= i then begin
           OpTValues.set this.tvalues i
-            Op.(- ((deriv t1 i) + acc / (integer i)) / (value t2));
-          aux (Op.zero ()) (i+1) 1
+            T.(- ((deriv t1 i) + acc / (integer i)) / (value t2));
+          aux (T.zero ()) (i+1) 1
         end else
-          aux Op.(acc + (integer j) * (deriv this j)
+          aux T.(acc + (integer j) * (deriv this j)
             * (deriv t2 Stdlib.(i-j))) i (j+1)
       in
-      if (order this) = 0 then set this 0 Op.(acos (value t1));
-      aux (Op.zero ()) (order this) 1;
+      if (order this) = 0 then set this 0 T.(acos (value t1));
+      aux (T.zero ()) (order this) 1;
       OpTValues.set_length this.tvalues l;
       l
     | ATAN ->
@@ -518,14 +516,14 @@ struct
         if i >= l then ()
         else if j >= i then begin
           OpTValues.set this.tvalues i
-            Op.(((deriv t1 i) - acc / (integer i)) / (value t2));
-          aux (Op.zero ()) (i+1) 1
+            T.(((deriv t1 i) - acc / (integer i)) / (value t2));
+          aux (T.zero ()) (i+1) 1
         end else
-          aux Op.(acc + (integer j) * (deriv this j)
+          aux T.(acc + (integer j) * (deriv this j)
             * (deriv t2 Stdlib.(i-j))) i (j+1)
       in
-      if (order this) = 0 then set this 0 Op.(atan (value t1));
-      aux (Op.zero ()) (order this) 1;
+      if (order this) = 0 then set this 0 T.(atan (value t1));
+      aux (T.zero ()) (order this) 1;
       OpTValues.set_length this.tvalues l;
       l
     | _ -> failwith "Unknown operator"
@@ -576,9 +574,9 @@ struct
   let log = un_op LOG
   let exp = un_op EXP
   let sin t =
-    un_op (SIN (Array.init (OpTValues.size t.tvalues) (fun _ -> Op.zero ()))) t
+    un_op (SIN (Array.init (OpTValues.size t.tvalues) (fun _ -> T.zero ()))) t
   let cos t =
-    un_op (COS (Array.init (OpTValues.size t.tvalues) (fun _ -> Op.zero ()))) t
+    un_op (COS (Array.init (OpTValues.size t.tvalues) (fun _ -> T.zero ()))) t
   (*
      cf. the implementation in FADBAD++ (tadiff.h class TTypeNameTAN and function tan)
      the TAN operator creates a node `sqr (cos x)` in order to use its derivatives
@@ -594,14 +592,14 @@ struct
 
   let ( ** ) t1 t2 = exp (t2 * (log t1))
 
-  let ( = ) t1 t2 = Op.((value t1) = (value t2))
-  let ( <> ) t1 t2 = Op.((value t1) <> (value t2))
+  let ( = ) t1 t2 = T.((value t1) = (value t2))
+  let ( <> ) t1 t2 = T.((value t1) <> (value t2))
 
 end
 
-module OrderedTTypeName(Op : Types.OrderedOpS) =
+module OrderedTTypeName(T : Types.OrderedOpS) =
 struct
-  module OpTTypeName = TTypeName(Op)
+  module OpTTypeName = TTypeName(T)
   include OpTTypeName
   type op += MIN | MAX
 
@@ -617,10 +615,10 @@ struct
     | _ -> eval this
 
 
-  let ( < ) a b = Op.(value a < value b)
-  let ( <= ) a b = Op.(value a <= value b)
-  let ( > ) a b = Op.(value a > value b)
-  let ( >= ) a b = Op.(value a >= value b)
+  let ( < ) a b = T.(value a < value b)
+  let ( <= ) a b = T.(value a <= value b)
+  let ( > ) a b = T.(value a > value b)
+  let ( >= ) a b = T.(value a >= value b)
 
   let min = bin_op MIN
   let max = bin_op MAX

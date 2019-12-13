@@ -13,15 +13,15 @@
 
 open Fadbad_utils
 
-module Derivatives (Op : Types.OpS) =
+module Derivatives (T : Types.OpS) =
 struct
-  type t = Op.t array ref
+  type t = T.t array ref
 
   let create () = ref [||]
-  let make n e = Array.init n (fun _ -> Op.copy e)
+  let make n e = Array.init n (fun _ -> T.copy e)
   let map f this = Array.map f !this
-  let copy this = map Op.copy this
-  let deepcopy this = map Op.deepcopy this
+  let copy this = map T.copy this
+  let deepcopy this = map T.deepcopy this
   let mapi f this = Array.mapi f !this
   let iter f this = Array.iter f !this
   let iteri f this = Array.iteri f !this
@@ -29,19 +29,19 @@ struct
   let to_string this =
     Printf.sprintf "[%s]"
       (String.concat ", "
-         (Array.to_list (Array.map Op.to_string !this)))
+         (Array.to_list (Array.map T.to_string !this)))
 
    let rec fprint_t_list ff t_l =
      let rec aux ff t_l =
        match t_l with
        | [] -> ()
        | x :: q -> Format.fprintf ff ";@,%s%a"
-                     Op.(string_of_elt !!x) aux q
+                     T.(string_of_elt !!x) aux q
      in
      match t_l with
      | [] -> ()
      | x :: q -> Format.printf "@[<2>%s%a@]"
-                   Op.(string_of_elt !!x) aux q
+                   T.(string_of_elt !!x) aux q
 
   let fprint ff this =
     Format.fprintf ff "@[<2>[%a]@]" fprint_t_list (Array.to_list !this)
@@ -60,14 +60,14 @@ struct
     if has_values this then begin
       check_bounds this i;
       !this.(i)
-    end else Op.zero ()
+    end else T.zero ()
 
   let diff this i n =
     user_assert (i < n && i >= 0)
       ("Derivatives.diff: Index " ^ (string_of_int i) ^
        " out of range [0," ^ (string_of_int (n - 1)) ^ "]");
-    let res = if has_values this then this else ref (make n (Op.zero ())) in
-    !res.(i) <- Op.one ();
+    let res = if has_values this then this else ref (make n (T.zero ())) in
+    !res.(i) <- T.one ();
     this := !res
 
   let cAdd v v' =
@@ -76,7 +76,7 @@ struct
       user_assert (length v = length v')
         ("Derivatives.cAdd: Size mismatch " ^
          (string_of_int (length v)) ^ "<>" ^ (string_of_int (length v')));
-      iteri (fun i _ -> ignore Op.(!v.(i) += !v'.(i))) v;
+      iteri (fun i _ -> ignore T.(!v.(i) += !v'.(i))) v;
     end else v := copy v'
 
   let cSub v v' =
@@ -85,8 +85,8 @@ struct
       user_assert (length v = length v')
         ("Derivatives.cSub: Size mismatch " ^
          (string_of_int (length v)) ^ "<>" ^ (string_of_int (length v')));
-      iteri (fun i _ -> ignore Op.(!v.(i) -= !v'.(i))) v;
-    end else v := map Op.(~-) v'
+      iteri (fun i _ -> ignore T.(!v.(i) -= !v'.(i))) v;
+    end else v := map T.(~-) v'
 
   (** multiply-accumulate operation *)
   let cMac v a v' =
@@ -95,8 +95,8 @@ struct
       user_assert (length v = length v')
         ("Derivatives.cMac: Size mismatch " ^
          (string_of_int (length v)) ^ "<>" ^ (string_of_int (length v')));
-      iteri (fun i _ -> ignore Op.(!v.(i) += a * !v'.(i))) v;
-    end else v := map (fun v' -> Op.(a * v')) v'
+      iteri (fun i _ -> ignore T.(!v.(i) += a * !v'.(i))) v;
+    end else v := map (fun v' -> T.(a * v')) v'
 
   (** substractive multiply-accumulate operation *)
   let cSmac v a v' =
@@ -105,19 +105,17 @@ struct
       user_assert (length v = length v')
         ("Derivatives.cSmac: Size mismatch " ^
          (string_of_int (length v)) ^ "<>" ^ (string_of_int (length v')));
-      iteri (fun i _ -> ignore Op.(!v.(i) -= a * !v'.(i))) v;
-    end else v := map (fun v' -> Op.(- a * v')) v'
+      iteri (fun i _ -> ignore T.(!v.(i) -= a * !v'.(i))) v;
+    end else v := map (fun v' -> T.(- a * v')) v'
 
 end
 
-module BTypeName (Op : Types.OpS) =
+module BTypeName (T : Types.OpS) =
 struct
-  module D = Derivatives(Op)
+  module D = Derivatives(T)
 
-  type elt = Op.elt
-  type scalar = Op.scalar
-
-  type op_t = Op.t
+  type elt = T.elt
+  type scalar = T.scalar
 
   type op = ..
   type op +=
@@ -130,14 +128,14 @@ struct
     mutable operator : op;
     mutable operands : t array;
     mutable rc : int;
-    mutable value : op_t;
+    mutable value : T.t;
     derivatives : D.t;
   }
 
   let string_of_op = function
     | CONST -> "CONST"
-    | SCALE f -> Printf.sprintf "SCALE %s" (Op.string_of_scalar f)
-    | TRANS f -> Printf.sprintf "TRANS %s" (Op.string_of_scalar f)
+    | SCALE f -> Printf.sprintf "SCALE %s" (T.string_of_scalar f)
+    | TRANS f -> Printf.sprintf "TRANS %s" (T.string_of_scalar f)
     | ADD -> "ADD" | SUB -> "SUB" | MUL -> "MUL" | DIV -> "DIV" | POW -> "POW"
     | POS -> "POS" | NEG -> "NEG" | INV -> "INV" | SQR -> "SQR" | SQRT -> "SQRT"
     | EXP -> "EXP" | LOG -> "LOG" | SIN -> "SIN" | COS -> "COS" | TAN -> "TAN"
@@ -159,7 +157,7 @@ struct
   and fprint_t ff this =
     let fprint_value ff value =
       Format.fprintf ff "@[<2>value@ =@ %s@]"
-        Op.(string_of_elt !!value)
+        T.(string_of_elt !!value)
     in
     let fprint_operator ff op =
       Format.fprintf ff "@[<2>operator@ =@ %s@]" (string_of_op op)
@@ -191,10 +189,10 @@ struct
         (Array.map to_short_string this.operands))))
     ^
     (Printf.sprintf "rc = %d\n\tvalue = %s\n\tderivatives = %s\n}"
-      this.rc (Op.to_string this.value) (D.to_string this.derivatives))
+      this.rc (T.to_string this.value) (D.to_string this.derivatives))
 
-  let string_of_scalar = Op.string_of_scalar
-  let string_of_elt = Op.string_of_elt
+  let string_of_scalar = T.string_of_scalar
+  let string_of_elt = T.string_of_elt
 
   let add_der this d = D.cAdd this.derivatives d.derivatives
   let sub_der this d = D.cSub this.derivatives d.derivatives
@@ -208,7 +206,7 @@ struct
        "]");
     this.operands.(i)
 
-  let create () = let v = Op.create () in {
+  let create () = let v = T.create () in {
       operator = CONST;
       operands = [||];
       rc = 0;
@@ -224,18 +222,18 @@ struct
     derivatives = D.create ();
   }
 
-  let integer i = lift (Op.integer i)
-  let make n = lift (Op.make n)
-  let zero () = lift (Op.zero ())
-  let one () = lift (Op.one ())
-  let two () = lift (Op.two ())
+  let integer i = lift (T.integer i)
+  let make n = lift (T.make n)
+  let zero () = lift (T.zero ())
+  let one () = lift (T.one ())
+  let two () = lift (T.two ())
 
   let copy this =
     {
       operator = this.operator;
       operands = Array.copy this.operands;
       rc = this.rc;
-      value = Op.copy this.value;
+      value = T.copy this.value;
       derivatives = ref (D.copy this.derivatives);
     }
 
@@ -244,18 +242,18 @@ struct
       operator = this.operator;
       operands = Array.map deepcopy this.operands;
       rc = this.rc;
-      value = Op.deepcopy this.value;
+      value = T.deepcopy this.value;
       derivatives = ref (D.deepcopy this.derivatives);
     }
 
   let value this = this.value
   let derivatives this = this.derivatives
 
-  let get this = Op.get this.value
+  let get this = T.get this.value
   let ( !! ) = get
 
   let deriv this i = D.get this.derivatives i
-  let d this i = Op.get (deriv this i)
+  let d this i = T.get (deriv this i)
 
   let propagate this =
     match this.operator with
@@ -263,7 +261,7 @@ struct
     | SCALE f ->
       let t = get_operands this 0 in
       D.cAdd t.derivatives
-        (ref (Array.map (fun x -> Op.scale x f) !(this.derivatives)))
+        (ref (Array.map (fun x -> T.scale x f) !(this.derivatives)))
     | ADD ->
       let t1 = get_operands this 0 in
       let t2 = get_operands this 1 in
@@ -282,16 +280,16 @@ struct
     | DIV ->
       let t1 = get_operands this 0 in
       let t2 = get_operands this 1 in
-      let inv_t2 = Op.inv (value t2) in
+      let inv_t2 = T.inv (value t2) in
       mac_der t1 inv_t2 this;
-      smac_der t2 Op.(inv_t2 * (value this)) this
+      smac_der t2 T.(inv_t2 * (value this)) this
     | POW ->
       let t1 = get_operands this 0 in
       let t2 = get_operands this 1 in
       let t1_val = value t1 in
       let t2_val = value t2 in
-      let tmp1 = Op.(t2_val * (t1_val ** (t2_val - (one ())))) in
-      let tmp2 = Op.((value this) * (log t1_val)) in
+      let tmp1 = T.(t2_val * (t1_val ** (t2_val - (one ())))) in
+      let tmp2 = T.((value this) * (log t1_val)) in
       mac_der t1 tmp1 this;
       mac_der t2 tmp2 this
     | TRANS _
@@ -303,44 +301,44 @@ struct
       sub_der t this
     | INV ->
       let t = get_operands this 0 in
-      smac_der t Op.(sqr (value this)) this
+      smac_der t T.(sqr (value this)) this
     | SQR ->
       let t = get_operands this 0 in
-      let tmp = Op.((two ()) * (value t)) in
+      let tmp = T.((two ()) * (value t)) in
       mac_der t tmp this
     | SQRT ->
       let t = get_operands this 0 in
-      let tmp = Op.(inv ((value this) * (two ()))) in
+      let tmp = T.(inv ((value this) * (two ()))) in
       mac_der t tmp this
     | EXP ->
       let t = get_operands this 0 in
       mac_der t (value this) this
     | LOG ->
       let t = get_operands this 0 in
-      mac_der t Op.(inv (value t)) this
+      mac_der t T.(inv (value t)) this
     | SIN ->
       let t = get_operands this 0 in
-      let tmp = Op.cos (value t) in
+      let tmp = T.cos (value t) in
       mac_der t tmp this
     | COS ->
       let t = get_operands this 0 in
-      let tmp = Op.sin (value t) in
+      let tmp = T.sin (value t) in
       smac_der t tmp this
     | TAN ->
       let t = get_operands this 0 in
-      let tmp = Op.((sqr (value this)) + (one ())) in
+      let tmp = T.((sqr (value this)) + (one ())) in
       mac_der t tmp this
     | ASIN ->
       let t = get_operands this 0 in
-      let tmp = Op.(inv (sqrt ((one ()) - (sqr (value t))))) in
+      let tmp = T.(inv (sqrt ((one ()) - (sqr (value t))))) in
       mac_der t tmp this
     | ACOS ->
       let t = get_operands this 0 in
-      let tmp = Op.(inv (sqrt ((one ()) - (sqr (value t))))) in
+      let tmp = T.(inv (sqrt ((one ()) - (sqr (value t))))) in
       smac_der t tmp this
     | ATAN ->
       let t = get_operands this 0 in
-      let tmp = Op.(inv ((sqr (value t)) + (one ()))) in
+      let tmp = T.(inv ((sqr (value t)) + (one ()))) in
       mac_der t tmp this
     | _ -> failwith "Unknown operator"
 
@@ -400,51 +398,51 @@ struct
     t1.derivatives := [||];
     t1
 
-  let scale t f = un_op (SCALE f) (fun x -> Op.scale x f) t
-  let translate t f = un_op (TRANS f) (fun x -> Op.translate x f) t
+  let scale t f = un_op (SCALE f) (fun x -> T.scale x f) t
+  let translate t f = un_op (TRANS f) (fun x -> T.translate x f) t
 
-  let ( ~+ ) = un_op POS Op.(~+)
-  let ( ~- ) = un_op NEG Op.(~-)
+  let ( ~+ ) = un_op POS T.(~+)
+  let ( ~- ) = un_op NEG T.(~-)
 
-  let ( + ) = bin_op ADD Op.( + )
-  let ( += ) = bin_cOp ADD Op.( + )
+  let ( + ) = bin_op ADD T.( + )
+  let ( += ) = bin_cOp ADD T.( + )
 
-  let ( - ) = bin_op SUB Op.( - )
-  let ( -= ) = bin_cOp SUB Op.( - )
+  let ( - ) = bin_op SUB T.( - )
+  let ( -= ) = bin_cOp SUB T.( - )
 
-  let ( * ) = bin_op MUL Op.( * )
-  let ( *= ) = bin_cOp MUL Op.( * )
+  let ( * ) = bin_op MUL T.( * )
+  let ( *= ) = bin_cOp MUL T.( * )
 
-  let ( / ) = bin_op DIV Op.( / )
-  let ( /= ) = bin_cOp DIV Op.( / )
+  let ( / ) = bin_op DIV T.( / )
+  let ( /= ) = bin_cOp DIV T.( / )
 
-  let ( ** ) = bin_op POW Op.( ** )
+  let ( ** ) = bin_op POW T.( ** )
 
-  let inv = un_op INV Op.inv
-  let sqr = un_op SQR Op.sqr
-  let sqrt = un_op SQRT Op.sqrt
-  let log = un_op LOG Op.log
-  let exp = un_op EXP Op.exp
-  let sin = un_op SIN Op.sin
-  let cos = un_op COS Op.cos
-  let tan = un_op TAN Op.tan
-  let asin = un_op ASIN Op.asin
-  let acos = un_op ACOS Op.acos
-  let atan = un_op ATAN Op.atan
+  let inv = un_op INV T.inv
+  let sqr = un_op SQR T.sqr
+  let sqrt = un_op SQRT T.sqrt
+  let log = un_op LOG T.log
+  let exp = un_op EXP T.exp
+  let sin = un_op SIN T.sin
+  let cos = un_op COS T.cos
+  let tan = un_op TAN T.tan
+  let asin = un_op ASIN T.asin
+  let acos = un_op ACOS T.acos
+  let atan = un_op ATAN T.atan
 
-  let ( = ) t1 t2 = Op.((value t1) = (value t2))
-  let ( <> ) t1 t2 = Op.((value t1) <> (value t2))
+  let ( = ) t1 t2 = T.((value t1) = (value t2))
+  let ( <> ) t1 t2 = T.((value t1) <> (value t2))
 
 end
 
-module OrderedBTypeName (Op : Types.OrderedOpS) =
+module OrderedBTypeName (T : Types.OrderedOpS) =
 struct
-  include BTypeName(Op)
+  include BTypeName(T)
 
-  let ( < ) a b = Op.(value a < value b)
-  let ( <= ) a b = Op.(value a <= value b)
-  let ( > ) a b = Op.(value a > value b)
-  let ( >= ) a b = Op.(value a >= value b)
+  let ( < ) a b = T.(value a < value b)
+  let ( <= ) a b = T.(value a <= value b)
+  let ( > ) a b = T.(value a > value b)
+  let ( >= ) a b = T.(value a >= value b)
 
   let min a b = if a < b then a else b
   let max a b = if a > b then a else b
