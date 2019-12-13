@@ -13,26 +13,7 @@
 
 open Fadbad_utils
 
-module type S =
-sig
-  include Op.S
-
-  type op_t
-
-  val diff : t -> int -> int -> unit
-  val d : t -> int -> elt
-  val deriv : t -> int -> t
-  val compute : t -> unit
-  val compute_list : t list -> unit
-end
-
-module type OrderedS =
-sig
-  include S
-  include Op.OrderedS with type t := t and type elt := elt
-end
-
-module Derivatives (Op : Op.S) =
+module Derivatives (Op : Types.OpS) =
 struct
   type t = Op.t array ref
 
@@ -129,7 +110,7 @@ struct
 
 end
 
-module BTypeName (Op : Op.S) =
+module BTypeName (Op : Types.OpS) =
 struct
   module D = Derivatives(Op)
 
@@ -145,16 +126,6 @@ struct
     | POS | NEG | INV | SQR | SQRT | EXP | LOG | SIN | COS | TAN
     | ASIN | ACOS | ATAN
 
-  (**
-     Type of elements
-     - [operator] : the operation described by this node
-     - [operands] : the arguments of the operator
-     - [rc] : the reference counter; it is always equal to the number of nodes
-             that points to this sub-expression plus one
-     - [value] : the current value of the sub-expression
-     - [derivatives] : the derivative of the root expression with respect to
-                      this sub-expression
-  *)
   type t = {
     mutable operator : op;
     mutable operands : t array;
@@ -466,7 +437,7 @@ struct
 
 end
 
-module OrderedBTypeName (Op : Op.OrderedS) =
+module OrderedBTypeName (Op : Types.OrderedOpS) =
 struct
   include BTypeName(Op)
 

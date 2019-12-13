@@ -1,111 +1,20 @@
-module type S =
-sig
-(** NAMING CONVENTIONS :
-    - the operators on values of type t have the same name as the normal
-      operators (ie + for add, - for sub, etc...)
-    - the binary operators on values of type t and values of type scalar have
-      an & in their name (ie t + scalar is called +& and scalar + t is called &+)
-    - the operators on values of type scalar have two & in their name
-      (ie scalar - scalar is called &-&)
-    - some terms have the prefix scalar_ : they are functions on scalars
-      (ie scalar_log) or scalar values (scalar_one)
-*)
+(**************************************************************************)
+(*                                                                        *)
+(*                                FADBADml                                *)
+(*                                                                        *)
+(*           OCaml port by François Bidet and Ismail Bennani              *)
+(*     Based on FADBAD++, written by Ole Stauning and Claus Bendtsen      *)
+(*                                                                        *)
+(*                             Copyright 2019                             *)
+(*                                                                        *)
+(*   This file is distributed under the terms of the CeCILL-C license.    *)
+(*                                                                        *)
+(**************************************************************************)
 
-  type t
-  type elt
-  (** Type of values *)
-
-  type scalar
-  (** Type of scalars *)
-  (* (t, +, .) should be a commutative S-module where S is the set of scalars *)
-
-  val create : unit -> t
-  (* Create an arbitrary value from nothing *)
-
-  val make : elt -> t
-  (** Wrap a value *)
-
-  val integer : int -> t
-  (** Wrap an integer *)
-
-  val get : t -> elt
-  (** Unwrap a value *)
-  val ( !! ) : t -> elt
-  (** Alias for get *)
-
-  val to_string : t -> string
-  val string_of_scalar : scalar -> string
-  val string_of_elt : elt -> string
-
-  val copy : t -> t
-  val deepcopy : t -> t
-
-  val zero : unit -> t
-  (** Construct a fresh value corresponding to 0 *)
-  val one : unit -> t
-  (** Construct a fresh value corresponding to 1 *)
-  val two : unit -> t
-  (** Construct a fresh value corresponding to 2 *)
-
-  val scale : t -> scalar -> t
-  val translate : t -> scalar -> t
-
-  val ( ~+ ) : t -> t
-  (** unary plus (with copy) *)
-  val ( ~- ) : t -> t
-  (** unary minus (with copy) *)
-
-  val ( + ) : t -> t -> t
-  val ( += ) : t -> t -> t
-
-  val ( - ) : t -> t -> t
-  val ( -= ) : t -> t -> t
-
-  val ( * ) : t -> t -> t
-  val ( *= ) : t -> t -> t
-
-  val ( / ) : t -> t -> t
-  val ( /= ) : t -> t -> t
-
-  val ( ** ) : t -> t -> t
-
-  val inv : t -> t
-  val sqr : t -> t
-
-  val sqrt : t -> t
-  val log : t -> t
-  val exp : t -> t
-  val sin : t -> t
-  val cos : t -> t
-  val tan : t -> t
-  val asin : t -> t
-  val acos : t -> t
-  val atan : t -> t
-
-  val ( = ) : t -> t -> bool
-  val ( <> ) : t -> t -> bool
-end
-
-module type Order = sig
-  type t
-
-  val ( < ) : t -> t -> bool
-  val ( <= ) : t -> t -> bool
-  val ( > ) : t -> t -> bool
-  val ( >= ) : t -> t -> bool
-
-  val min : t -> t -> t
-  val max : t -> t -> t
-end
-
-module type OrderedS = sig
-  include S
-  include Order with type t := t
-end
-
-module OpFloat =
+module Float =
 struct
   type t = float ref
+
   type elt = float
   type scalar = float
 
@@ -167,12 +76,12 @@ end
 
 module OrderedFloat =
 struct
-  include OpFloat
-  let ( < ) x y = Stdlib.(!x < !y)
-  let ( <= ) x y = Stdlib.(!x <= !y)
-  let ( > ) x y = Stdlib.(!x > !y)
-  let ( >= ) x y = Stdlib.(!x >= !y)
+  include Float
+  let ( < ) x y = Stdlib.(get x < get y)
+  let ( <= ) x y = Stdlib.(get x <= get y)
+  let ( > ) x y = Stdlib.(get x > get y)
+  let ( >= ) x y = Stdlib.(get x >= get y)
 
-  let max f1 f2 = ref (max !f1 !f2)
-  let min f1 f2 = ref (min !f1 !f2)
+  let max f1 f2 = make (max (get f1) (get f2))
+  let min f1 f2 = make (min (get f1) (get f2))
 end

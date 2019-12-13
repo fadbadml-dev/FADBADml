@@ -11,31 +11,12 @@
 (*                                                                        *)
 (**************************************************************************)
 
+(** Forward Automatic Differentiation (FAD) *)
+
 open Fadbad_utils
 
-module type S =
-sig
-  include Op.S
-
-  type op_t
-
-  val diff : t -> int -> int -> unit
-  val d : t -> int -> elt
-  val deriv : t -> int -> op_t
-end
-
-module type OrderedS =
-sig
-  include S
-  include Op.OrderedS with type t := t and type elt := elt
-end
-
-module FTypeName (Op : Op.S) =
+module FTypeName (Op : Types.OpS) =
 struct
-
-  (** Type of a FAD node:
-      - [m_val] : value of the current node
-      - [m_diff] : derivatives of the current node wrt. each coordinates *)
 
   type op_t = Op.t
 
@@ -46,10 +27,9 @@ struct
 
   type elt = Op.elt
   type scalar = Op.scalar
-  (**/**)
-  let string_of_scalar = Op.string_of_scalar
+
+let string_of_scalar = Op.string_of_scalar
   let string_of_elt = Op.string_of_elt
-  (**/**)
 
   let to_string this =
     Printf.sprintf "{%s | [%s]}" (Op.to_string this.m_val)
@@ -526,7 +506,7 @@ struct
     res
 end
 
-module OrderedFTypeName(Op : Op.OrderedS) =
+module OrderedFTypeName(Op : Types.OrderedOpS) =
 struct
   include FTypeName(Op)
 
