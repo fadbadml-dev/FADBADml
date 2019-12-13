@@ -13,7 +13,7 @@
 
 (** Interface to library FADBADml *)
 
-(** {0 Basic types} *)
+(** {1 Basic types} *)
 
 (** Type of a module of operators *)
 module type OpS = Types.OpS
@@ -21,7 +21,7 @@ module type OpS = Types.OpS
 (** Type of a module of operators over ordered elements *)
 module type OrderedOpS = Types.OrderedOpS
 
-(** {0 Basic operators} *)
+(** {1 Basic operators} *)
 
 (** Operators over float elements *)
 module OpFloat = Op.Float
@@ -29,25 +29,25 @@ module OpFloat = Op.Float
 (** Operators over float elements, including comparison operators *)
 module OrderedFloat = Op.OrderedFloat
 
-(** {0 Forward Automatic Differentiation (FAD)} *)
+(** {1 Forward Automatic Differentiation (FAD)} *)
 
 (** Construct a FAD-like module from a module of operators *)
-module F(Op : OpS) = Fadiff.FTypeName(Op)
+module F(T : OpS) = Fadiff.FTypeName(T)
 
 (** Construct a FAD-like module from a module of operators over ordered
     elements *)
-module OrderedF(Op : OrderedOpS) = Fadiff.OrderedFTypeName(Op)
+module OrderedF(T : OrderedOpS) = Fadiff.OrderedFTypeName(T)
 
-(** {0 Backward Automatic Differentiation (BAD)} *)
+(** {1 Backward Automatic Differentiation (BAD)} *)
 
 (** Construct a BAD-like module from a module of operators *)
-module B(Op : OpS) = Badiff.BTypeName(Op)
+module B(T : OpS) = Badiff.BTypeName(T)
 
 (** Construct a BAD-like module from a module of operators over ordered
     elements *)
-module OrderedB(Op : OrderedOpS) = Badiff.OrderedBTypeName(Op)
+module OrderedB(T : OrderedOpS) = Badiff.OrderedBTypeName(T)
 
-(** {0 Automatic Taylor Expansion (TAD)} *)
+(** {1 Automatic Taylor Expansion (TAD)} *)
 
 (** Construct a TAD-like module from a module of operators *)
-module T (Op : OpS) = Tadiff.TTypeName(Op)
+module T (T : OpS) = Tadiff.TTypeName(T)
