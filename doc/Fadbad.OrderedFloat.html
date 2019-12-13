@@ -2,7 +2,7 @@
 <html>
 <head>
 <link rel="stylesheet" href="../css/doc_style.css" type="text/css">
-<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta content="text/html; charset=utf8" http-equiv="Content-Type">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="Start" href="index.html">
 <link rel="previous" href="Fadbad.OpFloat.html">
@@ -14,11 +14,11 @@
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Index of module types" rel=Appendix href="index_module_types.html">
 <link title="Badiff" rel="Chapter" href="Badiff.html">
-<link title="Fadbad" rel="Chapter" href="Fadbad.html">
-<link title="Fadbad_utils" rel="Chapter" href="Fadbad_utils.html">
 <link title="Fadiff" rel="Chapter" href="Fadiff.html">
 <link title="Op" rel="Chapter" href="Op.html">
-<link title="Tadiff" rel="Chapter" href="Tadiff.html"><title>FADBADml : Fadbad.OrderedFloat</title>
+<link title="Tadiff" rel="Chapter" href="Tadiff.html">
+<link title="Types" rel="Chapter" href="Types.html">
+<link title="Fadbad" rel="Chapter" href="Fadbad.html"><title>FADBADml : Fadbad.OrderedFloat</title>
 </head>
 <body>
 <div class="navbar"><a class="pre" href="Fadbad.OpFloat.html" title="Fadbad.OpFloat">Previous</a>
@@ -27,13 +27,14 @@
 </div>
 <h1>Module <a href="type_Fadbad.OrderedFloat.html">Fadbad.OrderedFloat</a></h1>
 
-<pre><span id="MODULEOrderedFloat"><span class="keyword">module</span> OrderedFloat</span>: <code class="type"><a href="Op.OrderedFloat.html">Op.OrderedFloat</a></code></pre><hr width="100%">
+<pre><span id="MODULEOrderedFloat"><span class="keyword">module</span> OrderedFloat</span>: <code class="type"><a href="Op.OrderedFloat.html">Op.OrderedFloat</a></code></pre><div class="info module top">
+<div class="info-desc">
+<p>Operators over float elements, including comparison operators</p>
+</div>
+</div>
+<hr width="100%">
 
-<pre><span class="keyword">include</span> OpFloat</pre>
+<pre><span class="keyword">include</span> <a href="Types.OpS.html">Types.OpS</a></pre>
 
-<pre><span id="VAL(<)"><span class="keyword">val</span> (&lt;)</span> : <code class="type">'a ref -> 'a ref -> bool</code></pre>
-<pre><span id="VAL(<=)"><span class="keyword">val</span> (&lt;=)</span> : <code class="type">'a ref -> 'a ref -> bool</code></pre>
-<pre><span id="VAL(>)"><span class="keyword">val</span> (&gt;)</span> : <code class="type">'a ref -> 'a ref -> bool</code></pre>
-<pre><span id="VAL(>=)"><span class="keyword">val</span> (&gt;=)</span> : <code class="type">'a ref -> 'a ref -> bool</code></pre>
-<pre><span id="VALmax"><span class="keyword">val</span> max</span> : <code class="type">'a ref -> 'a ref -> 'a ref</code></pre>
-<pre><span id="VALmin"><span class="keyword">val</span> min</span> : <code class="type">'a ref -> 'a ref -> 'a ref</code></pre></body></html>
+<pre><span class="keyword">include</span> <a href="Types.Order.html">Types.Order</a></pre>
+</body></html>

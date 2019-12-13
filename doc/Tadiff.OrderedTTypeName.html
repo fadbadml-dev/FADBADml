@@ -2,7 +2,7 @@
 <html>
 <head>
 <link rel="stylesheet" href="../css/doc_style.css" type="text/css">
-<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta content="text/html; charset=utf8" http-equiv="Content-Type">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="Start" href="index.html">
 <link rel="previous" href="Tadiff.TTypeName.html">
@@ -13,11 +13,11 @@
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Index of module types" rel=Appendix href="index_module_types.html">
 <link title="Badiff" rel="Chapter" href="Badiff.html">
-<link title="Fadbad" rel="Chapter" href="Fadbad.html">
-<link title="Fadbad_utils" rel="Chapter" href="Fadbad_utils.html">
 <link title="Fadiff" rel="Chapter" href="Fadiff.html">
 <link title="Op" rel="Chapter" href="Op.html">
-<link title="Tadiff" rel="Chapter" href="Tadiff.html"><title>FADBADml : Tadiff.OrderedTTypeName</title>
+<link title="Tadiff" rel="Chapter" href="Tadiff.html">
+<link title="Types" rel="Chapter" href="Types.html">
+<link title="Fadbad" rel="Chapter" href="Fadbad.html"><title>FADBADml : Tadiff.OrderedTTypeName</title>
 </head>
 <body>
 <div class="navbar"><a class="pre" href="Tadiff.TTypeName.html" title="Tadiff.TTypeName">Previous</a>
@@ -25,46 +25,211 @@
 &nbsp;</div>
 <h1>Functor <a href="type_Tadiff.OrderedTTypeName.html">Tadiff.OrderedTTypeName</a></h1>
 
-<pre><span id="MODULEOrderedTTypeName"><span class="keyword">module</span> OrderedTTypeName</span> <code class="code">(</code><code class="code">Op</code><code class="code"> : </code><code class="type"><a href="Op.OrderedS.html">Op.OrderedS</a></code><code class="code">) </code>: <code class="code">sig</code> <a href="Tadiff.OrderedTTypeName.html">..</a> <code class="code">end</code></pre><table border="0" cellpadding="3" width="100%">
+<pre><span id="MODULEOrderedTTypeName"><span class="keyword">module</span> OrderedTTypeName</span> <code class="code">(</code><code class="code">Ty</code><code class="code"> : </code><code class="type"><a href="Types.OrderedOpS.html">Types.OrderedOpS</a></code><code class="code">) </code>: <code class="code">sig</code> <a href="Tadiff.OrderedTTypeName.html">..</a> <code class="code">end</code></pre><div class="info module top">
+<div class="info-desc">
+<p>Extends <a href="Tadiff.TTypeName.html"><code class="code">TTypeName</code></a> with comparison operators.</p>
+</div>
+</div>
+<table border="0" cellpadding="3" width="100%">
 <tr>
 <td align="left" valign="top" width="1%%"><b>Parameters: </b></td>
 <td>
 <table class="paramstable">
 <tr>
 <td align="center" valign="top" width="15%">
-<code>Op</code></td>
+<code>Ty</code></td>
 <td align="center" valign="top">:</td>
-<td><code class="type"><a href="Op.OrderedS.html">Op.OrderedS</a></code>
+<td><code class="type"><a href="Types.OrderedOpS.html">Types.OrderedOpS</a></code>
+<div class="parameter-desc" >module of operators over the underlying type on which we perform
+              automatic differentiation
+</div>
+
+</tr>
 </table>
 </td>
 </tr>
 </table>
 <hr width="100%">
 
-<pre><span class="keyword">include</span> struct ... end</pre>
-<pre><code><span class="keyword">type</span> <code class="type"></code>op += </code></pre><table class="typetable">
+<pre><span class="keyword">include</span> <a href="Types.OrderedOpS.html">Types.OrderedOpS</a></pre>
+
+<pre><span id="TYPEop_t"><span class="keyword">type</span> <code class="type"></code>op_t</span> = <code class="type">Ty.t</code> </pre>
+<div class="info ">
+<div class="info-desc">
+<p>Underlying type</p>
+</div>
+</div>
+
+
+<pre><span id="TYPEop"><span class="keyword">type</span> <code class="type"></code>op</span> = ..</pre>
+
+<pre><code><span class="keyword">type</span> <code class="type"></code><a href="Tadiff.OrderedTTypeName.html#TYPEop">op</a> += </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span id="EXTENSIONMIN">MIN</span></code></td>
+<code><span id="EXTENSIONCONST">CONST</span></code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span id="EXTENSIONMAX">MAX</span></code></td>
+<code><span id="EXTENSIONSCALE">SCALE</span> <span class="keyword">of</span> <code class="type">scalar</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONTRANS">TRANS</span> <span class="keyword">of</span> <code class="type">scalar</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONSIN">SIN</span> <span class="keyword">of</span> <code class="type">Ty.t array</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONCOS">COS</span> <span class="keyword">of</span> <code class="type">Ty.t array</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONADD">ADD</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONSUB">SUB</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONMUL">MUL</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONDIV">DIV</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONPOW">POW</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONPOS">POS</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONNEG">NEG</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONINV">INV</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONSQR">SQR</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONSQRT">SQRT</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONEXP">EXP</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONLOG">LOG</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONTAN">TAN</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONASIN">ASIN</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONACOS">ACOS</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="EXTENSIONATAN">ATAN</span></code></td>
 
 </tr></table>
 
+<div class="info ">
+<div class="info-desc">
+<p>Defined operators. This type can be extended to define custom operators</p>
+</div>
+</div>
 
 
-<pre><span id="VALstring_of_op"><span class="keyword">val</span> string_of_op</span> : <code class="type">op -> string</code></pre>
+<pre><span id="VALstring_of_op"><span class="keyword">val</span> string_of_op</span> : <code class="type"><a href="Tadiff.OrderedTTypeName.html#TYPEop">op</a> -> string</code></pre>
+<pre><span id="VALoperator"><span class="keyword">val</span> operator</span> : <code class="type">t -> <a href="Tadiff.OrderedTTypeName.html#TYPEop">op</a></code></pre>
+<pre><span id="VALvalue"><span class="keyword">val</span> value</span> : <code class="type">t -> <a href="Tadiff.OrderedTTypeName.html#TYPEop_t">op_t</a></code></pre>
+<pre><span id="VALlift"><span class="keyword">val</span> lift</span> : <code class="type"><a href="Tadiff.OrderedTTypeName.html#TYPEop_t">op_t</a> -> t</code></pre>
+<pre><span id="VALorder"><span class="keyword">val</span> order</span> : <code class="type">t -> int</code></pre>
+<pre><span id="VALget_tvalues"><span class="keyword">val</span> get_tvalues</span> : <code class="type">t -> elt array</code></pre>
+<pre><span id="VALget_derivatives"><span class="keyword">val</span> get_derivatives</span> : <code class="type">t -> elt array</code></pre>
+<pre><span id="VALset"><span class="keyword">val</span> set</span> : <code class="type">t -> int -> <a href="Tadiff.OrderedTTypeName.html#TYPEop_t">op_t</a> -> unit</code></pre>
+<pre><span id="VALun_op"><span class="keyword">val</span> un_op</span> : <code class="type"><a href="Tadiff.OrderedTTypeName.html#TYPEop">op</a> -> t -> t</code></pre>
+<pre><span id="VALbin_op"><span class="keyword">val</span> bin_op</span> : <code class="type"><a href="Tadiff.OrderedTTypeName.html#TYPEop">op</a> -> t -> t -> t</code></pre>
+<pre><span id="VALd"><span class="keyword">val</span> d</span> : <code class="type">t -> int -> elt</code></pre>
+<pre><span id="VALderiv"><span class="keyword">val</span> deriv</span> : <code class="type">t -> int -> <a href="Tadiff.OrderedTTypeName.html#TYPEop_t">op_t</a></code></pre>
 <pre><span id="VALeval"><span class="keyword">val</span> eval</span> : <code class="type">t -> int -> int</code></pre>
-<pre><span id="VAL(<)"><span class="keyword">val</span> (&lt;)</span> : <code class="type">t -> t -> bool</code></pre>
-<pre><span id="VAL(<=)"><span class="keyword">val</span> (&lt;=)</span> : <code class="type">t -> t -> bool</code></pre>
-<pre><span id="VAL(>)"><span class="keyword">val</span> (&gt;)</span> : <code class="type">t -> t -> bool</code></pre>
-<pre><span id="VAL(>=)"><span class="keyword">val</span> (&gt;=)</span> : <code class="type">t -> t -> bool</code></pre>
-<pre><span id="VALmin"><span class="keyword">val</span> min</span> : <code class="type">'a -> 'b -> t -> t -> t</code></pre>
-<pre><span id="VALmax"><span class="keyword">val</span> max</span> : <code class="type">'a -> 'b -> t -> t -> t</code></pre></body></html>
+<pre><span id="VALreset"><span class="keyword">val</span> reset</span> : <code class="type">t -> unit</code></pre></body></html>

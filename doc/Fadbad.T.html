@@ -2,7 +2,7 @@
 <html>
 <head>
 <link rel="stylesheet" href="../css/doc_style.css" type="text/css">
-<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta content="text/html; charset=utf8" http-equiv="Content-Type">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="Start" href="index.html">
 <link rel="previous" href="Fadbad.OrderedB.html">
@@ -13,11 +13,11 @@
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Index of module types" rel=Appendix href="index_module_types.html">
 <link title="Badiff" rel="Chapter" href="Badiff.html">
-<link title="Fadbad" rel="Chapter" href="Fadbad.html">
-<link title="Fadbad_utils" rel="Chapter" href="Fadbad_utils.html">
 <link title="Fadiff" rel="Chapter" href="Fadiff.html">
 <link title="Op" rel="Chapter" href="Op.html">
-<link title="Tadiff" rel="Chapter" href="Tadiff.html"><title>FADBADml : Fadbad.T</title>
+<link title="Tadiff" rel="Chapter" href="Tadiff.html">
+<link title="Types" rel="Chapter" href="Types.html">
+<link title="Fadbad" rel="Chapter" href="Fadbad.html"><title>FADBADml : Fadbad.T</title>
 </head>
 <body>
 <div class="navbar"><a class="pre" href="Fadbad.OrderedB.html" title="Fadbad.OrderedB">Previous</a>
@@ -25,7 +25,12 @@
 &nbsp;</div>
 <h1>Functor <a href="type_Fadbad.T.html">Fadbad.T</a></h1>
 
-<pre><span id="MODULET"><span class="keyword">module</span> T</span> <code class="code">(</code><code class="code">Op</code><code class="code"> : </code><code class="type"><a href="Fadbad.OpS.html">OpS</a></code><code class="code">) </code>: <code class="type"><a href="Tadiff.TTypeName.html">TTypeName</a></code><code class="code">(</code><code class="type"><a href="Op.html">Op</a></code><code class="code">)</code></pre><table border="0" cellpadding="3" width="100%">
+<pre><span id="MODULET"><span class="keyword">module</span> T</span> <code class="code">(</code><code class="code">Op</code><code class="code"> : </code><code class="type"><a href="Fadbad.OpS.html">OpS</a></code><code class="code">) </code>: <code class="type"><a href="Tadiff.TTypeName.html">TTypeName</a></code><code class="code">(</code><code class="type"><a href="Op.html">Op</a></code><code class="code">)</code></pre><div class="info module top">
+<div class="info-desc">
+<p>Construct a TAD-like module from a module of operators</p>
+</div>
+</div>
+<table border="0" cellpadding="3" width="100%">
 <tr>
 <td align="left" valign="top" width="1%%"><b>Parameters: </b></td>
 <td>
@@ -41,11 +46,14 @@
 </table>
 <hr width="100%">
 
-<pre><span id="MODULETValues"><span class="keyword">module</span> <a href="Tadiff.TTypeName.TValues.html">TValues</a></span>: <code class="type"><a href="Tadiff.TValues.html">TValues</a></code><code class="code">(</code><code class="type"><a href="Op.html">Op</a></code><code class="code">)</code></pre>
-<pre><span id="TYPEelt"><span class="keyword">type</span> <code class="type"></code>elt</span> = <code class="type">Op.elt</code> </pre>
+<pre><span class="keyword">include</span> <a href="Types.OpS.html">Types.OpS</a></pre>
 
-
-<pre><span id="TYPEscalar"><span class="keyword">type</span> <code class="type"></code>scalar</span> = <code class="type">Op.scalar</code> </pre>
+<pre><span id="TYPEop_t"><span class="keyword">type</span> <code class="type"></code>op_t</span> = <code class="type">Ty.t</code> </pre>
+<div class="info ">
+<div class="info-desc">
+<p>Underlying type</p>
+</div>
+</div>
 
 
 <pre><span id="TYPEop"><span class="keyword">type</span> <code class="type"></code>op</span> = ..</pre>
@@ -62,28 +70,28 @@
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span id="EXTENSIONSCALE">SCALE</span> <span class="keyword">of</span> <code class="type"><a href="Tadiff.TTypeName.html#TYPEscalar">scalar</a></code></code></td>
+<code><span id="EXTENSIONSCALE">SCALE</span> <span class="keyword">of</span> <code class="type">scalar</code></code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span id="EXTENSIONTRANS">TRANS</span> <span class="keyword">of</span> <code class="type"><a href="Tadiff.TTypeName.html#TYPEscalar">scalar</a></code></code></td>
+<code><span id="EXTENSIONTRANS">TRANS</span> <span class="keyword">of</span> <code class="type">scalar</code></code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span id="EXTENSIONSIN">SIN</span> <span class="keyword">of</span> <code class="type">Op.t array</code></code></td>
+<code><span id="EXTENSIONSIN">SIN</span> <span class="keyword">of</span> <code class="type">Ty.t array</code></code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span id="EXTENSIONCOS">COS</span> <span class="keyword">of</span> <code class="type">Op.t array</code></code></td>
+<code><span id="EXTENSIONCOS">COS</span> <span class="keyword">of</span> <code class="type">Ty.t array</code></code></td>
 
 </tr>
 <tr>
@@ -199,93 +207,24 @@
 
 </tr></table>
 
+<div class="info ">
+<div class="info-desc">
+<p>Defined operators. This type can be extended to define custom operators</p>
+</div>
+</div>
 
 
-<pre><span id="TYPEop_t"><span class="keyword">type</span> <code class="type"></code>op_t</span> = <code class="type">Op.t</code> </pre>
-
-
-<pre><code><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> = {</code></pre><table class="typetable">
-<tr>
-<td align="left" valign="top" >
-<code>&nbsp;&nbsp;</code></td>
-<td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTt.operator">operator</span>&nbsp;: <code class="type"><a href="Tadiff.TTypeName.html#TYPEop">op</a></code>;</code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code>&nbsp;&nbsp;</code></td>
-<td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTt.operands">operands</span>&nbsp;: <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> array</code>;</code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code>&nbsp;&nbsp;</code></td>
-<td align="left" valign="top" >
-<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTt.tvalues">tvalues</span>&nbsp;: <code class="type">TValues.t</code>;</code></td>
-
-</tr></table>
-}
-
-
-
-<pre><span id="VALtvalues"><span class="keyword">val</span> tvalues</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> Op.t array</code></pre>
-<pre><span id="VALderivatives"><span class="keyword">val</span> derivatives</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> Op.t array</code></pre>
-<pre><span id="VALget_tvalues"><span class="keyword">val</span> get_tvalues</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> Op.elt array</code></pre>
-<pre><span id="VALget_derivatives"><span class="keyword">val</span> get_derivatives</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> Op.elt array</code></pre>
 <pre><span id="VALstring_of_op"><span class="keyword">val</span> string_of_op</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEop">op</a> -> string</code></pre>
-<pre><span id="VALto_short_string"><span class="keyword">val</span> to_short_string</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> string</code></pre>
-<pre><span id="VALto_string"><span class="keyword">val</span> to_string</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> string</code></pre>
-<pre><span id="VALstring_of_scalar"><span class="keyword">val</span> string_of_scalar</span> : <code class="type">Op.scalar -> string</code></pre>
-<pre><span id="VALstring_of_elt"><span class="keyword">val</span> string_of_elt</span> : <code class="type">Op.elt -> string</code></pre>
-<pre><span id="VALget_operands"><span class="keyword">val</span> get_operands</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> int -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALcreate"><span class="keyword">val</span> create</span> : <code class="type">unit -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALcreate_sized"><span class="keyword">val</span> create_sized</span> : <code class="type">int -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALlift"><span class="keyword">val</span> lift</span> : <code class="type">Op.t -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALmake"><span class="keyword">val</span> make</span> : <code class="type">Op.elt -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALmake_sized"><span class="keyword">val</span> make_sized</span> : <code class="type">Op.elt -> int -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALinteger"><span class="keyword">val</span> integer</span> : <code class="type">int -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALzero"><span class="keyword">val</span> zero</span> : <code class="type">unit -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALone"><span class="keyword">val</span> one</span> : <code class="type">unit -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALtwo"><span class="keyword">val</span> two</span> : <code class="type">unit -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALcopy"><span class="keyword">val</span> copy</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALdeepcopy"><span class="keyword">val</span> deepcopy</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALreset"><span class="keyword">val</span> reset</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> unit</code></pre>
-<pre><span id="VALvalue"><span class="keyword">val</span> value</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> Op.t</code></pre>
-<pre><span id="VALget"><span class="keyword">val</span> get</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> Op.elt</code></pre>
-<pre><span id="VAL(!!)"><span class="keyword">val</span> (!!)</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> Op.elt</code></pre>
-<pre><span id="VALderiv"><span class="keyword">val</span> deriv</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> int -> Op.t</code></pre>
-<pre><span id="VALd"><span class="keyword">val</span> d</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> int -> Op.elt</code></pre>
-<pre><span id="VALlength"><span class="keyword">val</span> length</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> int</code></pre>
-<pre><span id="VALset"><span class="keyword">val</span> set</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> int -> Op.t -> unit</code></pre>
-<pre><span id="VALeval"><span class="keyword">val</span> eval</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> int -> int</code></pre>
-<pre><span id="VALun_op"><span class="keyword">val</span> un_op</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEop">op</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALbin_op"><span class="keyword">val</span> bin_op</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEop">op</a> -><br>       <a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALbin_cOp"><span class="keyword">val</span> bin_cOp</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEop">op</a> -><br>       <a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALscale"><span class="keyword">val</span> scale</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEscalar">scalar</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALtranslate"><span class="keyword">val</span> translate</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEscalar">scalar</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VAL(~+)"><span class="keyword">val</span> (~+)</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VAL(~-)"><span class="keyword">val</span> (~-)</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VAL(+)"><span class="keyword">val</span> (+)</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VAL(+=)"><span class="keyword">val</span> (+=)</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VAL(-)"><span class="keyword">val</span> (-)</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VAL(-=)"><span class="keyword">val</span> (-=)</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VAL( * )"><span class="keyword">val</span> ( * )</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VAL( *= )"><span class="keyword">val</span> ( *= )</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VAL(/)"><span class="keyword">val</span> (/)</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VAL(/=)"><span class="keyword">val</span> (/=)</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALinv"><span class="keyword">val</span> inv</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALsqr"><span class="keyword">val</span> sqr</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALsqrt"><span class="keyword">val</span> sqrt</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALlog"><span class="keyword">val</span> log</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALexp"><span class="keyword">val</span> exp</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALsin"><span class="keyword">val</span> sin</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALcos"><span class="keyword">val</span> cos</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALtan"><span class="keyword">val</span> tan</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALasin"><span class="keyword">val</span> asin</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALacos"><span class="keyword">val</span> acos</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VALatan"><span class="keyword">val</span> atan</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VAL( ** )"><span class="keyword">val</span> ( ** )</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a></code></pre>
-<pre><span id="VAL(=)"><span class="keyword">val</span> (=)</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a> -> bool</code></pre>
-<pre><span id="VAL(<>)"><span class="keyword">val</span> (&lt;&gt;)</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEt">t</a> -> <a href="Tadiff.TTypeName.html#TYPEt">t</a> -> bool</code></pre></body></html>
+<pre><span id="VALoperator"><span class="keyword">val</span> operator</span> : <code class="type">t -> <a href="Tadiff.TTypeName.html#TYPEop">op</a></code></pre>
+<pre><span id="VALvalue"><span class="keyword">val</span> value</span> : <code class="type">t -> <a href="Tadiff.TTypeName.html#TYPEop_t">op_t</a></code></pre>
+<pre><span id="VALlift"><span class="keyword">val</span> lift</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEop_t">op_t</a> -> t</code></pre>
+<pre><span id="VALorder"><span class="keyword">val</span> order</span> : <code class="type">t -> int</code></pre>
+<pre><span id="VALget_tvalues"><span class="keyword">val</span> get_tvalues</span> : <code class="type">t -> elt array</code></pre>
+<pre><span id="VALget_derivatives"><span class="keyword">val</span> get_derivatives</span> : <code class="type">t -> elt array</code></pre>
+<pre><span id="VALset"><span class="keyword">val</span> set</span> : <code class="type">t -> int -> <a href="Tadiff.TTypeName.html#TYPEop_t">op_t</a> -> unit</code></pre>
+<pre><span id="VALun_op"><span class="keyword">val</span> un_op</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEop">op</a> -> t -> t</code></pre>
+<pre><span id="VALbin_op"><span class="keyword">val</span> bin_op</span> : <code class="type"><a href="Tadiff.TTypeName.html#TYPEop">op</a> -> t -> t -> t</code></pre>
+<pre><span id="VALd"><span class="keyword">val</span> d</span> : <code class="type">t -> int -> elt</code></pre>
+<pre><span id="VALderiv"><span class="keyword">val</span> deriv</span> : <code class="type">t -> int -> <a href="Tadiff.TTypeName.html#TYPEop_t">op_t</a></code></pre>
+<pre><span id="VALeval"><span class="keyword">val</span> eval</span> : <code class="type">t -> int -> int</code></pre>
+<pre><span id="VALreset"><span class="keyword">val</span> reset</span> : <code class="type">t -> unit</code></pre></body></html>

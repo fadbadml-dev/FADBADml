@@ -2,7 +2,7 @@
 <html>
 <head>
 <link rel="stylesheet" href="../css/doc_style.css" type="text/css">
-<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta content="text/html; charset=utf8" http-equiv="Content-Type">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="Start" href="index.html">
 <link rel="previous" href="Fadiff.html">
@@ -14,11 +14,11 @@
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Index of module types" rel=Appendix href="index_module_types.html">
 <link title="Badiff" rel="Chapter" href="Badiff.html">
-<link title="Fadbad" rel="Chapter" href="Fadbad.html">
-<link title="Fadbad_utils" rel="Chapter" href="Fadbad_utils.html">
 <link title="Fadiff" rel="Chapter" href="Fadiff.html">
 <link title="Op" rel="Chapter" href="Op.html">
-<link title="Tadiff" rel="Chapter" href="Tadiff.html"><title>FADBADml : Op</title>
+<link title="Tadiff" rel="Chapter" href="Tadiff.html">
+<link title="Types" rel="Chapter" href="Types.html">
+<link title="Fadbad" rel="Chapter" href="Fadbad.html"><title>FADBADml : Op</title>
 </head>
 <body>
 <div class="navbar"><a class="pre" href="Fadiff.html" title="Fadiff">Previous</a>
@@ -27,10 +27,22 @@
 </div>
 <h1>Module <a href="type_Op.html">Op</a></h1>
 
-<pre><span id="MODULEOp"><span class="keyword">module</span> Op</span>: <code class="code">sig</code> <a href="Op.html">..</a> <code class="code">end</code></pre><hr width="100%">
+<pre><span id="MODULEOp"><span class="keyword">module</span> Op</span>: <code class="code">sig</code> <a href="Op.html">..</a> <code class="code">end</code></pre><div class="info module top">
+<div class="info-desc">
+<p>Predefined operator modules</p>
+</div>
+</div>
+<hr width="100%">
 
-<pre><span id="MODULETYPES"><span class="keyword">module type</span> <a href="Op.S.html">S</a></span> = <code class="code">sig</code> <a href="Op.S.html">..</a> <code class="code">end</code></pre>
-<pre><span id="MODULETYPEOrder"><span class="keyword">module type</span> <a href="Op.Order.html">Order</a></span> = <code class="code">sig</code> <a href="Op.Order.html">..</a> <code class="code">end</code></pre>
-<pre><span id="MODULETYPEOrderedS"><span class="keyword">module type</span> <a href="Op.OrderedS.html">OrderedS</a></span> = <code class="code">sig</code> <a href="Op.OrderedS.html">..</a> <code class="code">end</code></pre>
-<pre><span id="MODULEOpFloat"><span class="keyword">module</span> <a href="Op.OpFloat.html">OpFloat</a></span>: <code class="code">sig</code> <a href="Op.OpFloat.html">..</a> <code class="code">end</code></pre>
-<pre><span id="MODULEOrderedFloat"><span class="keyword">module</span> <a href="Op.OrderedFloat.html">OrderedFloat</a></span>: <code class="code">sig</code> <a href="Op.OrderedFloat.html">..</a> <code class="code">end</code></pre></body></html>
+<pre><span id="MODULEFloat"><span class="keyword">module</span> <a href="Op.Float.html">Float</a></span>: <code class="type"><a href="Types.OpS.html">Types.OpS</a></code><code class="type">  with type elt = float and type scalar = float</code></pre><div class="info">
+<p><code class="code">float</code> operators.</p>
+
+</div>
+
+<pre><span id="MODULEOrderedFloat"><span class="keyword">module</span> <a href="Op.OrderedFloat.html">OrderedFloat</a></span>: <code class="type"><a href="Types.OrderedOpS.html">Types.OrderedOpS</a></code><code class="type"> 
+                      with type elt = float
+                      and type scalar = float</code></pre><div class="info">
+<p><code class="code">float</code> operators with comparison.</p>
+
+</div>
+</body></html>
