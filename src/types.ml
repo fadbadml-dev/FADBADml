@@ -11,6 +11,8 @@
 (*                                                                        *)
 (**************************************************************************)
 
+(** *)
+
 (** Module of comparison operators *)
 module type Order =
 sig
@@ -39,6 +41,11 @@ sig
   (* (t, +, .) should be a commutative S-module where S is the set of scalars
      where + : t -> t -> t and . : t -> scalar -> t. *)
 
+  val copy : t -> t
+  val deepcopy : t -> t
+
+  (** {1 Constructors} *)
+
   val create : unit -> t
   (* Create an arbitrary value from nothing *)
 
@@ -48,31 +55,30 @@ sig
   val integer : int -> t
   (** Wrap an integer *)
 
+  val zero : unit -> t
+  (** Construct a fresh value corresponding to 0 *)
+
+  val one : unit -> t
+  (** Construct a fresh value corresponding to 1 *)
+
+  val two : unit -> t
+  (** Construct a fresh value corresponding to 2 *)
+
+  (** {1 Destructors} *)
+
   val get : t -> elt
   (** Unwrap a value *)
+
   val ( !! ) : t -> elt
   (** Alias for [get] *)
 
   val to_string : t -> string
+
   val string_of_scalar : scalar -> string
+
   val string_of_elt : elt -> string
 
-  val copy : t -> t
-  val deepcopy : t -> t
-
-  val zero : unit -> t
-  (** Construct a fresh value corresponding to 0 *)
-  val one : unit -> t
-  (** Construct a fresh value corresponding to 1 *)
-  val two : unit -> t
-  (** Construct a fresh value corresponding to 2 *)
-
-  val scale : t -> scalar -> t
-  (** Multiplication between a value and a scalar *)
-  val translate : t -> scalar -> t
-  (** Addition between a value and a scalar *)
-
-  (** {0 Arithmetic operators} *)
+  (** {1 Arithmetic operators} *)
 
   val ( ~+ ) : t -> t
   (** unary plus (with copy) *)
@@ -105,6 +111,13 @@ sig
   val asin : t -> t
   val acos : t -> t
   val atan : t -> t
+
+  (** {1 Scalar operators} *)
+
+  val scale : t -> scalar -> t
+  (** Multiplication between a value and a scalar *)
+  val translate : t -> scalar -> t
+  (** Addition between a value and a scalar *)
 
   (** {1 Comparison operators} *)
 

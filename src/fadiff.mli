@@ -12,38 +12,64 @@
 (**************************************************************************)
 
 (** Re-define usual operators to compute values and derivatives for elements of
-    type Ty.t in forward mode.
-    @param Ty module of operators over the underlying type on which we perform
+    type T.t in forward mode.
+    @param T module of operators over the underlying type on which we perform
               automatic differentiation *)
-module FTypeName (Ty : Types.OpS) :
+module FTypeName (T : Types.OpS) :
 sig
-  include Types.OpS with type elt = Ty.elt
-                    and type scalar = Ty.scalar
+  include Types.OpS with type elt = T.elt
+                    and type scalar = T.scalar
 
-  type op_t = Ty.t
+  (** {1 Additionnal constructors} *)
 
-  val value : t -> op_t
-  val lift : op_t -> t
+  val lift : T.t -> t
+
+  (** {1 Accessors} *)
+
+  val value : t -> T.t
+  (** Same as {!get} but returns an {!T.t} instead of an {!elt} *)
+
+  (** {1  Automatic Differentiation} *)
 
   val diff : t -> int -> int -> unit
+  (** [diff x i n] assigns [i] as index of variable [x] out of [n] *)
+
   val d : t -> int -> elt
-  val deriv : t -> int -> op_t
+  (** [d f i] retrieves the derivative of variable of index [i] in
+      computation [f] as an [elt] *)
+
+  val deriv : t -> int -> T.t
+  (** [deriv f i] retrieves the derivative of variable of index [i] in
+      computation [f] *)
 end
 
 (** Extends {!FTypeName} with comparison operators.
-    @param Ty module of operators over the underlying type on which we perform
+    @param T module of operators over the underlying type on which we perform
               automatic differentiation *)
-module OrderedFTypeName(Ty : Types.OrderedOpS) :
+module OrderedFTypeName(T : Types.OrderedOpS) :
 sig
-  include Types.OrderedOpS with type elt = Ty.elt
-                           and type scalar = Ty.scalar
+  include Types.OrderedOpS with type elt = T.elt
+                           and type scalar = T.scalar
 
-  type op_t = Ty.t
+  (** {1 Additionnal constructors} *)
 
-  val value : t -> op_t
-  val lift : op_t -> t
+  val lift : T.t -> t
+
+  (** {1 Accessors} *)
+
+  val value : t -> T.t
+  (** Same as {!get} but returns an {!T.t} instead of an {!elt} *)
+
+  (** {1  Automatic Differentiation} *)
 
   val diff : t -> int -> int -> unit
+  (** [diff x i n] assigns [i] as index of variable [x] out of [n] *)
+
   val d : t -> int -> elt
-  val deriv : t -> int -> op_t
+  (** [d f i] retrieves the derivative of variable of index [i] in
+      computation [f] as an [elt] *)
+
+  val deriv : t -> int -> T.t
+  (** [deriv f i] retrieves the derivative of variable of index [i] in
+      computation [f] *)
 end
