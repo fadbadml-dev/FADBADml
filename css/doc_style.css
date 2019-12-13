@@ -81,20 +81,29 @@ div.info > p:first-child{ margin-top:0; }
 div.info-desc > p:first-child { margin-top:0; margin-bottom:0; }
 
 .indextable {
+  margin-top:10%;
   border-style : hidden;
+  border-collapse: collapse;
   width: 100%;
 }
 
-.indextable:before {
-  content:"Module list";
-  text-align: center;
-  font-weight: bold;
-  font-size:2rem;
-  display:block;
-  width:100%;
+.indextable tr {
+    border-bottom: 1px solid #ccc;
+}
+.indextable tr td {
+  vertical-align: middle;
+  padding-top:10px;
+  padding-bottom:10px;
+}
+.indextable tr td .info p {
+  padding:0;
+  margin:0;
 }
 .indextable tr td:first-child:before {
   content:"> ";
+}
+.indextable tr td:first-child {
+  width:20%;
 }
 
 .indexlist {
