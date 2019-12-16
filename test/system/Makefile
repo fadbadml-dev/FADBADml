@@ -22,11 +22,11 @@ cleanall: clean
 
 # comparisons
 
-$(TARGET:%=compare_%): cpp ml
-	./compare.py -prog $(@:compare_%=%) -n 100
+$(TARGET:%=compare_%): cpp opt
+	./compare.py $(@:compare_%=%) -n 100
 
-compare_fad_bad: fadcpp fadml badcpp badml
-	./compare.py -prog fad_bad -n 100
+compare_fad_bad: fadcpp fadmlopt badcpp badmlopt
+	./compare.py fad_bad -n 100
 
 test: compare_fad_bad compare_tad
 
