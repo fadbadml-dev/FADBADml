@@ -1,4 +1,5 @@
 [Fadbad.B]: doc/Fadbad.B.html
+[FADBAD++ website]: http://www.fadbad.com/fadbad.html#CrashCourse
 
 ## Backward automatic differentiation (BAD)
 
@@ -94,6 +95,8 @@ let dfdy = B.d y 0; (* contains df/dy *)
 There are several things going on here:
 - first, note that the function `d` is called on the leaves in BAD whereas it was called on the root in FAD. This is due to what we discussed [in a previous note](#note1).
 - second, there is no `compute` function in FADBAD++, we added this to solve what we think is a bug in the C++ implementation (refer to [this](not-done-yet)).
-Countrary to what its name suggests, this function does not compute anything, it increments the reference counter (`rc` field) of the nodes in the subtree starting at `f` so that we know when to propagate during the actual computation (that is performed by `d`).
+The call to compute is what actually propagates the derivatives from `z` to `x` and `y`.
+<i class="fas fa-exclamation-circle red"></i> However, if there are several expressions that we want to differentiate (eg. `z` and `z'`), we would need to call `compute_list` (and not `compute` twice) on all the variables (eg. `compute_list [z; z']`).
 
 Find a similar code [here](https://github.com/fadbadml-dev/FADBADml/blob/master/example/exampleBAD.ml).
+For more information, please refer to [FADBAD++ website].
