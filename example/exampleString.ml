@@ -132,7 +132,7 @@ module OpString =
 
 module F = Fadbad.F(OpString)
 
-module Func (Op : Fadbad.Op.S) =
+module Func (Op : Fadbad.OpS) =
   struct
     let exec x y =
       let open Op in

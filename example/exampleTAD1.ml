@@ -12,7 +12,7 @@
 (**************************************************************************)
 
 module OpFloat = Fadbad.OpFloat
-module T : Fadbad.TS with type elt = float and type op_t = OpFloat.t = Fadbad.T(OpFloat)
+module T = Fadbad.T(OpFloat)
 
 let f x y =
   let open T in

@@ -11,7 +11,7 @@
 (*                                                                        *)
 (**************************************************************************)
 
-module type OpFloatS = Fadbad.Op.S with type elt = float and type scalar = float
+module type OpFloatS = Fadbad.OpS with type elt = float and type scalar = float
 
 type 'a dprice =
   {

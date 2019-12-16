@@ -35,12 +35,12 @@ type 'a diff2 =
 
 
 module type FuncS =
-  functor(Op : Fadbad.Op.S) ->
+  functor(Op : Fadbad.OpS) ->
   sig
     val exec: Op.t -> Op.t -> Op.t
   end
 
-module DFunc (Func : FuncS) (Op : Fadbad.Op.S) =
+module DFunc (Func : FuncS) (Op : Fadbad.OpS) =
   struct
     module B = Fadbad.B(Op)
     module Func = Func(B)
@@ -59,7 +59,7 @@ module DFunc (Func : FuncS) (Op : Fadbad.Op.S) =
       }
   end
 
-module DDFunc (Func : FuncS) (Op : Fadbad.Op.S) =
+module DDFunc (Func : FuncS) (Op : Fadbad.OpS) =
   struct
     module F = Fadbad.F(Op)
     module DFunc = DFunc(Func)(F)
@@ -83,7 +83,7 @@ module DDFunc (Func : FuncS) (Op : Fadbad.Op.S) =
   end
 
 
-module MyFunc1 (Op : Fadbad.Op.S) =
+module MyFunc1 (Op : Fadbad.OpS) =
   struct
     let exec x y =
       let open Op in
@@ -93,7 +93,7 @@ module MyFunc1 (Op : Fadbad.Op.S) =
     let to_string = "y * (sqrt x) + (sin (sqrt x))"
   end
 
-module MyFunc2 (Op : Fadbad.Op.S) =
+module MyFunc2 (Op : Fadbad.OpS) =
   struct
     let exec x y =
       let open Op in

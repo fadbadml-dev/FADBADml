@@ -88,10 +88,10 @@ let () =
   let module Exp = Experiment(Brusselator)(Op) in
   let s0 = [| Op.make_bounds 1.45 1.55; Op.make_bounds 2.95 3.05 |] in
   let t0 = 0. in
-  let tEnd = ref 8. in
-  let dt = ref 1e-1 in
+  let tEnd = ref 2. in
+  let dt = ref 2e-2 in
   let order = ref 3 in
-  let display_threshold = ref 1e-3 in
+  let display_threshold = ref 3e-3 in
 
   Arg.(parse [
            "-tend", Set_float tEnd, "final time";
