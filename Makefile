@@ -38,6 +38,10 @@ doc: lib
 		$(shell find src -name "*.mli") \
 		$(shell find src -name "*.ml" -a ! -name 'fadbad_utils.ml')
 
+makedist:
+	mkdir -p fadbadml
+	cp -r example fadbadml
+	cp -r lib fadbadml
 
 example: lib_byte
 	$(MAKE) -C example
