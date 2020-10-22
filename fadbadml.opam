@@ -1,6 +1,6 @@
 opam-version: "2.0"
 name: "fadbadml"
-version: "0.1"
+version: "0.1.1"
 synopsis: "FADBAD++ for OCaml"
 maintainer: [
   "francois-bidet <fbidet@lix.polytechnique.fr>"
