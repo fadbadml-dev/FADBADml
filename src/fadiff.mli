@@ -29,6 +29,9 @@ sig
   val value : t -> T.t
   (** Same as {!get} but returns an {!T.t} instead of an {!elt} *)
 
+  val dim: t -> int
+  (** Size of differentiation vector *)
+
   (** {1  Automatic Differentiation} *)
 
   val diff : t -> int -> int -> unit
@@ -38,9 +41,15 @@ sig
   (** [d f i] retrieves the derivative of variable of index [i] in
       computation [f] as an [elt] *)
 
+  val set_deriv : t -> int -> T.t -> unit
+  (** [set_deriv f i x] sets the derivative of [f] with respect to 
+      the variable of index [i] to [x] *)
+
   val deriv : t -> int -> T.t
   (** [deriv f i] retrieves the derivative of variable of index [i] in
       computation [f] *)
+
+  val reset_diff : t -> unit
 end
 
 (** Extends {!FTypeName} with comparison operators.
@@ -60,10 +69,17 @@ sig
   val value : t -> T.t
   (** Same as {!get} but returns an {!T.t} instead of an {!elt} *)
 
+  val dim: t -> int
+  (** Size of differentiation vector *)
+
   (** {1  Automatic Differentiation} *)
 
   val diff : t -> int -> int -> unit
   (** [diff x i n] assigns [i] as index of variable [x] out of [n] *)
+
+  val set_deriv : t -> int -> T.t -> unit
+  (** [set_deriv f i x] sets the derivative of [f] with respect to 
+      the variable of index [i] to [x] *)
 
   val d : t -> int -> elt
   (** [d f i] retrieves the derivative of variable of index [i] in
@@ -72,4 +88,6 @@ sig
   val deriv : t -> int -> T.t
   (** [deriv f i] retrieves the derivative of variable of index [i] in
       computation [f] *)
+
+  val reset_diff : t -> unit
 end

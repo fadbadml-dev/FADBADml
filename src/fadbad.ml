@@ -51,3 +51,9 @@ module OrderedB(T : OrderedOpS) = Badiff.OrderedBTypeName(T)
 
 (** Construct a TAD-like module from a module of operators *)
 module T (T : OpS) = Tadiff.TTypeName(T)
+
+(** {1 Low level implementation} *)
+
+module Fadiff = Fadiff
+module Badiff = Badiff
+module Tadiff = Tadiff

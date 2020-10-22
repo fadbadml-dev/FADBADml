@@ -38,6 +38,11 @@ let string_of_scalar = T.string_of_scalar
     m_diff = Array.make 0 (T.zero ());
   }
 
+  let reset_diff this =
+    for i = 0 to Array.length this.m_diff - 1 do
+      this.m_diff.(i) <- T.zero ()
+    done
+
   let get v = T.get v.m_val
   let ( !! ) = get
 
@@ -71,6 +76,9 @@ let string_of_scalar = T.string_of_scalar
 
   let dim v = Array.length v.m_diff
   let value v = v.m_val
+
+  let set_deriv v i x =
+    if i < (dim v) then v.m_diff.(i) <- x
 
   let deriv v i =
     if i < (dim v) then v.m_diff.(i)
