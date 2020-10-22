@@ -5,7 +5,7 @@
 (*           OCaml port by François Bidet and Ismail Bennani              *)
 (*     Based on FADBAD++, written by Ole Stauning and Claus Bendtsen      *)
 (*                                                                        *)
-(*                             Copyright 2019                             *)
+(*                          Copyright 2019-2020                           *)
 (*                                                                        *)
 (*   This file is distributed under the terms of the CeCILL-C license.    *)
 (*                                                                        *)
