@@ -4,6 +4,7 @@ echo
 echo \#\#\#\# Switching to master
 
 git checkout master
+git pull --rebase
 
 echo
 echo \#\#\#\# Building documentation
