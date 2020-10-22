@@ -52,6 +52,12 @@
 <p>Same as <code class="code">get</code> but returns an <code class="code">T.t</code> instead of an <code class="code">elt</code></p>
 </div>
 </div>
+
+<pre><span id="VALdim"><span class="keyword">val</span> dim</span> : <code class="type">t -> int</code></pre><div class="info ">
+<div class="info-desc">
+<p>Size of differentiation vector</p>
+</div>
+</div>
 <h2 id="1_AutomaticDifferentiation"> Automatic Differentiation</h2>
 <pre><span id="VALdiff"><span class="keyword">val</span> diff</span> : <code class="type">t -> int -> int -> unit</code></pre><div class="info ">
 <div class="info-desc">
@@ -66,10 +72,18 @@
 </div>
 </div>
 
+<pre><span id="VALset_deriv"><span class="keyword">val</span> set_deriv</span> : <code class="type">t -> int -> T.t -> unit</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">set_deriv f i x</code> sets the derivative of <code class="code">f</code> with respect to 
+      the variable of index <code class="code">i</code> to <code class="code">x</code></p>
+</div>
+</div>
+
 <pre><span id="VALderiv"><span class="keyword">val</span> deriv</span> : <code class="type">t -> int -> T.t</code></pre><div class="info ">
 <div class="info-desc">
 <p><code class="code">deriv f i</code> retrieves the derivative of variable of index <code class="code">i</code> in
       computation <code class="code">f</code></p>
 </div>
 </div>
-</body></html>
+
+<pre><span id="VALreset_diff"><span class="keyword">val</span> reset_diff</span> : <code class="type">t -> unit</code></pre></body></html>
