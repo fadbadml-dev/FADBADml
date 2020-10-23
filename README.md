@@ -11,19 +11,26 @@ This library is an OCaml porting of [FADBAD++](http://www.fadbad.com), a softwar
 
 # Installation
 
-After cloning, you can:
-- build and install **with** opam:
+After cloning, you can install with:
+
 ```
   cd path/to/repo
   opam install .
 ```
 
-- build and install **without** opam:
+or 
+
 ```
   cd path/to/repo
-  ./configure
-  make
-  sudo make install
+  dune build
+  dune install
+```
+
+# Tests
+
+Run tests:
+```
+  dune runtest
 ```
 
 # Usage
