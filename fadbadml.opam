@@ -8,7 +8,7 @@ maintainer: ["fbidet@lix.polytechnique.fr" "ismail.lahkim.bennani@ens.fr"]
 authors: ["François Bidet" "Ismail Bennani"]
 license: "CECILL-C"
 homepage: "https://fadbadml-dev.github.io/FADBADml/"
-doc: "https://fadbadml-dev.github.io/FADBADml/doc/Fadbad.html"
+doc: "https://fadbadml-dev.github.io/FADBADml/doc/"
 bug-reports: "https://github.com/fadbadml-dev/FADBADml/issues"
 depends: [
   "dune" {>= "2.7"}

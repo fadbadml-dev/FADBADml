@@ -6,7 +6,7 @@
 
 (source (github fadbadml-dev/FADBADml))
 (homepage "https://fadbadml-dev.github.io/FADBADml/")
-(documentation https://fadbadml-dev.github.io/FADBADml/doc/Fadbad.html)
+(documentation https://fadbadml-dev.github.io/FADBADml/doc/)
 (license CECILL-C)
 (authors "François Bidet" "Ismail Bennani")
 (maintainers "fbidet@lix.polytechnique.fr" "ismail.lahkim.bennani@ens.fr")
