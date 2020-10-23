@@ -82,6 +82,7 @@ sig
 
   val ( ~+ ) : t -> t
   (** unary plus (with copy) *)
+
   val ( ~- ) : t -> t
   (** unary minus (with copy) *)
 
@@ -116,6 +117,7 @@ sig
 
   val scale : t -> scalar -> t
   (** Multiplication between a value and a scalar *)
+  
   val translate : t -> scalar -> t
   (** Addition between a value and a scalar *)
 
