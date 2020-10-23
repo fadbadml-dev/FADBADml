@@ -40,7 +40,7 @@ let int_float : float QCheck.arbitrary =
     ~print:string_of_float
     ~shrink:QCheck.Shrink.nil
     ~small:(fun _ -> 1)
-    (let rec int_float_gen rand =
+    (let int_float_gen rand =
        let f = QCheck.Gen.int rand in float f
      in int_float_gen)
 
@@ -49,7 +49,7 @@ let int_float_range low high : float QCheck.arbitrary =
     ~print:string_of_float
     ~shrink:QCheck.Shrink.nil
     ~small:(fun _ -> 1)
-    (let rec int_float_range_gen rand =
+    (let int_float_range_gen rand =
        let f = QCheck.Gen.int_range low high rand in float f
      in int_float_range_gen)
 

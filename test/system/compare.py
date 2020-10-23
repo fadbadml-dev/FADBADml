@@ -54,7 +54,7 @@ def compare_(id, ntests, mindt=0., maxdt=1., minsteps=0, maxsteps=2,
         if verbose:
             cur_time = time() - starttime;
             print("testing: | %*d/%d | (approx time: %.2fs)" %\
-                (padsize, i, ntests, cur_time), end="\r")
+                (padsize, i, ntests, cur_time), end="\r", file=sys.stderr)
         nsteps = randint(minsteps, maxsteps)
         dt = random() * (maxdt - mindt) + mindt
 
@@ -62,13 +62,13 @@ def compare_(id, ntests, mindt=0., maxdt=1., minsteps=0, maxsteps=2,
 
         if not ok:
             if verbose:
-                print()
-                print("Failure with JSONs:")
+                print(file=sys.stderr)
+                print("Failure with JSONs:", file=sys.stderr)
                 for js in jsons:
-                    print("\t%s" % js)
+                    print("\t%s" % js, file=sys.stderr)
             return jsons, False
     global_env["progress"][id] = ntests
-    if verbose: print()
+    if verbose: print(file=sys.stderr)
     return [], True
 
 def compare(n, **kwargs): return compare_(0, n, verbose=True, **kwargs)
@@ -95,7 +95,7 @@ def compare_parallel(ntests, nprocesses=4, **kwargs):
                     cur_count += "%*d/%d | " %\
                         (padsize, global_env["progress"][i], args[i][1])
                 print("testing: |", cur_count, "(approx time: %.2fs)" %\
-                        (count / 10), end="\r")
+                        (count / 10), end="\r", file=sys.stderr)
             count += 1
             sleep(0.1)
         p.close()
@@ -105,15 +105,15 @@ def compare_parallel(ntests, nprocesses=4, **kwargs):
         cur_count += "%*d/%d | " %\
             (padsize, global_env["progress"][i], args[i][1])
     print("testing: |", cur_count, "(approx time: %.2fs)" %\
-            (count / 10), end="\r")
+            (count / 10), end="\r", file=sys.stderr)
     for (jsons, ok) in res.get():
         if not ok:
-            print()
-            print("Failure with JSONs:")
+            print(file=sys.stderr)
+            print("Failure with JSONs:", file=sys.stderr)
             for js in jsons:
-                print("\t%s" % js)
+                print("\t%s" % js, file=sys.stderr)
             return jsons, False
-    print()
+    print(file=sys.stderr)
     return [], True
 
 if __name__ == "__main__":
@@ -144,16 +144,16 @@ if __name__ == "__main__":
                "minsteps": args.minsteps, "maxsteps": args.maxsteps,
                "mindt": args.mindt, "maxdt": args.maxdt }
 
-    print("Options:", kwargs)
+    print("Options:", kwargs, file=sys.stderr)
 
     if args.prog == "fad":
-        global_env["exe"] = ["fadcpp", "fadml"]
+        global_env["exe"] = ["fadcpp.exe", "fadml.exe"]
     elif args.prog == "bad":
-        global_env["exe"] = ["badcpp", "badml"]
+        global_env["exe"] = ["badcpp.exe", "badml.exe"]
     elif args.prog == "tad":
-        global_env["exe"] = ["tadcpp", "tadml"]
+        global_env["exe"] = ["tadcpp.exe", "tadml.exe"]
     elif args.prog == "fad_bad":
-        global_env["exe"] = ["fadcpp", "fadml", "badcpp", "badml"]
+        global_env["exe"] = ["fadcpp.exe", "fadml.exe", "badcpp.exe", "badml.exe"]
     else:
         print("Unknown value '%s' for argument prog" % args.prog, file=sys.stderr)
         parser.print_help(sys.stderr)

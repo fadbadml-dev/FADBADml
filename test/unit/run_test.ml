@@ -39,7 +39,7 @@ let eq_float_tuple (a1,a2) (b1,b2) = (eq_float a1 b1) && (eq_float a2 b2)
 let string_of_float_tuple (f1, f2) = Printf.sprintf "(%f,%f)" f1 f2
 
 let check_results results =
-  Array.for_all (fun (cell, res) ->
+  Array.for_all (fun (_, res) ->
       match res.QCheck.TestResult.state with
       | Success -> true
       | Error _ | Failed _ | Failed_other _ -> false
@@ -293,7 +293,7 @@ struct
     | Success ->
       Printf.printf "%s\t:\tOK\n" (QCheck.Test.get_name cell)
     | Failed { instances = instance :: _ }
-    | Error { instance } ->
+    | Error { instance; _ } ->
       let name = QCheck.Test.get_name cell in
       let arb = QCheck.Test.get_arbitrary cell in
       let c_ex = instance.instance in
