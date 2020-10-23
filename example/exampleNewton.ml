@@ -11,6 +11,9 @@
 (*                                                                        *)
 (**************************************************************************)
 
+let user_assert b s =
+if not b then begin Printf.eprintf "User assertion failed: %s\n" s; exit 1 end 
+
 module OpFun =
   struct
     type elt = float -> float
@@ -42,9 +45,9 @@ module OpFun =
     let translate f a = make (fun x -> (!f x) +. a)
 
     let diff_n _ _ _ d =
-      Fadbad_utils.user_assert (d = 0) "diff_n : cannot differentiate a float"
+      user_assert (d = 0) "diff_n : cannot differentiate a float"
     let d_n v i_l =
-      Fadbad_utils.user_assert (i_l = []) "d_n : cannot get derivative of a float";
+      user_assert (i_l = []) "d_n : cannot get derivative of a float";
       get v
 
     let apply f x = !f x
