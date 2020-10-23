@@ -61,6 +61,10 @@ sig
 
   val compute_list : t list -> unit
   (** Same as running {!compute} on each element of the input list. *)
+
+  (** {1 Printers} *)
+  
+  val fprint : Format.formatter -> t -> unit
 end
 
 (** Extends {!BTypeName} with comparison operators.

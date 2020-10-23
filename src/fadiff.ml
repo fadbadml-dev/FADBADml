@@ -258,7 +258,7 @@ let string_of_scalar = T.string_of_scalar
                       T.((v.m_diff.(i) * v'.m_val) + (v'.m_diff.(i) * v.m_val))
                   )
         v.m_diff
-    | true, _ -> Array.iteri (fun i vi -> ignore T.(vi *= v'.m_val))
+    | true, _ -> Array.iter (fun vi -> ignore T.(vi *= v'.m_val))
                    v.m_diff
     | _ -> (* _, true *)
       setDepend v v';

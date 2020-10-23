@@ -31,7 +31,7 @@ struct
       (String.concat ", "
          (Array.to_list (Array.map T.to_string !this)))
 
-   let rec fprint_t_list ff t_l =
+   let fprint_t_list ff t_l =
      let rec aux ff t_l =
        match t_l with
        | [] -> ()
@@ -40,7 +40,7 @@ struct
      in
      match t_l with
      | [] -> ()
-     | x :: q -> Format.printf "@[<2>%s%a@]"
+     | x :: q -> Format.fprintf ff "@[<2>%s%a@]"
                    T.(string_of_elt !!x) aux q
 
   let fprint ff this =
@@ -152,7 +152,7 @@ struct
     in
     match t_l with
     | [] -> ()
-    | x :: q -> Format.printf "@[<2>%a%a@]" fprint_t x aux q
+    | x :: q -> Format.fprintf ff "@[<2>%a%a@]" fprint_t x aux q
 
   and fprint_t ff this =
     let fprint_value ff value =
@@ -182,7 +182,7 @@ struct
 
   let fprint ff this = Format.fprintf ff "%a" fprint_t this
 
-  let rec to_string this =
+  let to_string this =
     (Printf.sprintf "{\n\toperator = %s\n\toperands =\n\t\t[%s]\n\t"
       (string_of_op this.operator)
       (String.concat ", " (Array.to_list
@@ -247,7 +247,6 @@ struct
     }
 
   let value this = this.value
-  let derivatives this = this.derivatives
 
   let get this = T.get this.value
   let ( !! ) = get

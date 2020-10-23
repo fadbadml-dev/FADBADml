@@ -43,7 +43,7 @@ let main_tad nsteps dt ncoeff =
   let exec_t = Unix.gettimeofday () in
   ignore (step mem dt); (* initialization *)
   (* start loop *)
-  for i = 1 to nsteps do
+  for _ = 1 to nsteps do
     ignore (step mem dt);
     t := !t +. dt;
   done;
@@ -81,7 +81,7 @@ let _ =
       Printf.sprintf "number of taylor coefficients to compute (default: %d)"
                       !ncoeff;
 
-  ]) (fun s -> ()) "usage: ./tad_ml [[-]-help] [-n N] [-dt DT]\n";
+  ]) (fun _ -> ()) "usage: ./tad_ml [[-]-help] [-n N] [-dt DT]\n";
 
   let res = main_tad !nsteps !dt !ncoeff in
   Format.printf "%a@." print_tad_res res

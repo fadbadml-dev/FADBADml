@@ -42,7 +42,6 @@ struct
       (Array.map T.to_string arr)))
   let string_of_values this = string_of_arr (get_values this)
   let string_of_derivatives this = string_of_arr (get_derivatives this)
-  let to_string = string_of_values
 
 
   let copy this = {
@@ -140,7 +139,7 @@ struct
     | ASIN -> "ASIN" | ACOS -> "ACOS" | ATAN -> "ATAN"
     | _ -> failwith "Unknown operator"
   let to_short_string this = string_of_op this.operator
-  let rec to_string this =
+  let to_string this =
     (Printf.sprintf "{\n\toperator = %s\n\toperands =\n\t\t[%s]\n\t"
       (string_of_op this.operator)
       (String.concat ", " (Array.to_list

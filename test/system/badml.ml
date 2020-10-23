@@ -47,7 +47,7 @@ let main_bad nsteps dt =
   let exec_t = Unix.gettimeofday () in
   ignore (step mem dt); (* initialization *)
   (* start loop *)
-  for i = 1 to nsteps do
+  for _ = 1 to nsteps do
     ignore (step mem dt);
     t := !t +. dt;
   done;
@@ -80,7 +80,7 @@ let _ =
       Printf.sprintf "number of steps to compute (default: %d)" !nsteps;
     "-dt", Set_float dt,
       Printf.sprintf "size of one step (default: %f)" !dt;
-  ]) (fun s -> ()) "usage: ./bad_ml [[-]-help] [-n N] [-dt DT]\n";
+  ]) (fun _ -> ()) "usage: ./bad_ml [[-]-help] [-n N] [-dt DT]\n";
 
   let res = main_bad !nsteps !dt in
   Format.printf "%a@." print_bad_res res
