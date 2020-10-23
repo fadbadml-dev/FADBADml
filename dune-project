@@ -1,10 +1,12 @@
 (lang dune 2.7)
 (name fadbadml)
-(version 0.1.1)
+(version 0.1.2)
 
 (generate_opam_files true)
 
 (source (github fadbadml-dev/FADBADml))
+(homepage "https://fadbadml-dev.github.io/FADBADml/")
+(documentation https://fadbadml-dev.github.io/FADBADml/doc/Fadbad.html)
 (license CECILL-C)
 (authors "François Bidet" "Ismail Bennani")
 (maintainers "fbidet@lix.polytechnique.fr" "ismail.lahkim.bennani@ens.fr")
