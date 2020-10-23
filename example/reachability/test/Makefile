@@ -1,17 +1,19 @@
-include ../../../config
+FADBADMLDIR ?= $(shell ocamlfind query fadbadml)
+INCLUDES += -I $(FADBADMLDIR) fadbad.cmxa
 
-INCLUDES += -I ../../../lib fadbad.cma
+all: test_interval.opt test_affineForm.opt
 
-all: test_interval.byte test_affineForm.byte
+%.opt: %.ml
+	ocamlopt -o $@ $(OCAMLOPTFLAGS) $(INCLUDES) $<
 
-test_interval.byte: ../interval.cmo
-test_interval.byte: INCLUDES += -I ../ interval.cmo
+test_interval.opt: ../interval.cmx
+test_interval.opt: INCLUDES += -I ../ interval.cmx
 
-test_affineForm.byte: ../affineForm.cmo
-test_affineForm.byte: INCLUDES += -I ../ affineForm.cmo
+test_affineForm.opt: ../affineForm.cmx
+test_affineForm.opt: INCLUDES += -I ../ affineForm.cmx
 
 clean:
-	rm -rf *.cm[ixo] *.byte .depend
+	rm -rf *.cm[ixo] *.opt *.o .depend
 
 cleanall: clean
 

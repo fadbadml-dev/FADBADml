@@ -1,34 +1,40 @@
-include ../../config
+FADBADMLDIR ?= $(shell ocamlfind query fadbadml)
+INCLUDES += -I $(FADBADMLDIR) fadbad.cmxa
 
-INCLUDES += -I ../../lib fadbad.cma
+cmx = \
+	fode.cmx \
+	interval.cmx \
+	affineForm.cmx \
+	sets.cmx \
+	taylorModel.cmx \
+	continuousIntegrator.cmx \
+	exampleReachability.cmx
 
-CMO = \
-	fode.cmo \
-	interval.cmo \
-	affineForm.cmo \
-	sets.cmo \
-	taylorModel.cmo \
-	continuousIntegrator.cmo \
-	exampleReachability.cmo
+build: objects exampleReachability.opt
 
-build: objects exampleReachability.byte
-
-run: exampleReachability.byte exampleReachability.gp
-	./exampleReachability.byte -tend 2.0 -dt 2e-2 -order 3 -threshold 3e-3 > data.dat
+run: exampleReachability.opt exampleReachability.gp
+	./exampleReachability.opt -tend 2.0 -dt 2e-2 -order 3 -threshold 3e-3 > data.dat
 	gnuplot exampleReachability.gp
 	xdg-open picture.svg
 
-objects: $(CMO)
+%.opt: %.ml
+	ocamlopt -o $@ $(OCAMLOPTFLAGS) $(INCLUDES) $<
 
-sets.cmo: interval.cmo affineForm.cmo
+objects: $(cmx)
 
-exampleReachability.byte: INCLUDES += interval.cmo affineForm.cmo sets.cmo taylorModel.cmo continuousIntegrator.cmo
+sets.cmx: interval.cmx affineForm.cmx
 
-clean:
-	rm -rf *.cm[ixo] *.byte .depend
+exampleReachability.opt: INCLUDES += interval.cmx affineForm.cmx sets.cmx taylorModel.cmx continuousIntegrator.cmx
+
+clean_this:
+	rm -rf *.cm[ixo] *.opt *.o .depend
 	rm -f data.dat picture.svg
 
-cleanall: clean
+clean: clean_this
+	$(MAKE) -C test clean
+
+cleanall: clean_this
+	$(MAKE) -C test cleanall
 
 -include .depend
 .depend:

@@ -1,39 +1,37 @@
-include ../config
-
-FADBAD = ../src/fadbad.cma
-INCLUDES += -I ../src/ fadbad.cma
+FADBADMLDIR ?= $(shell ocamlfind query fadbadml)
+INCLUDES += -I $(FADBADMLDIR) fadbad.cmxa
 
 EXAMPLES = \
-	exampleFAD.byte \
-	exampleBAD.byte \
-	exampleFADFAD.byte \
-	exampleBADFAD1.byte \
-	exampleBADFAD2.byte \
-	exampleBADFAD3.byte \
-	exampleBADFAD4.byte \
-	exampleNewton.byte \
-	exampleTAD1.byte \
-	exampleTAD2.byte \
-	exampleTAD3.byte \
-	monteCarlo.byte \
-	exampleString.byte \
-	exampleBrusselator.byte
+	exampleFAD.opt \
+	exampleBAD.opt \
+	exampleFADFAD.opt \
+	exampleBADFAD1.opt \
+	exampleBADFAD2.opt \
+	exampleBADFAD3.opt \
+	exampleBADFAD4.opt \
+	exampleNewton.opt \
+	exampleTAD1.opt \
+	exampleTAD2.opt \
+	exampleTAD3.opt \
+	monteCarlo.opt \
+	exampleString.opt \
+	exampleBrusselator.opt
 
 all: $(EXAMPLES)
 
-$(EXAMPLES): $(FADBAD)
+%.opt: %.ml
+	ocamlopt -o $@ $(OCAMLOPTFLAGS) $(INCLUDES) $<
 
-exampleBrusselator.byte: INCLUDES += graphics.cma unix.cma
-brusselator.tmp: exampleBrusselator.byte
-	./exampleBrusselator.byte -notad -n 20000 -o brusselator.tmp
+exampleBrusselator.opt: INCLUDES += graphics.cmxa unix.cmxa
+brusselator.tmp: exampleBrusselator.opt
+	./exampleBrusselator.opt -notad -n 20000 -o brusselator.tmp
 brusselator.png: brusselator.tmp
 	gnuplot -e "set key autotitle columnhead; set terminal png size 800,800; set output '$@'; plot '$<' using 2:3"
 
-$(FADBAD):
-	$(MAKE) -C ../src/
+
 
 clean:
-	rm -rf *.cm[ixo] *.byte .depend
+	rm -rf *.cm[ixo] *.opt *.o .depend
 	rm -rf *.tmp *.png
 	$(MAKE) -C reachability clean
 
