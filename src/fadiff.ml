@@ -33,6 +33,11 @@ let string_of_scalar = T.string_of_scalar
     Printf.sprintf "{%s | [%s]}" (T.to_string this.m_val)
       (String.concat ", " (Array.to_list (Array.map T.to_string this.m_diff)))
 
+  let make_sized v n = {
+    m_val = T.make v;
+    m_diff = Array.make n (T.zero ());
+  }
+    
   let create () = {
     m_val = T.create ();
     m_diff = Array.make 0 (T.zero ());
@@ -46,9 +51,9 @@ let string_of_scalar = T.string_of_scalar
   let get v = T.get v.m_val
   let ( !! ) = get
 
-  let lift v = { (create ()) with m_val = v; }
+  let lift v = { (create ()) with m_val = v }
 
-  let make v = lift (T.make v)
+  let make v = make_sized v 0
   let integer i = lift (T.integer i)
   let zero () = lift (T.zero ())
   let one () = lift (T.one ())
