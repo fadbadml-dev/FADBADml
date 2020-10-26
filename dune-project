@@ -14,4 +14,5 @@
 (package 
     (name fadbadml)
     (synopsis "FADBAD++ for OCaml")
-    (description "This library is an OCaml porting of FADBAD++, a software written by Ole Stauning and Claus Bendtsen."))
+    (description "This library is an OCaml porting of FADBAD++, a software written by Ole Stauning and Claus Bendtsen.")
+    (depends (ocaml (>= "4.08")) (qcheck :with-test) (conf-python-3 :with-test)))

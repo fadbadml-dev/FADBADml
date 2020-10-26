@@ -12,6 +12,9 @@ doc: "https://fadbadml-dev.github.io/FADBADml/doc/"
 bug-reports: "https://github.com/fadbadml-dev/FADBADml/issues"
 depends: [
   "dune" {>= "2.7"}
+  "ocaml" {>= "4.08"}
+  "qcheck" {with-test}
+  "conf-python-3" {with-test}
   "odoc" {with-doc}
 ]
 build: [
