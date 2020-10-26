@@ -1,6 +1,6 @@
 (lang dune 2.7)
 (name fadbadml)
-(version 0.1.2)
+(version 0.1.2.1)
 
 (generate_opam_files true)
 
