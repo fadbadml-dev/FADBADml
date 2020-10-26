@@ -63,6 +63,7 @@ sig
 
   (** {1 Additionnal constructors} *)
 
+  val make_sized : elt -> int -> t
   val lift : T.t -> t
 
   (** {1 Accessors} *)
